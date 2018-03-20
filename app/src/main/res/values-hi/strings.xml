@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">डीकोम्प</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="images"> <b>तस्वीरें</b></string>
+    <string name="all"><b>सब</b></string>
+    <string name="ok">ठीक है</string>
+    <string name="cancel">रद्द</string>
+
+    <!--deComp directory-->
+    <string name="dir_decomp_created">फ़ोल्डर decomp बनाया गया है|</string>
+    <string name="storage_issue">कुछ मीडिया भंडार कार्ड का मुद्दा है!</string>
+
+    <!--set quality and compress dialog-->
+    <string name="images_selected">तस्वीरों को चुना</string>
+    <string name="image_selected">तस्वीर चुनी</string>
+    <string name="noImageSelected">कोई तसवीर नहीं चुनी गए</string>
+    <string name="set_quality">संकुचित तस्वीरों के लिए गुणवत्ता सेट करें</string>
+    <string name="statCompressingBtn">शुरू करें</string>
+    <string name="low">कम</string>
+    <string name="high">ज्यादा</string>
+
+    <!--information dialog-->
+    <string name="intro">डीकोम्प क्वालिटी के लिए आपकी जरूरत के आधार पर आपकी फोटो की मेमोरी संख्या(साइज़) को कम करता है।</string>
+    <string name="selectMax100">एक बार में 100 या उससे कम तस्वीरों चुने। जरूरत के रूप में क्वालिटी निर्धारित करें। ज्यादा क्वालिटी से आपकी फोटो की मेमोरी संख्या बढ़ सकती है।</string>
+    <string name="happyDecomping">हो गया, हैप्पी DeComping!</string>
+
+    <!--compressing dialog-->
+    <string name="compressing">तस्वीर पर काम जारी</string>
+    <string name="original">असली : </string>
+    <string name="newText">नई : </string>
+    <string name="decomping">डीकोम्पिंग</string>
+    <string name="no_change">कोई बदलाव नहीं</string>
+    <string name="compressed">कम हुआ</string>
+    <string name="enhanced">बढ़ गया</string>
+    <string name="new_total">नया कुल : </string>
+    <string name="total">कुल : </string>
+    <string name="done">खत्म</string>
+
+    <string name="no_images_show">कोई तसवीर नहीं है</string>
+    <!--deleting images and sharing on CompGallery Activity-->
+    <string name="deleteImages">इन तस्वीरों को मिटाना चाहते हैं?</string>
+    <string name="deleting">तस्वीरों को मिटाया जा रहा है…</string>
+    <string name="deleted">मिटा दिया</string>
+    <string name="unableToDelete">मिटाने में असमर्थ</string>
+    <string name="share">साझा करें</string>
+    <string name="loading">प्रतीक्षा करें…</string>
+
+    <!--DeComp title-->
+    <string name="De">डी</string>
+    <string name="comp">कोम्प</string>
+    <string name="images_decomped">तस्वीरें\nडीकोम्प है</string>
+
+    <!--Mind your Earth promo-->
+    <string name="our_planet">हमारी पृथ्वी</string>
+    <string name="mind_your_earth">Mind your Earth</string>
+    <string name="mind_your_earth_descripion">कचरा डिजीटल करें और उन्हें अपने नक्शे पर खोजें। एक लंबी ज्ञात समस्या का समाधान करे।</string>
+    <string name="install">इंस्टॉल करें</string>
+    <string name="know_more">अधिक जानिए</string>
+
+</resources>

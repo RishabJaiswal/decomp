@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "312282048130",
+    "firebase_url": "https://decomp-1127.firebaseio.com",
+    "project_id": "decomp-1127",
+    "storage_bucket": "decomp-1127.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312282048130:android:e63ec1967b8bb7f3",
+        "android_client_info": {
+          "package_name": "com.decomp.comp.decomp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "312282048130-ph5icb4gfs7238s5ublklknue8peidd6.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "312282048130-64o9k46jku31al3u8532maj6i14ia54p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH57vJbcd3zWtZ-ajESAT86Oyzj4JZBlU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-70060017-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

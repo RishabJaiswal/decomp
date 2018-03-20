@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.decomp.comp.decomp.ImagePager"
+    android:id="@+id/imageViewer"
+    android:background="#000">
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttons"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="8dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/delFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/delete"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/rotateFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="mini"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:srcCompat="@drawable/rotate_right"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/shareFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="mini"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:srcCompat="@drawable/share"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

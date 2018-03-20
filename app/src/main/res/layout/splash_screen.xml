@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splshScrnlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
+    tools:context=".SplashScreen"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp"
+    android:animateLayoutChanges="true">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.22"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="false"
+        app:lottie_fileName="animated_background.json"
+        app:lottie_loop="false"
+        app:lottie_cacheStrategy="strong"/>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/mye_promo_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:backgroundTint="#fff"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:pressedTranslationZ="4dp"
+        app:srcCompat="@drawable/mye"
+        app:useCompatPadding="true"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/de_square"
+        android:gravity="center"
+        android:text="@string/De"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/mye_promo_fab"
+        app:layout_constraintEnd_toStartOf="@+id/title_comp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/selImgFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:useCompatPadding="true"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:backgroundTint="#fff"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="@+id/title_comp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:pressedTranslationZ="4dp"
+        app:srcCompat="@drawable/sel_imgs"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/compGalFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:useCompatPadding="true"
+        app:backgroundTint="#fff"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/selImgFab"
+        app:layout_constraintStart_toEndOf="@+id/selImgFab"
+        app:layout_constraintTop_toTopOf="@+id/selImgFab"
+        app:srcCompat="@drawable/next"/>
+
+    <Button
+        android:id="@+id/btn_changePermissions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:background="@color/blue"
+        android:text="@string/action_settings"
+        android:textColor="#fff"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/title_comp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/infoFab"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        app:useCompatPadding="true"
+        app:backgroundTint="#fff"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/selImgFab"
+        app:layout_constraintEnd_toStartOf="@+id/selImgFab"
+        app:layout_constraintTop_toTopOf="@+id/selImgFab"
+        app:srcCompat="@drawable/info"/>
+
+    <FrameLayout
+        android:id="@+id/adViewParent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/title_comp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/comp"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="@+id/title"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <!--dcomped images count-->
+    <RelativeLayout
+        android:id="@+id/decomped_count_parent"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/decomped_count_back"
+        app:layout_constraintBottom_toTopOf="@+id/adViewParent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selImgFab">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView2"
+            android:layout_width="99dp"
+            android:layout_height="99dp"
+            android:layout_centerInParent="true"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="cube_loader.json"
+            app:lottie_loop="true"/>
+
+        <TextView
+            android:id="@+id/decomped_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/divider_decompedCount"
+            android:layout_centerHorizontal="true"
+            android:text="108"
+            android:textColor="#424242"
+            android:textSize="36sp"
+            android:textStyle="bold"/>
+
+        <!--divider-->
+        <TextView
+            android:id="@+id/divider_decompedCount"
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#00424242"/>
+
+        <TextView
+            android:id="@+id/decomped_count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider_decompedCount"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/images_decomped"
+            android:textColor="#424242"
+            android:textStyle="bold"/>
+
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

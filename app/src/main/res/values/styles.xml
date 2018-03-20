@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme" parent="AppTheme.Base">
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary"> #d000 </item>
+    </style>
+
+    <style name="expandedToolbar" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="collpToolbar" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
+</resources>

@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">DeComp</string>
+    <string name="action_settings">Settings</string>
+    <string name="images"> <b>Images</b></string>
+    <string name="all"><b>All</b></string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="splash_screen_native_ad_unit" translatable="false">ca-app-pub-4200151682628675/2986388823</string>
+    <string name="interstitial_adunit" translatable="false">ca-app-pub-4200151682628675/8760613749</string>
+    <string name="compressing_dialog_ad_unit" translatable="false">ca-app-pub-4200151682628675/7037066942</string>
+
+    <!--deComp directory-->
+    <string name="dir_decomp_created">Directory \'decomp\' created!</string>
+    <string name="storage_issue">There is a media storage issue!</string>
+
+    <!--set quality and compress dialog-->
+    <string name="images_selected">images selected</string>
+    <string name="image_selected">image selected</string>
+    <string name="noImageSelected">No image selected</string>
+    <string name="set_quality">Set quality for compressed images</string>
+    <string name="statCompressingBtn">Start</string>
+    <string name="low">low</string>
+    <string name="high">high</string>
+
+    <!--information dialog-->
+    <string name="intro">DeComp can compress your images based on your need for the quality</string>
+    <string name="selectMax100">Select a maximum of 100 images at once. Set the quality as needed. Highest quality may instead enhance your image.</string>
+    <string name="happyDecomping">Done, Happy DeComping!</string>
+
+    <!--compressing dialog-->
+    <string name="compressing">Compressing</string>
+    <string name="original">Original: </string>
+    <string name="newText">New: </string>
+    <string name="decomping">Decomping</string>
+    <string name="no_change">No change</string>
+    <string name="compressed">Compressed</string>
+    <string name="enhanced">Enhanced</string>
+    <string name="new_total">New total: </string>
+    <string name="total">Total: </string>
+    <string name="done">Done</string>
+
+    <string name="no_images_show">No DeComped image</string>
+    <!--deleting images and sharing on CompGallery Activity-->
+    <string name="deleteImages">Delete these images?</string>
+    <string name="deleting">Deleting…</string>
+    <string name="deleted">Deleted</string>
+    <string name="unableToDelete">Unable to delete</string>
+    <string name="share">Share</string>
+    <string name="loading">loading…</string>
+
+    <string name="De">De</string>
+    <string name="comp">Comp</string>
+    <string name="images_decomped">images\ndecomped</string>
+
+    <!--Mind your Earth promo-->
+    <string name="our_planet">Our Planet</string>
+    <string name="mind_your_earth">Mind your Earth</string>
+    <string name="mind_your_earth_descripion">Digitize trash and locate them on your map. Solving a long known problem.</string>
+    <string name="install">Install</string>
+    <string name="know_more">Know more</string>
+
+    <!--preferences-->
+    <string name="pref_decompCount" translatable="false">decompedCount</string>
+    <string name="pref_user_data" translatable="false">userData</string>
+</resources>
