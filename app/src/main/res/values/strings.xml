@@ -6,7 +6,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
-    <string name="splash_screen_native_ad_unit" translatable="false">ca-app-pub-4200151682628675/2986388823</string>
+
+    <string name="admob_app_id" translatable="false">ca-app-pub-4200151682628675~7434223747</string>
+    <string name="splash_screen_ad_unit" translatable="false">ca-app-pub-4200151682628675/2986388823</string>
     <string name="interstitial_adunit" translatable="false">ca-app-pub-4200151682628675/8760613749</string>
     <string name="compressing_dialog_ad_unit" translatable="false">ca-app-pub-4200151682628675/7037066942</string>
 

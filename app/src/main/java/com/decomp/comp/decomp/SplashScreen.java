@@ -20,6 +20,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.darsh.multipleimageselect.models.Image;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
 
@@ -123,17 +125,13 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
 
     private void initialize()
     {
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-4200151682628675~7434223747");
+        MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
         li = LayoutInflater.from(this);
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottieBackground);
         lottieAnimationView.playAnimation(0.2f, 0.8f);
 
         //setting ad
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int widthInDp = (int) (displayMetrics.widthPixels / displayMetrics.density);
-        final NativeExpressAdView adView = new NativeExpressAdView(this);
-        adView.setAdSize(new AdSize(widthInDp, 80));
-        adView.setAdUnitId(getString(R.string.splash_screen_native_ad_unit));
+        final AdView adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
         adView.setAdListener(new AdListener()
@@ -144,16 +142,21 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                 super.onAdLoaded();
 
                 //adding adview
-                FrameLayout adViewParent = findViewById(R.id.adViewParent);
+               /* FrameLayout adViewParent = findViewById(R.id.adViewParent);
                 FrameLayout.LayoutParams flp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
                 flp.gravity = Gravity.CENTER;
                 adView.setLayoutParams(flp);
-                adViewParent.addView(adView);
+                adViewParent.addView(adView);*/
 
             }
-        });
 
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                Log.d("Ad  failed", String.valueOf(i));
+            }
+        });
         //setting infoFab adding click listeners
         findViewById(R.id.mye_promo_fab).setOnClickListener(this);
         findViewById(R.id.compGalFab).setOnClickListener(this);
