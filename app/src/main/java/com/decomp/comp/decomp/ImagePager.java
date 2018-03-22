@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -140,6 +142,9 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
                 i.putExtra(Intent.EXTRA_STREAM, fileUri);
                 i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(i, "Share"));
+
+                //log share event
+                FirebaseAnalytics.getInstance(this).logEvent("images_being_shared", null);
                 break;
 
             case R.id.rotateFab:
