@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -130,10 +131,14 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.shareFab:
+                Uri fileUri = FileProvider.getUriForFile(this,
+                        BuildConfig.APPLICATION_ID + ".file.provider",
+                        new File(filepath));
                 Intent i = new Intent();
                 i.setAction(Intent.ACTION_SEND);
                 i.setType("image/jpeg");
-                i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filepath)));
+                i.putExtra(Intent.EXTRA_STREAM, fileUri);
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(i, "Share"));
                 break;
 

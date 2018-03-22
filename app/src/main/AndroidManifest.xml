@@ -43,5 +43,18 @@
         <!--activity to show a selected image-->
         <activity android:name=".ImagePager"/>
 
+        <!--file provider for sdk>=24-->
+        <provider
+            android:authorities="${applicationId}.file.provider"
+            android:name=".GenericFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+
+        </provider>
+
     </application>
 </manifest>
