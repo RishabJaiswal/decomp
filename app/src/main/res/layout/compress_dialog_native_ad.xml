@@ -12,12 +12,12 @@
         android:layout_centerInParent="true"
         android:text="@string/loading"/>
 
-    <com.google.android.gms.ads.NativeExpressAdView
+    <com.google.android.gms.ads.AdView
         android:id="@+id/nativeAdView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ads:adUnitId="@string/compressing_dialog_ad_unit"
         ads:adSize="280X100">
-    </com.google.android.gms.ads.NativeExpressAdView>
+    </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

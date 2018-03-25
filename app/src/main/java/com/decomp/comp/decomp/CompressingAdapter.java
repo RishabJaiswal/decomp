@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 
@@ -39,7 +39,7 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private long orgSize;
     private AdRequest adRequest;
     private final int AD_THRESHOLD = 5;
-    private final int NATIVE_AD_TYPE = 1;
+    private final int AD_TYPE = 1;
     private final int NO_AD_TYPE = 0;
 
     public CompressingAdapter(Context context, File[] orgImgss)
@@ -68,7 +68,7 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position)
     {
         if (position != 0 && (position + 1) % (AD_THRESHOLD + 1) == 0)
-            return NATIVE_AD_TYPE;
+            return AD_TYPE;
         return NO_AD_TYPE;
     }
 
@@ -77,7 +77,7 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     {
         RecyclerView.LayoutParams rlp = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
                 RecyclerView.LayoutParams.WRAP_CONTENT);
-        if (viewType == NATIVE_AD_TYPE)
+        if (viewType == AD_TYPE)
         {
             View view = LayoutInflater.from(cntxt).inflate(R.layout.compress_dialog_native_ad, null, false);
             view.setLayoutParams(rlp);
@@ -164,13 +164,13 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     //native add
     private class AdHolder extends RecyclerView.ViewHolder
     {
-        NativeExpressAdView nativeAdView;
+        AdView adView;
 
         AdHolder(View itemVIew)
         {
             super(itemVIew);
-            nativeAdView = itemVIew.findViewById(R.id.nativeAdView);
-            nativeAdView.loadAd(adRequest);
+            adView = itemVIew.findViewById(R.id.nativeAdView);
+            adView.loadAd(adRequest);
         }
     }
 }
