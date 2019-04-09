@@ -8,24 +8,24 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-public class ImagePager extends AppCompatActivity implements View.OnClickListener
-{
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
+public class ImagePager extends AppCompatActivity implements View.OnClickListener {
     ImageView imgView;
     FloatingActionButton delFab, shareFab, rotateRightFab;
 
@@ -38,23 +38,20 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
     FileOutputStream imgStream;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_pager);
         initialize();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(item.getItemId() == android.R.id.home)
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
             finish();
         return true;
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         if (Build.VERSION.SDK_INT < 16)
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -64,8 +61,8 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
         imgView = (ImageView) findViewById(R.id.imgView);
         filepath = getIntent().getStringExtra("filepath");
 
-        int maxSize = (int) (Runtime.getRuntime().maxMemory()/1024);
-        imageLruCache = new ImageLruCache(maxSize/8);
+        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        imageLruCache = new ImageLruCache(maxSize / 8);
         loadBitmap();
 
 
@@ -78,15 +75,12 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
         rotateRightFab.setOnClickListener(this);
     }
 
-    private void loadBitmap()
-    {
+    private void loadBitmap() {
         file = new File(filepath);
-        synchronized (imageLruCache)
-        {
+        synchronized (imageLruCache) {
             bitmapOrg = imageLruCache.get(file.getAbsolutePath());
         }
-        if(bitmapOrg != null)
-        {
+        if (bitmapOrg != null) {
             imgView.setImageBitmap(bitmapOrg);
             return;
         }
@@ -101,10 +95,8 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.delFab:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
                 builder.setTitle("Delete");
@@ -150,18 +142,18 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
             case R.id.rotateFab:
                 Matrix matrix = new Matrix();
                 matrix.postRotate(90);
-                if(bitmapOrg == null)
-                    bitmapOrg = task.orgBmp ;
+                if (bitmapOrg == null)
+                    bitmapOrg = task.orgBmp;
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmapOrg, bitmapOrg.getWidth(), bitmapOrg.getHeight(), true);
                 Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
                         scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
                 imgView.setImageBitmap(rotatedBitmap);
                 bitmapOrg = rotatedBitmap;
                 try {
-                imgStream = new FileOutputStream(filepath, false);
-                    bitmapOrg.compress(Bitmap.CompressFormat.PNG, 100,imgStream);
-            } catch (FileNotFoundException e) {
-            }
+                    imgStream = new FileOutputStream(filepath, false);
+                    bitmapOrg.compress(Bitmap.CompressFormat.PNG, 100, imgStream);
+                } catch (FileNotFoundException e) {
+                }
 
                 break;
         }

@@ -1,5 +1,6 @@
 package com.decomp.comp.decomp;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -7,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ProgressBar;
@@ -27,8 +27,7 @@ import java.util.Calendar;
 /**
  * Created by Rishab on 17-10-2015.
  */
-public class CompressAsyncTask extends AsyncTask<File, Integer, String>
-{
+public class CompressAsyncTask extends AsyncTask<File, Integer, String> {
     private TextView compSizeTv, counterTv;
     private ProgressBar pb;
     private AlertDialog dialog;
@@ -39,16 +38,15 @@ public class CompressAsyncTask extends AsyncTask<File, Integer, String>
     //BitmapFactory.Options options;
 
     private byte[] compImgBytes;
-    private int i=0, compFactor;
+    private int i = 0, compFactor;
     private long compSize = 0;
     private ByteArrayOutputStream baos;
 
     public CompressAsyncTask(CompressTaskFragment taskFragment,
-                             AlertDialog dialog, View dialogView, int compF, CompressingAdapter cmpAdpter)
-    {
+                             AlertDialog dialog, View dialogView, int compF, CompressingAdapter cmpAdpter) {
         this.taskFragment = taskFragment;
 
-        pb = (ProgressBar)dialogView.findViewById(R.id.progress);
+        pb = (ProgressBar) dialogView.findViewById(R.id.progress);
         counterTv = (TextView) dialogView.findViewById(R.id.counter);
         compSizeTv = (TextView) dialogView.findViewById(R.id.compSize);
         compressingAdapter = cmpAdpter;
@@ -61,11 +59,10 @@ public class CompressAsyncTask extends AsyncTask<File, Integer, String>
         //options = new BitmapFactory.Options();
         //options.inMutable = true;
     }
+
     @Override
-    protected void onPreExecute()
-    {
-        if(!taskFragment.isDoneWithDialog)
-        {
+    protected void onPreExecute() {
+        if (!taskFragment.isDoneWithDialog) {
             pb.setMax(taskFragment.imgs.length);
             pb.setInterpolator(new AccelerateDecelerateInterpolator());
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel", new DialogInterface.OnClickListener() {
@@ -73,8 +70,7 @@ public class CompressAsyncTask extends AsyncTask<File, Integer, String>
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (getStatus().equals(Status.RUNNING) || getStatus().equals(Status.PENDING)) {
                         cancel(false);
-                        if (isCancelled())
-                        {
+                        if (isCancelled()) {
                             dialog.cancel();
                         }
                     }
@@ -85,36 +81,31 @@ public class CompressAsyncTask extends AsyncTask<File, Integer, String>
     }
 
     @Override
-    protected String doInBackground(File... imgs)
-    {
+    protected String doInBackground(File... imgs) {
         //long imgsName = dir.getLong("imgName", Long.MAX_VALUE);
         Bitmap img;
-        for(; i < imgs.length; i++)
-        {
-            if(compressingAdapter.isCompressed[i])
+        for (; i < imgs.length; i++) {
+            if (compressingAdapter.isCompressed[i])
                 continue;
-            try
-            {
+            try {
                 baos.reset();
                 String filePath = imgs[i].getAbsolutePath();
                 img = BitmapFactory.decodeFile(filePath);
                 img.compress(Bitmap.CompressFormat.JPEG, compFactor, baos);
-                if(baos == null)
+                if (baos == null)
                     continue;
                 compImgBytes = baos.toByteArray();
                 if (compImgBytes.length == 0)
                     continue;
 
                 OutputStream out1 = new BufferedOutputStream(new FileOutputStream(new File(dir.getString("dir", null) + File.separator +
-                        String.valueOf(Calendar.getInstance().getTimeInMillis()) +"."+filePath.substring(filePath.lastIndexOf(".")+1))));
+                        String.valueOf(Calendar.getInstance().getTimeInMillis()) + "." + filePath.substring(filePath.lastIndexOf(".") + 1))));
                 out1.write(compImgBytes);
                 //if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB && ImageLruCache.canUseForInBitmap(img,options))
-                  //  options.inBitmap = img;
+                //  options.inBitmap = img;
                 compSize += compImgBytes.length;
                 publishProgress(i);
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 cancel(true);
                 dialog.dismiss();
             }
@@ -123,25 +114,23 @@ public class CompressAsyncTask extends AsyncTask<File, Integer, String>
     }
 
     @Override
-    protected void onProgressUpdate(Integer... value)
-    {
+    protected void onProgressUpdate(Integer... value) {
         pb.incrementProgressBy(1);
         compressingAdapter.isCompressed[value[0]] = true;
-        compressingAdapter.compSizes[value[0]] =  compImgBytes.length;
+        compressingAdapter.compSizes[value[0]] = compImgBytes.length;
         compressingAdapter.notifyItemChanged(value[0]);
         counterTv.setText(i + "/" + taskFragment.imgs.length);
     }
 
     @Override
-    protected void onPostExecute(String result)
-    {
-        if(!taskFragment.isDoneWithDialog)
+    protected void onPostExecute(String result) {
+        if (!taskFragment.isDoneWithDialog)
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.done);
 
-        CompGallery compGallery = ((CompGallery)taskFragment.getActivity());
+        CompGallery compGallery = ((CompGallery) taskFragment.getActivity());
         compSizeTv.setText(compGallery.getString(R.string.new_total) + " " +
                 CompressTaskFragment.converter(compSize, 0));
-        compGallery.compImgs = new File(dir.getString("dir","")).listFiles();
+        compGallery.compImgs = new File(dir.getString("dir", "")).listFiles();
         Arrays.sort(compGallery.compImgs);
         compGallery.totalCompImgs = compGallery.compImgs.length;
         compGallery.imgAdapter = new ImageAdapter(taskFragment.getActivity(), compGallery.compImgs);

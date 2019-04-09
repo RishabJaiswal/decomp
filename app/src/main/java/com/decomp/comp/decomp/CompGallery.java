@@ -11,18 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.transition.ChangeImageTransform;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,16 +20,27 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by Rishab on 17-10-2015.
  */
-public class CompGallery extends AppCompatActivity implements View.OnClickListener
-{
+public class CompGallery extends AppCompatActivity implements View.OnClickListener {
     RecyclerView imgRecycler;
     FloatingActionButton shareFab, delFab;
     CheckBox selAllCb;
@@ -63,19 +62,16 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
     File[] compImgs;
     boolean isSharingOrDeleting = false, isDoneWithDialog = false; //checks if users is sharing images
 
-    static
-    {
+    static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
         //setting transitions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //getWindow().setSharedElementExitTransition(new ChangeImageTransform(this, null));
             //getWindow().setAllowEnterTransitionOverlap(true);
         }
@@ -84,42 +80,35 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             isDoneWithDialog = savedInstanceState.getBoolean("isDoneWithDialog");
 
         Intent intent = getIntent();
-        if (intent.getBooleanExtra("isCompressing", false))
-        {
+        if (intent.getBooleanExtra("isCompressing", false)) {
             taskFragment = (CompressTaskFragment) fm.findFragmentByTag("task");
-            if (taskFragment == null && !isDoneWithDialog)
-            {
+            if (taskFragment == null && !isDoneWithDialog) {
                 taskFragment = CompressTaskFragment.getInstance();
                 taskFragment.setData(isDoneWithDialog);
                 taskFragment.show(fm.beginTransaction(), "task");
             }
-        }
-        else
+        } else
             isDoneWithDialog = true;
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         compImgs = new File(compDir).listFiles();
         Arrays.sort(compImgs);
         retainFragment = (RetainFragment) getSupportFragmentManager().findFragmentByTag("data");
 
-        if (retainFragment == null)
-        {
+        if (retainFragment == null) {
             retainFragment = new RetainFragment();
             getSupportFragmentManager().beginTransaction().add(retainFragment, "data").commit();
         }
         isSharingOrDeleting = retainFragment.isSharingOrDeleting;
         status = retainFragment.status;
 
-        if (isDoneWithDialog || (taskFragment != null && taskFragment.compressTask.getStatus().equals(AsyncTask.Status.FINISHED)))
-        {
+        if (isDoneWithDialog || (taskFragment != null && taskFragment.compressTask.getStatus().equals(AsyncTask.Status.FINISHED))) {
             totalCompImgs = compImgs.length;
             imgAdapter = new ImageAdapter(this, compImgs);
-            if (isSharingOrDeleting)
-            {
+            if (isSharingOrDeleting) {
                 imgAdapter.selFiles = retainFragment.selFiles;
                 imgAdapter.isChecked = retainFragment.isChecked;
                 if (retainFragment.status == 1)
@@ -129,9 +118,7 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
                 selAllCb.setVisibility(View.VISIBLE);
                 if (retainFragment.selFiles.size() == compImgs.length)
                     selAllCb.setChecked(true);
-            }
-            else if (selAllCb.getVisibility() == View.VISIBLE)
-            {
+            } else if (selAllCb.getVisibility() == View.VISIBLE) {
                 if (selAllCb.isChecked())
                     selAllCb.setChecked(false);
                 selAllCb.setVisibility(View.INVISIBLE);
@@ -140,8 +127,7 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             imgRecycler.setAdapter(imgAdapter);
         }
 
-        if (isDoneWithDialog && compImgs.length == 0)
-        {
+        if (isDoneWithDialog && compImgs.length == 0) {
             delFab.setVisibility(View.INVISIBLE);
             shareFab.setVisibility(View.INVISIBLE);
             noImgsTv.setVisibility(View.VISIBLE);
@@ -149,37 +135,28 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public void onBackPressed()
-    {
-        if (isSharingOrDeleting)
-        {
+    public void onBackPressed() {
+        if (isSharingOrDeleting) {
             stopShareNDel();
-        }
-        else if (!isDoneWithDialog)
-        {
-        }
-        else
-        {
-            if(interstitialAd.isLoaded())
+        } else if (!isDoneWithDialog) {
+        } else {
+            if (interstitialAd.isLoaded())
                 interstitialAd.show();
             finish();
         }
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isDoneWithDialog", isDoneWithDialog);
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
         retainFragment.isSharingOrDeleting = isSharingOrDeleting;
-        if (isSharingOrDeleting)
-        {
+        if (isSharingOrDeleting) {
             retainFragment.isChecked = imgAdapter.isChecked;
             retainFragment.selFiles = imgAdapter.selFiles;
             retainFragment.status = status;
@@ -187,15 +164,13 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home)
             finish();
         return true;
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         compDir = getSharedPreferences("dir", Context.MODE_PRIVATE).getString("dir", null);
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -209,11 +184,9 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
         adRequest = new AdRequest.Builder().build();
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getString(R.string.interstitial_adunit));
-        interstitialAd.setAdListener(new AdListener()
-        {
+        interstitialAd.setAdListener(new AdListener() {
             @Override
-            public void onAdLoaded()
-            {
+            public void onAdLoaded() {
                 if (isDoneWithDialog) ;
                 //interstitialAd.show();
             }
@@ -261,22 +234,17 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.selAllCb:
 
                 final boolean isChecked = selAllCb.isChecked();
                 imgAdapter.selFiles.clear();
-                if (isChecked)
-                {
+                if (isChecked) {
                     Arrays.fill(imgAdapter.isChecked, true);
                     imgAdapter.notifyDataSetChanged();
                     imgAdapter.selFiles.addAll(Arrays.asList(compImgs));
-                }
-                else
-                {
+                } else {
                     Arrays.fill(imgAdapter.isChecked, false);
                     imgAdapter.notifyDataSetChanged();
                 }
@@ -295,28 +263,20 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void shareOrDelImgs(int id)
-    {
-        if (!isSharingOrDeleting)
-        {
+    private void shareOrDelImgs(int id) {
+        if (!isSharingOrDeleting) {
             selAllCb.setVisibility(View.VISIBLE);
-            if (id == R.id.shareFab)
-            {
+            if (id == R.id.shareFab) {
                 delFab.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
+            } else {
                 shareFab.setVisibility(View.INVISIBLE);
             }
             isSharingOrDeleting = true;
             imgAdapter.isChecked = new boolean[compImgs.length];
             imgAdapter.selFiles = new ArrayList<>();
             imgAdapter.notifyDataSetChanged();
-        }
-        else if (id == R.id.shareFab)
-        {
-            if (imgAdapter.selFiles.size() == 0)
-            {
+        } else if (id == R.id.shareFab) {
+            if (imgAdapter.selFiles.size() == 0) {
                 Snackbar.make(coord, R.string.noImageSelected, Snackbar.LENGTH_SHORT).show();
                 return;
             }
@@ -329,11 +289,8 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare);
             startActivity(Intent.createChooser(i, getString(R.string.share)));
             retainFragment.isSharingOrDeleting = false;
-        }
-        else if (id == R.id.delFab)
-        {
-            if (imgAdapter.selFiles.size() == 0)
-            {
+        } else if (id == R.id.delFab) {
+            if (imgAdapter.selFiles.size() == 0) {
                 Snackbar.make(coord, R.string.noImageSelected, Snackbar.LENGTH_SHORT).show();
                 return;
             }
@@ -345,19 +302,16 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             builder.setTitle(imgs);
             builder.setMessage(R.string.deleteImages);
             final String finalImgs = imgs;
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
-            {
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
+                public void onClick(DialogInterface dialogInterface, int i) {
                     int total = size;
                     ProgressDialog progressDialog = new ProgressDialog(CompGallery.this, R.style.MyAlertDialogStyle);
                     progressDialog.setTitle(getString(R.string.deleting));
                     progressDialog.setIndeterminate(true);
                     progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();
-                    for (File file : imgAdapter.selFiles)
-                    {
+                    for (File file : imgAdapter.selFiles) {
                         if (file.delete())
                             total--;
                     }
@@ -369,19 +323,16 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
                     else
                         Snackbar.make(coord, R.string.unableToDelete, Snackbar.LENGTH_LONG).show();
                     stopShareNDel();
-                    if (compImgs.length == 0)
-                    {
+                    if (compImgs.length == 0) {
                         delFab.setVisibility(View.INVISIBLE);
                         shareFab.setVisibility(View.INVISIBLE);
                         noImgsTv.setVisibility(View.VISIBLE);
                     }
                 }
             });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-            {
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
+                public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
                 }
             });
@@ -391,8 +342,7 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void stopShareNDel()
-    {
+    private void stopShareNDel() {
         isSharingOrDeleting = false;
         if (selAllCb.isChecked())
             selAllCb.setChecked(false);
@@ -406,17 +356,14 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             shareFab.setVisibility(View.VISIBLE);
     }
 
-    private void setImgRecyclerClickListener()
-    {
+    private void setImgRecyclerClickListener() {
         //setting recycler dialogView click listener as user can select items now;
         imgRecycler.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
-                new RecyclerViewItemClickListener.OnItemClickListener()
-                {
+                new RecyclerViewItemClickListener.OnItemClickListener() {
                     CheckBox cb;
 
                     @Override
-                    public void onItemClick(final View view, final int position)
-                    {
+                    public void onItemClick(final View view, final int position) {
                         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.9f, 1f);
                         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.9f, 1f);
                         scaleDownX.setDuration(100);
@@ -426,38 +373,29 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
                         scaleDown.play(scaleDownX).with(scaleDownY);
                         scaleDown.start();
 
-                        scaleDown.addListener(new Animator.AnimatorListener()
-                        {
+                        scaleDown.addListener(new Animator.AnimatorListener() {
                             @Override
-                            public void onAnimationStart(Animator animator)
-                            {
+                            public void onAnimationStart(Animator animator) {
 
                             }
 
                             @Override
-                            public void onAnimationEnd(Animator animator)
-                            {
-                                if (isSharingOrDeleting)
-                                {
+                            public void onAnimationEnd(Animator animator) {
+                                if (isSharingOrDeleting) {
                                     cb = (CheckBox) view.findViewById(R.id.checkBox);
-                                    if (cb.isChecked())
-                                    {
+                                    if (cb.isChecked()) {
                                         imgAdapter.selFiles.remove(imgAdapter.compImgs[position]);
                                         imgAdapter.isChecked[position] = false;
                                         if (selAllCb.isChecked())
                                             selAllCb.setChecked(false);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         imgAdapter.selFiles.add(imgAdapter.compImgs[position]);
                                         imgAdapter.isChecked[position] = true;
                                         if (imgAdapter.selFiles.size() == compImgs.length)
                                             selAllCb.setChecked(true);
                                     }
                                     cb.setChecked(!cb.isChecked());
-                                }
-                                else
-                                {
+                                } else {
                                     Intent i = new Intent(CompGallery.this, ImagePager.class);
                                     i.putExtra("filepath", imgAdapter.compImgs[position].getAbsolutePath());
                                     startActivity(i);
@@ -467,14 +405,12 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
                             }
 
                             @Override
-                            public void onAnimationCancel(Animator animator)
-                            {
+                            public void onAnimationCancel(Animator animator) {
 
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animator animator)
-                            {
+                            public void onAnimationRepeat(Animator animator) {
 
                             }
                         });
