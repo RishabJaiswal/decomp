@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +16,17 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Rishab on 22-10-2015.
  */
-public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-{
+public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     File[] orgImgs;
     Context cntxt;
     String kb = " kb";
@@ -39,11 +39,10 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private long orgSize;
     private AdRequest adRequest;
     private final int AD_THRESHOLD = 5;
-    private final int NATIVE_AD_TYPE = 1;
+    private final int AD_TYPE = 1;
     private final int NO_AD_TYPE = 0;
 
-    public CompressingAdapter(Context context, File[] orgImgss)
-    {
+    public CompressingAdapter(Context context, File[] orgImgss) {
         orgImgs = orgImgss;
         cntxt = context;
         compGallery = ((CompGallery) cntxt);
@@ -65,20 +64,17 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
+    public int getItemViewType(int position) {
         if (position != 0 && (position + 1) % (AD_THRESHOLD + 1) == 0)
-            return NATIVE_AD_TYPE;
+            return AD_TYPE;
         return NO_AD_TYPE;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.LayoutParams rlp = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
                 RecyclerView.LayoutParams.WRAP_CONTENT);
-        if (viewType == NATIVE_AD_TYPE)
-        {
+        if (viewType == AD_TYPE) {
             View view = LayoutInflater.from(cntxt).inflate(R.layout.compress_dialog_native_ad, null, false);
             view.setLayoutParams(rlp);
             return new AdHolder(view);
@@ -89,10 +85,8 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHoldolder, int pos)
-    {
-        if (viewHoldolder.getItemViewType() == NO_AD_TYPE)
-        {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHoldolder, int pos) {
+        if (viewHoldolder.getItemViewType() == NO_AD_TYPE) {
             ItemHolder holder = (ItemHolder) viewHoldolder;
             int position = pos - (pos / (AD_THRESHOLD + 1));
             currFile = orgImgs[position];
@@ -101,8 +95,7 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.fileNameTv.setText(currFile.getName());
             holder.origSizeTv.setText(cntxt.getString(R.string.original) + " " +
                     CompressTaskFragment.converter(orgSize, 0));
-            if (isCompressed[position])
-            {
+            if (isCompressed[position]) {
                 holder.compPb.setVisibility(View.GONE);
                 if (orgSize > compSizes[position])
                     holder.compStatusTv.setText(R.string.compressed);
@@ -119,16 +112,13 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return orgImgs.length + orgImgs.length / AD_THRESHOLD;
     }
 
     @Override
-    public void onViewRecycled(RecyclerView.ViewHolder viewHolder)
-    {
-        if (viewHolder.getItemViewType() == NO_AD_TYPE)
-        {
+    public void onViewRecycled(RecyclerView.ViewHolder viewHolder) {
+        if (viewHolder.getItemViewType() == NO_AD_TYPE) {
             ItemHolder holder = (ItemHolder) viewHolder;
             holder.compPb.setVisibility(View.VISIBLE);
             holder.compStatusTv.setText(R.string.compressing);
@@ -137,15 +127,12 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private void loadBitmap(ImageView imageView, File file)
-    {
+    private void loadBitmap(ImageView imageView, File file) {
         Bitmap bmp;
-        synchronized (imageLruCache)
-        {
+        synchronized (imageLruCache) {
             bmp = imageLruCache.get(file.getAbsolutePath());
         }
-        if (bmp != null)
-        {
+        if (bmp != null) {
             imageView.setImageBitmap(bmp);
             return;
         }
@@ -162,28 +149,24 @@ public class CompressingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     //native add
-    private class AdHolder extends RecyclerView.ViewHolder
-    {
-        NativeExpressAdView nativeAdView;
+    private class AdHolder extends RecyclerView.ViewHolder {
+        AdView adView;
 
-        AdHolder(View itemVIew)
-        {
+        AdHolder(View itemVIew) {
             super(itemVIew);
-            nativeAdView = itemVIew.findViewById(R.id.nativeAdView);
-            nativeAdView.loadAd(adRequest);
+            adView = itemVIew.findViewById(R.id.nativeAdView);
+            adView.loadAd(adRequest);
         }
     }
 }
 
-class ItemHolder extends RecyclerView.ViewHolder
-{
+class ItemHolder extends RecyclerView.ViewHolder {
     ImageView thumbnail;
     LottieAnimationView done;
     TextView fileNameTv, compStatusTv, origSizeTv, compSizeTv;
     ProgressBar compPb;
 
-    ItemHolder(View itemView, Context cntxt)
-    {
+    ItemHolder(View itemView, Context cntxt) {
         super(itemView);
         thumbnail = itemView.findViewById(R.id.thumbnail);
         done = itemView.findViewById(R.id.doneIv);

@@ -1,9 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!--setting activity transitions-->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowExitTransition">@android:transition/explode</item>
