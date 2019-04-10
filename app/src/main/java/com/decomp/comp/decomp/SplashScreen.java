@@ -109,6 +109,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
         li = LayoutInflater.from(this);
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottieBackground);
+        lottieAnimationView.setMaxFrame(70);
         lottieAnimationView.playAnimation();
 
         //setting ad
