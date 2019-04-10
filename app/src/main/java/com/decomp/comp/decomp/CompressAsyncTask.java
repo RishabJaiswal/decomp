@@ -1,6 +1,6 @@
 package com.decomp.comp.decomp;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
+
+import androidx.appcompat.app.AlertDialog;
 
 /**
  * Created by Rishab on 17-10-2015.

@@ -17,7 +17,6 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-
 /**
  * Created by Rishab on 17-10-2015.
  */

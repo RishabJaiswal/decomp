@@ -1,7 +1,7 @@
 package com.decomp.comp.decomp;
 
+
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
@@ -80,14 +80,14 @@ public class ImageLruCache extends LruCache<String, Bitmap> {
                 && targetOptions.inSampleSize == 1;
     }
 
-    static int getBytesPerPixel(Config config) {
-        if (config == Config.ARGB_8888)
+    static int getBytesPerPixel(Bitmap.Config config) {
+        if (config == Bitmap.Config.ARGB_8888)
             return 4;
-        else if (config == Config.RGB_565)
+        else if (config == Bitmap.Config.RGB_565)
             return 2;
-        else if (config == Config.ARGB_4444)
+        else if (config == Bitmap.Config.ARGB_4444)
             return 2;
-        else if (config == Config.ALPHA_8)
+        else if (config == Bitmap.Config.ALPHA_8)
             return 1;
         return 1;
     }
