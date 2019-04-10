@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -286,7 +287,7 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             i.setAction(Intent.ACTION_SEND_MULTIPLE);
             i.setType("image/*");
             for (File file : imgAdapter.selFiles)
-                filesToShare.add(Uri.fromFile(file));
+                filesToShare.add(getUriFromFile(file));
             i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare);
             startActivity(Intent.createChooser(i, getString(R.string.share)));
             retainFragment.isSharingOrDeleting = false;
@@ -341,6 +342,10 @@ public class CompGallery extends AppCompatActivity implements View.OnClickListen
             alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
+    }
+
+    private Uri getUriFromFile(File file) {
+        return FileProvider.getUriForFile(this,  BuildConfig.APPLICATION_ID + ".file.provider", file);
     }
 
     private void stopShareNDel() {
