@@ -1,5 +1,6 @@
 package com.decomp.comp.decomp;
 
+
 import android.Manifest;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
@@ -12,20 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -35,16 +25,21 @@ import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class SplashScreen extends AppCompatActivity implements View.OnClickListener
-{
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+
+public class SplashScreen extends AppCompatActivity implements View.OnClickListener {
     private SeekBar seekBar;
 
     private Intent intent;
@@ -55,18 +50,15 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
     private int progress = 50;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
         initialize();
 
-        if (savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             goingToComp = savedInstanceState.getBoolean("goingToComp");
             compClicked = savedInstanceState.getBoolean("compClicked");
-            if (goingToComp)
-            {
+            if (goingToComp) {
                 images = savedInstanceState.getParcelableArrayList("images");
                 progress = savedInstanceState.getInt("progress");
             }
@@ -74,34 +66,26 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         if (compClicked && goingToComp)
             showCompDialog(progress);
 
         //setting directory for compressed images
-        if (!Environment.isExternalStorageRemovable() && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-        {
+        if (!Environment.isExternalStorageRemovable() && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             //createFolder();
             checkPermissions();
-        }
-        else if (Environment.isExternalStorageRemovable())
-        {
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-            {
+        } else if (Environment.isExternalStorageRemovable()) {
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 //createFolder();
                 checkPermissions();
-            }
-            else
-            {
+            } else {
                 findViewById(R.id.selImgFab).setVisibility(View.INVISIBLE);
                 findViewById(R.id.compGalFab).setVisibility(View.INVISIBLE);
                 findViewById(R.id.btn_changePermissions).setVisibility(View.INVISIBLE);
                 Snackbar.make(findViewById(R.id.splshScrnlayout), "External media storage not found", Snackbar.LENGTH_LONG).show();
             }
-        }
-        else
+        } else
             Snackbar.make(findViewById(R.id.splshScrnlayout), "There is a media storage problem", Snackbar.LENGTH_LONG).show();
 
         //setting decomped files count
@@ -111,34 +95,30 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("goingToComp", goingToComp);
         outState.putBoolean("compClicked", compClicked);
-        if (goingToComp)
-        {
+        if (goingToComp) {
             outState.putParcelableArrayList("images", images);
             outState.putInt("progress", seekBar.getProgress());
         }
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
         li = LayoutInflater.from(this);
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottieBackground);
-        lottieAnimationView.playAnimation(0.2f, 0.8f);
+        lottieAnimationView.setMaxFrame(70);
+        lottieAnimationView.playAnimation();
 
         //setting ad
         final AdView adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-        adView.setAdListener(new AdListener()
-        {
+        adView.setAdListener(new AdListener() {
             @Override
-            public void onAdLoaded()
-            {
+            public void onAdLoaded() {
                 super.onAdLoaded();
 
                 //adding adview
@@ -173,17 +153,13 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             createFolder();
             findViewById(R.id.selImgFab).setVisibility(View.VISIBLE);
             findViewById(R.id.compGalFab).setVisibility(View.VISIBLE);
             findViewById(R.id.btn_changePermissions).setVisibility(View.INVISIBLE);
-        }
-        else
-        {
+        } else {
             showRationale();
             findViewById(R.id.selImgFab).setVisibility(View.INVISIBLE);
             findViewById(R.id.compGalFab).setVisibility(View.INVISIBLE);
@@ -191,8 +167,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void openPermissions()
-    {
+    private void openPermissions() {
         Intent i = new Intent();
         i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         i.addCategory(Intent.CATEGORY_DEFAULT);
@@ -204,23 +179,19 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == Constants.REQUEST_CODE && resultCode == RESULT_OK && data != null)
-        {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             //The array list has the image paths of the selected images
             images = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             goingToComp = true;
         }
     }
 
-    private void createFolder()
-    {
+    private void createFolder() {
         String extStrDir = Environment.getExternalStorageDirectory().getAbsolutePath();
         extStrDir += File.separator + "decomp";
         File decompDir = new File(extStrDir);
-        if (!decompDir.exists())
-        {
+        if (!decompDir.exists()) {
             if (decompDir.mkdir())
                 Snackbar.make(findViewById(R.id.splshScrnlayout), R.string.dir_decomp_created, Snackbar.LENGTH_LONG).show();
             else
@@ -229,8 +200,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
 
         SharedPreferences dirPref = getSharedPreferences("dir", MODE_PRIVATE);
         dirPref.edit().putString("dir", extStrDir).apply();
-        try
-        {
+        try {
             int deCompedImages = new File(extStrDir).listFiles().length;
             if (deCompedImages == 0)
                 dirPref.edit().putLong("imgName", Long.MAX_VALUE).apply();
@@ -238,31 +208,23 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                 getSharedPreferences(getString(R.string.pref_user_data), MODE_PRIVATE).edit()
                         .putLong(getString(R.string.pref_decompCount), deCompedImages).apply();
             ((TextView) findViewById(R.id.decomped_count)).setText(String.valueOf(deCompedImages));
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
     }
 
-    private void checkPermissions()
-    {
+    private void checkPermissions() {
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED)
-        {
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             findViewById(R.id.selImgFab).setVisibility(View.INVISIBLE);
             findViewById(R.id.compGalFab).setVisibility(View.INVISIBLE);
             findViewById(R.id.btn_changePermissions).setVisibility(View.VISIBLE);
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 showRationale();
-            }
-            else
-            {
+            } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
-        }
-        else
-        {
+        } else {
             findViewById(R.id.selImgFab).setVisibility(View.VISIBLE);
             findViewById(R.id.compGalFab).setVisibility(View.VISIBLE);
             findViewById(R.id.btn_changePermissions).setVisibility(View.INVISIBLE);
@@ -270,22 +232,18 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void showRationale()
-    {
+    private void showRationale() {
         Snackbar.make(findViewById(R.id.splshScrnlayout), "Cannot access directories. Access required " +
                 "to store compressed images", Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_settings, new View.OnClickListener()
-                {
+                .setAction(R.string.action_settings, new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
+                    public void onClick(View view) {
                         openPermissions();
                     }
                 }).show();
     }
 
-    private void showCompDialog(int progress)
-    {
+    private void showCompDialog(int progress) {
         int noImgs = images.size();
         String img = null;
         if (noImgs == 1)
@@ -302,11 +260,9 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder builder = new AlertDialog.Builder(SplashScreen.this, R.style.MyAlertDialogStyle);
         builder.setTitle(images.size() + " " + img);
         instruction.setText(R.string.set_quality);
-        builder.setPositiveButton(R.string.statCompressingBtn, new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton(R.string.statCompressingBtn, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int id)
-            {
+            public void onClick(DialogInterface dialogInterface, int id) {
                 intent = new Intent(getApplicationContext(), CompGallery.class);
                 intent.putExtra("isCompressing", true);
                 intent.putExtra("compFactor", seekBar.getProgress());
@@ -314,21 +270,17 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                 goingToComp = false;
                 compClicked = false;
                 dialogInterface.dismiss();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     startActivity(intent,
                             ActivityOptions.makeSceneTransitionAnimation(
                                     SplashScreen.this).toBundle());
-                }
-                else
+                } else
                     startActivity(intent);
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-        {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 goingToComp = false;
                 compClicked = false;
                 dialogInterface.cancel();
@@ -340,8 +292,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         compressingDialog.show();
     }
 
-    private AlertDialog buildInfoDialog()
-    {
+    private AlertDialog buildInfoDialog() {
         //alert dialog's view
         View infoDialogView = li.inflate(R.layout.info, null);
         Typeface regular = ResourcesCompat.getFont(this, R.font.roboto_regular);
@@ -360,35 +311,28 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.infoFab:
-            {
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.infoFab: {
                 buildInfoDialog().show();
                 break;
             }
-            case R.id.selImgFab:
-            {
+            case R.id.selImgFab: {
                 compClicked = true;
                 Intent intent = new Intent(SplashScreen.this, AlbumSelectActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 100);
                 startActivityForResult(intent, Constants.REQUEST_CODE);
                 break;
             }
-            case R.id.compGalFab:
-            {
+            case R.id.compGalFab: {
                 Intent i = new Intent(getApplicationContext(), CompGallery.class);
                 startActivity(i);
                 break;
             }
-            case R.id.btn_changePermissions:
-            {
+            case R.id.btn_changePermissions: {
                 openPermissions();
             }
-            case R.id.mye_promo_fab:
-            {
+            case R.id.mye_promo_fab: {
                 View myeView = getLayoutInflater().inflate(R.layout.mye_promotion, null);
                 myeView.findViewById(R.id.install_mye_button).setOnClickListener(this);
                 myeView.findViewById(R.id.know_more).setOnClickListener(this);
@@ -398,14 +342,12 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                         .show();
                 break;
             }
-            case R.id.install_mye_button:
-            {
+            case R.id.install_mye_button: {
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("market://details?id=com.mindyourearth.planet")));
                 break;
             }
-            case R.id.know_more:
-            {
+            case R.id.know_more: {
 
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("https://medium.com/@rishabjaiswal/mind-your-earth-digitizing-a-long-known-problem-ecc03bdf9bf")));

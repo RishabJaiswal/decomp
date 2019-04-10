@@ -21,7 +21,7 @@
         android:background="#30424242"
         android:layout_below="@+id/compressingTxtTv"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/compressingRecView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

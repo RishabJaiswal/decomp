@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coord"
@@ -8,11 +9,11 @@
     android:layout_gravity="center_horizontal"
     android:background="#fff">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:minHeight="?attr/actionBarSize"
@@ -23,7 +24,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/images">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -42,13 +43,13 @@
                     android:textColor="#fff"
                     android:visibility="invisible"/>
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/imgRecView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
         android:layout_gravity="center"
         android:visibility="invisible"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/shareFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +78,7 @@
         app:srcCompat="@drawable/share"
         app:fabSize="normal" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,4 +90,4 @@
         android:layout_marginLeft="16dp"
         app:backgroundTint="#F44336" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
