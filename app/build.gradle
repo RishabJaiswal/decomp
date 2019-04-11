@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -9,8 +18,8 @@ android {
         applicationId "com.decomp.comp.decomp"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 10
-        versionName "3.0.0"
+        versionCode 11
+        versionName "v1.1.1-${getGitHash()}"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -19,12 +28,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            //changes the generated .apk name
+            if (variant.name.contains("release")) {
+                def formattedDate = new Date().format('dd.MM.yy_HHmm')
+                outputFileName = "decomp_${variant.name}_${variant.versionCode}_${formattedDate}_${getGitHash()}.apk"
+            }
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core:1.0.1'
     implementation 'com.google.android.material:material:1.1.0-alpha05'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
     implementation 'com.github.darsh2:MultipleImageSelect:v0.0.4'
