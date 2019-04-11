@@ -92,7 +92,6 @@ public class CompressTaskFragment extends DialogFragment {
             compressTask.execute(imgs);
 
         this.setCancelable(false);
-        setRetainInstance(true);
         super.onCreate(savedInstanceState);
     }
 
