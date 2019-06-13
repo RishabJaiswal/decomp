@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -21,10 +25,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 public class ImagePager extends AppCompatActivity implements View.OnClickListener {
     ImageView imgView;
@@ -89,10 +89,7 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
         AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), null, task);
         imgView.setImageDrawable(asyncDrawable);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, file);
-        else
-            task.execute(file);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, file);
     }
 
     @Override
