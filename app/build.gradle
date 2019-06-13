@@ -18,8 +18,8 @@ android {
         applicationId "com.decomp.comp.decomp"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 11
-        versionName "v1.1.1-${getGitHash()}"
+        versionCode 12
+        versionName "v1.2.2-${getGitHash()}"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
