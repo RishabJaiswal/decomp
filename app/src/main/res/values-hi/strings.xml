@@ -51,11 +51,18 @@
     <string name="comp">कोम्प</string>
     <string name="images_decomped">तस्वीरें\nडीकोम्प है</string>
 
-    <!--Mind your Earth promo-->
-    <string name="our_planet">हमारी पृथ्वी</string>
-    <string name="mind_your_earth">Mind your Earth</string>
-    <string name="mind_your_earth_descripion">कचरा डिजीटल करें और उन्हें अपने नक्शे पर खोजें। एक लंबी ज्ञात समस्या का समाधान करे।</string>
+    <!--App promo-->
     <string name="install">इंस्टॉल करें</string>
-    <string name="know_more">अधिक जानिए</string>
+    <string name="promo_secondary_btn_text">अधिक जानिए</string>
+
+    <!--Note Owl promo-->
+    <string name="note_owl_promo_label">Note making</string>
+    <string name="note_owl_app_name">Note Owl</string>
+    <string name="note_owl_promo_descripion">If you haven\'t caught up with your writing habits, try note making with Note Owl. Those small scribbles, details descriptions or just a visual reminder are helpful</string>
+
+    <!--Mind your Earth promo-->
+    <!--<string name="our_planet">हमारी पृथ्वी</string>
+    <string name="mind_your_earth">Mind your Earth</string>
+    <string name="mind_your_earth_descripion">कचरा डिजीटल करें और उन्हें अपने नक्शे पर खोजें। एक लंबी ज्ञात समस्या का समाधान करे।</string>-->
 
 </resources>
