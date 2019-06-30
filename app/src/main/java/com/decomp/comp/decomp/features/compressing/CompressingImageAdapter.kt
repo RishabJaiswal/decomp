@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.LayoutInflater
@@ -83,10 +84,19 @@ class CompressingImageAdapter(
         //on palette color generated
         override fun onGenerated(palette: Palette?) {
             palette?.let {
-                ColorStateList.valueOf(it.getVibrantColor(Color.RED))?.let { color ->
-                    ViewCompat.setBackgroundTintList(itemView.scrim_image, color)
-                    ViewCompat.setBackgroundTintList(itemView.pb_compressing_image, color)
+                val color = it.getVibrantColor(Color.RED)
+                ColorStateList.valueOf(color)?.let { colorStateList ->
+                    ViewCompat.setBackgroundTintList(itemView.scrim_image, colorStateList)
+                    setProgressColor(color)
                 }
+            }
+        }
+
+        private fun setProgressColor(color: Int) {
+            itemView.pb_compressing_image.apply {
+                val progressDrawable = indeterminateDrawable.mutate()
+                progressDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                this.progressDrawable = progressDrawable
             }
         }
     }
