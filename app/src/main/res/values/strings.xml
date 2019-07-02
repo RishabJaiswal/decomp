@@ -42,6 +42,9 @@
     <string name="total">Total: </string>
     <string name="done">Done</string>
 
+    <!--compressing screen-->
+    <string name="file_size" translatable="false"> %1$.1f\n%2$s</string>
+
     <string name="no_images_show">No DeComped image</string>
     <!--deleting images and sharing on CompGallery Activity-->
     <string name="deleteImages">Delete these images?</string>

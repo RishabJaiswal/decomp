@@ -11,17 +11,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.darsh.multipleimageselect.models.Image;
-
-import java.io.File;
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.darsh.multipleimageselect.models.Image;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Rishab on 06-11-2015.
