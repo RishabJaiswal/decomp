@@ -7,4 +7,5 @@ class SelectedImage(val image: Image) : File(image.path) {
     var isCompressed: Boolean = false
     var color: Int? = null
     var textColor: Int? = null
+    var compressImageBytes: Long = 0L
 }

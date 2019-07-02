@@ -15,10 +15,9 @@ class CompressingImagesActivity : AppCompatActivity() {
 
     private val images: Array<SelectedImage> by lazy {
         intent.getParcelableArrayListExtra<Image>(KEY_IMAGES).let { images ->
-            val imagesArray = Array(images.size) {
+            Array(images.size) {
                 SelectedImage(images[it])
             }
-            return@lazy imagesArray
         }
     }
 

@@ -42,6 +42,7 @@ class CompressTask(private val compFactor: Int,
 
                     //publishing changes
                     image.isCompressed = true
+                    image.compressImageBytes = compressedImgBytes.size.toLong()
                     totalCompressedBytes += compressedImgBytes.size.toLong()
                     publishProgress(index)
                 }
