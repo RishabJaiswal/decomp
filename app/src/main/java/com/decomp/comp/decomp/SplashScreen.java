@@ -19,6 +19,13 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
@@ -31,13 +38,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 public class SplashScreen extends AppCompatActivity implements View.OnClickListener {
     private SeekBar seekBar;
@@ -252,8 +252,8 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
             img = getString(R.string.images_selected);
 
         View dialogView = li.inflate(R.layout.compressing_dialog, null);
-        seekBar = (SeekBar) dialogView.findViewById(R.id.seekBar);
-        TextView instruction = (TextView) dialogView.findViewById(R.id.instruct);
+        seekBar = dialogView.findViewById(R.id.seekBar);
+        TextView instruction = dialogView.findViewById(R.id.instruct);
         seekBar.setProgress(progress);
 
         //building and showing dialog
@@ -333,7 +333,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                 openPermissions();
             }
             case R.id.mye_promo_fab: {
-                View myeView = getLayoutInflater().inflate(R.layout.mye_promotion, null);
+                View myeView = getLayoutInflater().inflate(R.layout.promotion, null);
                 myeView.findViewById(R.id.install_mye_button).setOnClickListener(this);
                 myeView.findViewById(R.id.know_more).setOnClickListener(this);
                 new AlertDialog.Builder(SplashScreen.this)
@@ -344,13 +344,13 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.install_mye_button: {
                 startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id=com.mindyourearth.planet")));
+                        Uri.parse("market://details?id=com.owl.noteowl")));
                 break;
             }
             case R.id.know_more: {
 
                 startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://medium.com/@rishabjaiswal/mind-your-earth-digitizing-a-long-known-problem-ecc03bdf9bf")));
+                        Uri.parse("https://www.youtube.com/watch?v=xkYkOyni4fE&t=3s")));
                 break;
             }
         }

@@ -3,6 +3,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -11,8 +20,8 @@ android {
         applicationId "com.decomp.comp.decomp"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 10
-        versionName "3.0.0"
+        versionCode 12
+        versionName "v1.2.2-${getGitHash()}"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -21,23 +30,33 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            //changes the generated .apk name
+            if (variant.name.contains("release")) {
+                def formattedDate = new Date().format('dd.MM.yy_HHmm')
+                outputFileName = "decomp_${variant.name}_${variant.versionCode}_${formattedDate}_${getGitHash()}.apk"
+            }
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'androidx.core:core:1.0.2'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'com.github.darsh2:MultipleImageSelect:v0.0.4'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha04'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-ads:17.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha06'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-ads:18.0.0'
     implementation 'com.airbnb.android:lottie:2.8.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.android.support:palette-v7:28.0.0'
     //crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation "androidx.core:core-ktx:1.0.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Required for all integration of Flurry, includes Analytics

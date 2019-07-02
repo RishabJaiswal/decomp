@@ -58,12 +58,22 @@
     <string name="comp">Comp</string>
     <string name="images_decomped">images\ndecomped</string>
 
-    <!--Mind your Earth promo-->
-    <string name="our_planet">Our Planet</string>
+    <!--App promo-->
+    <string name="app_promo_label" translatable="false">@string/note_owl_promo_label</string>
+    <string name="app_promo_title" translatable="false">@string/note_owl_app_name</string>
+    <string name="app_promo_descripion" translatable="false">@string/note_owl_promo_descripion</string>
+    <string name="install">Install App</string>
+    <string name="promo_secondary_btn_text">Watch Video</string>
+
+    <!--Note Owl promo-->
+    <string name="note_owl_promo_label">Note making</string>
+    <string name="note_owl_app_name">Note Owl</string>
+    <string name="note_owl_promo_descripion">If you haven\'t caught up with your writing habits, try note making with Note Owl. Write small scribbles, detailed descriptions or just a helpful visual reminder.</string>
+
+    <!--Mind Your Earth promo-->
+    <!--<string name="our_planet">Our Planet</string>
     <string name="mind_your_earth">Mind your Earth</string>
-    <string name="mind_your_earth_descripion">Digitize trash and locate them on your map. Solving a long known problem.</string>
-    <string name="install">Install</string>
-    <string name="know_more">Know more</string>
+    <string name="mind_your_earth_descripion">Digitize trash and locate them on your map. Solving a long known problem.</string>-->
 
     <!--preferences-->
     <string name="pref_decompCount" translatable="false">decompedCount</string>
