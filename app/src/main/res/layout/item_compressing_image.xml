@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="24dp"
-    android:paddingLeft="24dp"
-    android:paddingEnd="24dp"
-    android:paddingRight="24dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bg_rectangle_white"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
 
     <!--scrim for original file size-->
     <View
@@ -18,7 +18,7 @@
         android:layout_height="@dimen/compressing_image"
         android:layout_marginStart="50dp"
         android:layout_marginLeft="50dp"
-        android:background="@drawable/bg_rectangle_opac_40"
+        android:background="@drawable/bg_rectangle_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,6 +39,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="190\nMb"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toEndOf="@+id/imv_bitmap"
         app:layout_constraintBottom_toBottomOf="@+id/scrim_image"
         app:layout_constraintEnd_toEndOf="@+id/scrim_image"
@@ -55,6 +58,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/imv_bitmap"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imv_bitmap"
+        android:textStyle="bold"
         tools:text="108\nMb" />
 
     <!--progress-->
@@ -62,13 +66,13 @@
         android:id="@+id/pb_compressing_image"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/compress_pb_height"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:indeterminate="true"
         android:max="100"
-        app:layout_constraintEnd_toStartOf="@+id/tv_compressed_size"
+        android:indeterminateDrawable="@drawable/progress_bar_compress"
+        android:progressDrawable="@drawable/progress_bar_compress"
+        app:layout_constraintEnd_toEndOf="@+id/tv_compressed_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imv_bitmap"
         tools:progress="50" />
@@ -76,11 +80,51 @@
     <!--file name-->
     <TextView
         android:id="@+id/tv_file_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintEnd_toStartOf="@+id/tv_compressed_by"
         app:layout_constraintStart_toStartOf="@+id/pb_compressing_image"
         app:layout_constraintTop_toBottomOf="@+id/pb_compressing_image"
         tools:text="image compress.jog" />
+
+    <!--done animation-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/anim_done"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imv_bitmap"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="@+id/imv_bitmap"
+        app:layout_constraintStart_toStartOf="@+id/imv_bitmap"
+        app:layout_constraintTop_toTopOf="@+id/imv_bitmap"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="checked_done_.json"
+        app:lottie_loop="false" />
+
+    <!--compression state-->
+    <TextView
+        android:id="@+id/tv_compressed_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rectangle_white"
+        android:backgroundTint="#558b2f"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="2dp"
+        android:gravity="center"
+        tools:text="50%"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_file_name"
+        app:layout_constraintEnd_toEndOf="@+id/tv_compressed_size"
+        app:layout_constraintStart_toStartOf="@+id/tv_compressed_size" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
