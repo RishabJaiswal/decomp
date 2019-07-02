@@ -15,13 +15,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.ImageFileProvider
 import com.decomp.comp.decomp.utils.Utils
+import com.decomp.comp.decomp.utils.visibleOrGone
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.item_compressing_image.view.*
 
 class CompressingImageAdapter(
         private val context: Context,
-        private val list: List<SelectedImage>
+        private val list: Array<SelectedImage>
 ) : RecyclerView.Adapter<CompressingImageAdapter.ViewHolder>() {
 
 
@@ -79,12 +80,18 @@ class CompressingImageAdapter(
                 Picasso.get()
                         .load(ImageFileProvider.getImageUri(context, image.path))
                         .into(imageTarget)
+
+                //setting original file size
+                val fileSize = Utils.convertSize(image.length().toFloat(), 0)
+                tv_bitmap_size.text = context.getString(R.string.file_size, fileSize.first, fileSize.second)
                 tv_file_name.text = image.name
+
+                pb_compressing_image.isIndeterminate = !image.isCompressed
                 if (image.isCompressed) {
                     pb_compressing_image.progress = pb_compressing_image.max
                 }
-                val fileSize = Utils.convertSize(image.length().toFloat(), 0)
-                tv_bitmap_size.text = context.getString(R.string.file_size, fileSize.first, fileSize.second)
+                tv_compressed_by.visibleOrGone(image.isCompressed)
+                anim_done.visibleOrGone(image.isCompressed)
             }
         }
 

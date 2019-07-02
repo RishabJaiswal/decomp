@@ -5,6 +5,6 @@
     <dimen name="compressing_items_pad">0.5dp</dimen>
     <dimen name="checkbox_dimen">40dp</dimen>
     <dimen name="compressing_image">108dp</dimen>
-    <dimen name="compress_pb_height">4dp</dimen>
+    <dimen name="compress_pb_height">1dp</dimen>
     <dimen name="compress_image_card_radius">8dp</dimen>
 </resources>

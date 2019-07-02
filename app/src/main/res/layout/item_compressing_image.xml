@@ -59,7 +59,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imv_bitmap"
         android:textStyle="bold"
-        android:text="108\nMb" />
+        tools:text="108\nMb" />
 
     <!--progress-->
     <ProgressBar
@@ -70,6 +70,7 @@
         android:layout_marginTop="8dp"
         android:indeterminate="true"
         android:max="100"
+        android:indeterminateDrawable="@drawable/progress_bar_compress"
         android:progressDrawable="@drawable/progress_bar_compress"
         app:layout_constraintEnd_toEndOf="@+id/tv_compressed_size"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,6 +97,7 @@
         android:id="@+id/anim_done"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imv_bitmap"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="@+id/imv_bitmap"
@@ -117,7 +119,8 @@
         android:paddingEnd="8dp"
         android:paddingBottom="2dp"
         android:gravity="center"
-        android:text="50%"
+        tools:text="50%"
+        android:visibility="gone"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_file_name"
