@@ -10,6 +10,7 @@ import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
 import com.decomp.comp.decomp.utils.Utils
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_compressing_images.*
 import kotlinx.android.synthetic.main.bottom_sheet_compressing_images.*
 
@@ -35,6 +36,10 @@ class CompressingImagesActivity : AppCompatActivity() {
         getSharedPreferences("dir", Context.MODE_PRIVATE).getString("dir", null)
     }
 
+    private val compressProgressBottomSheet by lazy {
+        BottomSheetBehavior.from(bs_compress_progress)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compressing_images)
@@ -43,8 +48,9 @@ class CompressingImagesActivity : AppCompatActivity() {
             CompressTask(compFactor, baseDir, this::updateItem, this::onCompressionComplete)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, *images)
         }, 2000)
-        pb_compressing.max = images.size
         setTotalUncompressedSize()
+        pb_compressing.max = images.size
+        compressProgressBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun updateItem(position: Int, imagesCompressed: Int, totalCompressedBytes: Long) {
@@ -69,6 +75,7 @@ class CompressingImagesActivity : AppCompatActivity() {
         //setting formatted uncompressed files size
         Utils.convertSize(totalSize.toFloat()).apply {
             tv_uncompressed_size.text = getString(R.string.file_size, this.first, this.second)
+            compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 }
