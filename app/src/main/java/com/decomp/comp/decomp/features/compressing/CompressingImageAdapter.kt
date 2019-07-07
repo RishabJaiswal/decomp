@@ -91,7 +91,7 @@ class CompressingImageAdapter(
                 if (image.isCompressed) {
                     pb_compressing_image.progress = pb_compressing_image.max
                     tv_compressed_by.text = "${Utils.findPercentDiff(image.compressImageBytes, image.length()).toInt()}%"
-                    val compressFileSize = Utils.convertSize(image.compressImageBytes.toFloat(), 0)
+                    val compressFileSize = Utils.convertSize(image.compressImageBytes.toFloat())
                     tv_compressed_size.text = context.getString(R.string.file_size, compressFileSize.first, compressFileSize.second)
                 }
                 anim_done.visibleOrGone(image.isCompressed)
