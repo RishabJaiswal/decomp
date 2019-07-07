@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.ImageFileProvider
 import com.decomp.comp.decomp.utils.Utils
+import com.decomp.comp.decomp.utils.extensions.getColor
+import com.decomp.comp.decomp.utils.setBackgroundTint
 import com.decomp.comp.decomp.utils.visibleOrGone
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -30,6 +32,8 @@ class CompressingImageAdapter(
     private val AD_THRESHOLD = 5
     private val TYPE_AD = 1
     private val TYPE_IMAGE = 0
+    val imageCompressedColor = R.color.green_800.getColor(context)
+    val imageEnhancedColor = R.color.red_800.getColor(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_compressing_image, parent, false)
@@ -44,7 +48,7 @@ class CompressingImageAdapter(
         return list.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), Palette.PaletteAsyncListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), Palette.PaletteAsyncListener {
 
         lateinit var selectedImage: SelectedImage
 
@@ -81,17 +85,29 @@ class CompressingImageAdapter(
                         .load(ImageFileProvider.getImageUri(context, image.path))
                         .into(imageTarget)
 
-                //setting original file size
+                //setting original file size and name
                 val fileSize = Utils.convertSize(image.length().toFloat(), 0)
                 tv_bitmap_size.text = context.getString(R.string.file_size, fileSize.first, fileSize.second)
                 tv_file_name.text = image.name
 
+                //compressed by label and progress bar
                 tv_compressed_by.visibleOrGone(image.isCompressed)
                 pb_compressing_image.isIndeterminate = !image.isCompressed
+
                 if (image.isCompressed) {
                     pb_compressing_image.progress = pb_compressing_image.max
-                    tv_compressed_by.text = "${Utils.findPercentDiff(image.compressImageBytes, image.length()).toInt()}%"
-                    val compressFileSize = Utils.convertSize(image.compressImageBytes.toFloat(), 0)
+
+                    //setting compressed by & its background
+                    val compressedBy = Utils.findPercentDiff(image.compressImageBytes, image.length()).toInt()
+                    tv_compressed_by.text = "${compressedBy}%"
+                    if (compressedBy < 0) {
+                        tv_compressed_by.setBackgroundTint(imageCompressedColor)
+                    } else {
+                        tv_compressed_by.setBackgroundTint(imageEnhancedColor)
+                    }
+
+                    //compressed file size
+                    val compressFileSize = Utils.convertSize(image.compressImageBytes.toFloat())
                     tv_compressed_size.text = context.getString(R.string.file_size, compressFileSize.first, compressFileSize.second)
                 }
                 anim_done.visibleOrGone(image.isCompressed)

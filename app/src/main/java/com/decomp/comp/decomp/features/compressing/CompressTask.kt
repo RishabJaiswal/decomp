@@ -8,7 +8,7 @@ import java.util.*
 
 class CompressTask(private val compFactor: Int,
                    private val baseDir: String,
-                   private val updateItem: (Int) -> Unit,
+                   private val updateItem: (Int, Int, Long) -> Unit,
                    private val onComplete: (String?) -> Unit) : AsyncTask<SelectedImage, Int, String>() {
 
 
@@ -16,6 +16,7 @@ class CompressTask(private val compFactor: Int,
     private var compressedImgBytes = ByteArray(0)
     private var totalCompressedBytes = 0L
     private var filePath = ""
+    private var imagesCompressed = 0
 
     override fun doInBackground(vararg imgs: SelectedImage): String {
         imgs.forEachIndexed { index, image ->
@@ -44,6 +45,7 @@ class CompressTask(private val compFactor: Int,
                     image.isCompressed = true
                     image.compressImageBytes = compressedImgBytes.size.toLong()
                     totalCompressedBytes += compressedImgBytes.size.toLong()
+                    imagesCompressed++;
                     publishProgress(index)
                 }
             } catch (e: IOException) {
@@ -56,7 +58,7 @@ class CompressTask(private val compFactor: Int,
     override fun onProgressUpdate(vararg values: Int?) {
         values.forEach {
             it?.let { position ->
-                updateItem(position)
+                updateItem(position, imagesCompressed, totalCompressedBytes)
             }
         }
     }
