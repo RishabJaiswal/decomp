@@ -5,4 +5,6 @@
     <color name="colorAccent">#424242</color>
     <color name="primaryTextBlack">#DE000000</color>
     <color name="promo_color">#424242</color>
+    <color name="green_800">#558b2f</color>
+    <color name="red_800">#d84315</color>
 </resources>
