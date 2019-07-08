@@ -109,7 +109,7 @@ public class CompressTaskFragment extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         CompGallery compGallery = ((CompGallery) getActivity());
-        compGallery.isDoneWithDialog = true;
+        compGallery.setDoneWithDialog(true);
     }
 
     @Override
