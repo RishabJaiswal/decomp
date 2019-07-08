@@ -13,6 +13,9 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.BufferedOutputStream;
@@ -23,8 +26,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
-
-import androidx.appcompat.app.AlertDialog;
 
 /**
  * Created by Rishab on 17-10-2015.
@@ -134,9 +135,9 @@ public class CompressAsyncTask extends AsyncTask<File, Integer, String> {
                 CompressTaskFragment.converter(compSize, 0));
         compGallery.compImgs = new File(dir.getString("dir", "")).listFiles();
         Arrays.sort(compGallery.compImgs);
-        compGallery.totalCompImgs = compGallery.compImgs.length;
+        compGallery.setTotalCompImgs(compGallery.compImgs.length);
         compGallery.imgAdapter = new ImageAdapter(taskFragment.getActivity(), compGallery.compImgs);
-        compGallery.imgRecycler.setAdapter(compGallery.imgAdapter);
+        ((RecyclerView) compGallery.findViewById(R.id.imgRecView)).setAdapter(compGallery.imgAdapter);
 
         //sending data to analytics
        /* AnalyticsApplication application = (AnalyticsApplication) compGallery.getApplication();
