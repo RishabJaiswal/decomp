@@ -30,6 +30,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
+import com.decomp.comp.decomp.features.compressing.CompressingImagesActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -263,7 +264,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         builder.setPositiveButton(R.string.statCompressingBtn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
-                intent = new Intent(getApplicationContext(), CompGallery.class);
+                intent = new Intent(getApplicationContext(), CompressingImagesActivity.class);
                 intent.putExtra("isCompressing", true);
                 intent.putExtra("compFactor", seekBar.getProgress());
                 intent.putParcelableArrayListExtra("images", images);

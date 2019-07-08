@@ -1,11 +1,14 @@
 package com.decomp.comp.decomp.features.compressing
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.darsh.multipleimageselect.models.Image
+import com.decomp.comp.decomp.CompGallery
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
@@ -14,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_compressing_images.*
 import kotlinx.android.synthetic.main.bottom_sheet_compressing_images.*
 
-class CompressingImagesActivity : AppCompatActivity() {
+class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
 
     private val images: Array<SelectedImage> by lazy {
         intent.getParcelableArrayListExtra<Image>(KEY_IMAGES).let { images ->
@@ -51,6 +54,15 @@ class CompressingImagesActivity : AppCompatActivity() {
         setTotalUncompressedSize()
         pb_compressing.max = images.size
         compressProgressBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+        btn_done_compressing.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.btn_done_compressing -> {
+                startActivity(Intent(this, CompGallery::class.java))
+            }
+        }
     }
 
     private fun updateItem(position: Int, imagesCompressed: Int, totalCompressedBytes: Long) {
@@ -64,6 +76,7 @@ class CompressingImagesActivity : AppCompatActivity() {
 
     private fun onCompressionComplete(string: String?) {
         tv_lbl_compressing.text = getString(R.string.compressed)
+        compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun setTotalUncompressedSize() {
@@ -75,7 +88,6 @@ class CompressingImagesActivity : AppCompatActivity() {
         //setting formatted uncompressed files size
         Utils.convertSize(totalSize.toFloat()).apply {
             tv_uncompressed_size.text = getString(R.string.file_size, this.first, this.second)
-            compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 }
