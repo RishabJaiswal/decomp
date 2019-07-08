@@ -1,85 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="24dp"
     app:behavior_peekHeight="88dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    android:background="@drawable/bg_rectangle_white"
+    app:strokeColor="#31424242"
+    app:strokeWidth="2dp"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/white"
     android:id="@+id/bs_compress_progress">
 
-    <!--compressing label-->
-    <TextView
-        android:id="@+id/tv_lbl_compressing"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/compressing"
-        android:textColor="@color/primaryTextBlack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="24dp">
 
-    <!--compress value-->
-    <TextView
-        android:id="@+id/tv_compress_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="8/108" />
+        <!--compressing label-->
+        <TextView
+            android:id="@+id/tv_lbl_compressing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/compressing"
+            android:textColor="@color/primaryTextBlack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!--progress for compressing image-->
-    <ProgressBar
-        android:id="@+id/pb_compressing"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="16dp"
-        tools:progress="50"
-        android:progressDrawable="@drawable/progress_bar_compress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_lbl_compressing"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lbl_compressing" />
+        <!--compress value-->
+        <TextView
+            android:id="@+id/tv_compress_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="8/108" />
 
-    <!--uncompressed size-->
-    <TextView
-        android:id="@+id/tv_uncompressed_size"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="24dp"
-        tools:text="5\nMb"
-        android:gravity="center"
-        android:background="@drawable/bg_rectangle_stroked_curved"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pb_compressing" />
+        <!--progress for compressing image-->
+        <ProgressBar
+            android:id="@+id/pb_compressing"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:layout_marginTop="16dp"
+            tools:progress="50"
+            android:progressDrawable="@drawable/progress_bar_compress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_lbl_compressing"
+            app:layout_constraintTop_toBottomOf="@+id/tv_lbl_compressing" />
 
-    <!--label: compressed to-->
-    <TextView
-        android:id="@+id/tv_lbl_compressed_to"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="compressed\n to"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_uncompressed_size"
-        app:layout_constraintEnd_toStartOf="@+id/tv_compressed_bytes"
-        app:layout_constraintStart_toEndOf="@+id/tv_uncompressed_size"
-        app:layout_constraintTop_toTopOf="@+id/tv_uncompressed_size" />
+        <!--uncompressed size-->
+        <TextView
+            android:id="@+id/tv_uncompressed_size"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="24dp"
+            tools:text="5\nMb"
+            android:gravity="center"
+            android:background="@drawable/bg_rectangle_stroked_curved"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pb_compressing" />
 
-    <!--compressed size-->
-    <TextView
-        android:id="@+id/tv_compressed_bytes"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        tools:text="108\nkb"
-        android:gravity="center"
-        android:background="@drawable/bg_circle_grey"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_uncompressed_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_uncompressed_size" />
+        <!--label: compressed to-->
+        <TextView
+            android:id="@+id/tv_lbl_compressed_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="compressed\n to"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_uncompressed_size"
+            app:layout_constraintEnd_toStartOf="@+id/tv_compressed_bytes"
+            app:layout_constraintStart_toEndOf="@+id/tv_uncompressed_size"
+            app:layout_constraintTop_toTopOf="@+id/tv_uncompressed_size" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!--compressed size-->
+        <TextView
+            android:id="@+id/tv_compressed_bytes"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            tools:text="108\nkb"
+            android:gravity="center"
+            android:background="@drawable/bg_circle_grey"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_uncompressed_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_uncompressed_size" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

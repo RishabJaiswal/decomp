@@ -64,6 +64,7 @@ class CompressingImagesActivity : AppCompatActivity() {
 
     private fun onCompressionComplete(string: String?) {
         tv_lbl_compressing.text = getString(R.string.compressed)
+        compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun setTotalUncompressedSize() {
@@ -75,7 +76,6 @@ class CompressingImagesActivity : AppCompatActivity() {
         //setting formatted uncompressed files size
         Utils.convertSize(totalSize.toFloat()).apply {
             tv_uncompressed_size.text = getString(R.string.file_size, this.first, this.second)
-            compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 }
