@@ -49,8 +49,11 @@ class CompressingImageAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ImageViewHolder && position < list.size) {
-            holder.bind(list[position])
+        if (holder is ImageViewHolder) {
+            val positionInList = position - (position / (AD_THRESHOLD + 1))
+            if (positionInList < list.size) {
+                holder.bind(list[positionInList])
+            }
         } else if (holder is AdViewHolder) {
         }
     }
@@ -61,6 +64,12 @@ class CompressingImageAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return if (position != 0 && (position + 1) % (AD_THRESHOLD + 1) == 0) TYPE_AD else TYPE_IMAGE
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is ImageViewHolder) {
+            holder.itemView.imv_bitmap.setImageDrawable(null)
+        }
     }
 
 
@@ -115,7 +124,7 @@ class CompressingImageAdapter(
 
                     //setting compressed by & its background
                     val compressedBy = Utils.findPercentDiff(image.compressImageBytes, image.length()).toInt()
-                    if (compressedBy < 0) {
+                    if (compressedBy <= 0) {
                         tv_compressed_by.text = context.getString(R.string.percentage_compressed, Math.abs(compressedBy))
                         tv_compressed_by.setBackgroundTint(imageCompressedColor)
                     } else {
