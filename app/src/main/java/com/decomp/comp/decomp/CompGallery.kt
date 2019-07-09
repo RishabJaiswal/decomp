@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import androidx.recyclerview.widget.GridLayoutManager
 import com.decomp.comp.decomp.utils.invisible
 import com.decomp.comp.decomp.utils.visible
 import com.google.android.gms.ads.AdListener
@@ -80,7 +79,9 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         compImgs = File(compDir).listFiles()
-        Arrays.sort(compImgs)
+        Arrays.sort(compImgs) { file1, file2 ->
+            if (file1.lastModified() < file2.lastModified()) 1 else -1
+        }
         retainFragment = supportFragmentManager.findFragmentByTag("data") as RetainFragment?
 
         if (retainFragment == null) {
@@ -173,12 +174,10 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
 
         //toolbar and up affordance and action bar
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
 
         //recyclerView, adapter and grid layout manager
-        val gridManager = GridLayoutManager(this, 3)
-        imgRecView.layoutManager = gridManager
         setImgRecyclerClickListener()
 
         //select all check box
