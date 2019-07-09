@@ -13,6 +13,7 @@ import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
 import com.decomp.comp.decomp.utils.Utils
+import com.decomp.comp.decomp.utils.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_compressing_images.*
 import kotlinx.android.synthetic.main.bottom_sheet_compressing_images.*
@@ -77,6 +78,7 @@ class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
     private fun onCompressionComplete(string: String?) {
         tv_lbl_compressing.text = getString(R.string.compressed)
         compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        btn_done_compressing.visible()
     }
 
     private fun setTotalUncompressedSize() {
