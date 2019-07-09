@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:gravity="center">
 
@@ -14,10 +14,10 @@
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/nativeAdView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         ads:adUnitId="@string/compressing_dialog_ad_unit"
-        ads:adSize="280X100">
+        ads:adSize="300X250">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>
