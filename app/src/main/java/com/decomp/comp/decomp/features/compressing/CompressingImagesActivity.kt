@@ -101,7 +101,7 @@ class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun updateItem(position: Int, imagesCompressed: Int, totalCompressedBytes: Long) {
-        compressingAdapter.notifyItemChanged(position)
+        compressingAdapter.updateItem(position)
         pb_compressing.progress = imagesCompressed
         tv_compress_progress.text = getString(R.string.compress_progress, imagesCompressed, images.size)
         Utils.convertSize(totalCompressedBytes.toFloat()).apply {

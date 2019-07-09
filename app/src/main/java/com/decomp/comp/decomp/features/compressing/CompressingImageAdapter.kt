@@ -50,7 +50,7 @@ class CompressingImageAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ImageViewHolder) {
-            val positionInList = position - (position / (AD_THRESHOLD + 1))
+            val positionInList = getDataSetPosition(position)
             if (positionInList < list.size) {
                 holder.bind(list[positionInList])
             }
@@ -72,6 +72,17 @@ class CompressingImageAdapter(
         }
     }
 
+    fun updateItem(dataSetPosition: Int) {
+        notifyItemChanged(getAdapterPosition(dataSetPosition))
+    }
+
+    private fun getAdapterPosition(dataSetPosition: Int): Int {
+        return dataSetPosition + dataSetPosition / AD_THRESHOLD
+    }
+
+    private fun getDataSetPosition(adapterPosition: Int): Int {
+        return adapterPosition - (adapterPosition / (AD_THRESHOLD + 1))
+    }
 
     inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), Palette.PaletteAsyncListener {
 
