@@ -113,17 +113,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_rectangle_white"
+        android:gravity="center"
         android:paddingStart="8dp"
         android:paddingTop="2dp"
         android:paddingEnd="8dp"
         android:paddingBottom="2dp"
-        android:gravity="center"
-        tools:text="50%"
-        android:visibility="gone"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_file_name"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tv_compressed_size"
-        app:layout_constraintStart_toStartOf="@+id/tv_compressed_size" />
+        app:layout_constraintStart_toStartOf="@+id/tv_compressed_size"
+        app:layout_constraintTop_toTopOf="@+id/tv_file_name"
+        tools:text="22%\nsaved"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

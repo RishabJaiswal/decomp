@@ -99,10 +99,11 @@ class CompressingImageAdapter(
 
                     //setting compressed by & its background
                     val compressedBy = Utils.findPercentDiff(image.compressImageBytes, image.length()).toInt()
-                    tv_compressed_by.text = "${compressedBy}%"
                     if (compressedBy < 0) {
+                        tv_compressed_by.text = context.getString(R.string.percentage_compressed, Math.abs(compressedBy))
                         tv_compressed_by.setBackgroundTint(imageCompressedColor)
                     } else {
+                        tv_compressed_by.text = context.getString(R.string.percentage_decompressed, compressedBy)
                         tv_compressed_by.setBackgroundTint(imageEnhancedColor)
                     }
 

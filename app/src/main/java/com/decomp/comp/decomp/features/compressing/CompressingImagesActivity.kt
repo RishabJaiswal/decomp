@@ -13,6 +13,7 @@ import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
 import com.decomp.comp.decomp.utils.Utils
+import com.decomp.comp.decomp.utils.extensions.toggle
 import com.decomp.comp.decomp.utils.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_compressing_images.*
@@ -56,12 +57,16 @@ class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
         pb_compressing.max = images.size
         compressProgressBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
         btn_done_compressing.setOnClickListener(this)
+        bs_compress_progress.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.btn_done_compressing -> {
                 startActivity(Intent(this, CompGallery::class.java))
+            }
+            R.id.bs_compress_progress -> {
+                compressProgressBottomSheet.toggle()
             }
         }
     }
