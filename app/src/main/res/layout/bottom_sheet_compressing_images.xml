@@ -16,13 +16,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
 
         <!--compressing label-->
         <TextView
             android:id="@+id/tv_lbl_compressing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
             android:text="@string/compressing"
             android:textColor="@color/primaryTextBlack"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +36,8 @@
             android:id="@+id/tv_compress_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="8/108" />
@@ -44,11 +49,11 @@
             android:layout_width="0dp"
             android:layout_height="6dp"
             android:layout_marginTop="16dp"
-            tools:progress="50"
             android:progressDrawable="@drawable/progress_bar_compress"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_compress_progress"
             app:layout_constraintStart_toStartOf="@+id/tv_lbl_compressing"
-            app:layout_constraintTop_toBottomOf="@+id/tv_lbl_compressing" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_lbl_compressing"
+            tools:progress="50" />
 
         <!--uncompressed size-->
         <TextView
@@ -56,11 +61,11 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="24dp"
-            tools:text="5\nMb"
-            android:gravity="center"
             android:background="@drawable/bg_rectangle_stroked_curved"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pb_compressing" />
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/pb_compressing"
+            app:layout_constraintTop_toBottomOf="@+id/pb_compressing"
+            tools:text="5\nMb" />
 
         <!--label: compressed to-->
         <TextView
@@ -83,23 +88,26 @@
             android:id="@+id/tv_compressed_bytes"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            tools:text="108\nkb"
-            android:gravity="center"
             android:background="@drawable/bg_circle_grey"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/tv_uncompressed_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_uncompressed_size" />
+            app:layout_constraintEnd_toEndOf="@+id/pb_compressing"
+            app:layout_constraintTop_toTopOf="@+id/tv_uncompressed_size"
+            tools:text="108\nkb" />
 
         <!--done button-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_done_compressing"
-            android:layout_width="match_parent"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/done"
-            android:background="@drawable/bg_rectangle_stroked_curved"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/colorAccent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/tv_compressed_bytes"
+            app:layout_constraintStart_toStartOf="@+id/tv_compressed_bytes"
             app:layout_constraintTop_toBottomOf="@+id/tv_uncompressed_size" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

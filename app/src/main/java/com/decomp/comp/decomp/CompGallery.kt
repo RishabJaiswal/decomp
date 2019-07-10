@@ -8,7 +8,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -21,10 +20,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import androidx.recyclerview.widget.GridLayoutManager
 import com.decomp.comp.decomp.utils.invisible
 import com.decomp.comp.decomp.utils.visible
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.snackbar.Snackbar
@@ -36,7 +33,6 @@ import java.util.*
  * Created by Rishab on 17-10-2015.
  */
 class CompGallery : AppCompatActivity(), View.OnClickListener {
-    private var taskFragment: CompressTaskFragment? = null
 
     internal lateinit var imgAdapter: ImageAdapter
     internal lateinit var imageLruCache: ImageLruCache
@@ -51,7 +47,6 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
     private var compDir: String? = null
     internal lateinit var compImgs: Array<File>
     var isSharingOrDeleting = false
-    var isDoneWithDialog = false //checks if users is sharing images
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,25 +57,14 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
             //getWindow().setAllowEnterTransitionOverlap(true);
         }
         initialize()
-        if (savedInstanceState != null)
-            isDoneWithDialog = savedInstanceState.getBoolean("isDoneWithDialog")
-
-        val intent = intent
-        if (intent.getBooleanExtra("isCompressing", false)) {
-            taskFragment = fm.findFragmentByTag("task") as CompressTaskFragment?
-            if (taskFragment == null && !isDoneWithDialog) {
-                taskFragment = CompressTaskFragment.getInstance()
-                taskFragment!!.setData(isDoneWithDialog)
-                taskFragment!!.show(fm.beginTransaction(), "task")
-            }
-        } else
-            isDoneWithDialog = true
     }
 
     override fun onResume() {
         super.onResume()
         compImgs = File(compDir).listFiles()
-        Arrays.sort(compImgs)
+        Arrays.sort(compImgs) { file1, file2 ->
+            if (file1.lastModified() < file2.lastModified()) 1 else -1
+        }
         retainFragment = supportFragmentManager.findFragmentByTag("data") as RetainFragment?
 
         if (retainFragment == null) {
@@ -90,29 +74,27 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
         isSharingOrDeleting = retainFragment!!.isSharingOrDeleting
         status = retainFragment!!.status
 
-        if (isDoneWithDialog || taskFragment != null && taskFragment!!.compressTask.status == AsyncTask.Status.FINISHED) {
-            totalCompImgs = compImgs.size
-            imgAdapter = ImageAdapter(this, compImgs)
-            if (isSharingOrDeleting) {
-                imgAdapter.selFiles = retainFragment!!.selFiles
-                imgAdapter.isChecked = retainFragment!!.isChecked
-                if (retainFragment!!.status == 1)
-                    delFab.invisible()
-                else
-                    shareFab.invisible()
-                selAllCb.visibility = View.VISIBLE
-                if (retainFragment!!.selFiles.size == compImgs.size)
-                    selAllCb.isChecked = true
-            } else if (selAllCb.visibility == View.VISIBLE) {
-                if (selAllCb.isChecked)
-                    selAllCb.isChecked = false
-                selAllCb.visibility = View.INVISIBLE
-                delFab.visible()
-            }
-            imgRecView.adapter = imgAdapter
+        totalCompImgs = compImgs.size
+        imgAdapter = ImageAdapter(this, compImgs)
+        if (isSharingOrDeleting) {
+            imgAdapter.selFiles = retainFragment!!.selFiles
+            imgAdapter.isChecked = retainFragment!!.isChecked
+            if (retainFragment!!.status == 1)
+                delFab.invisible()
+            else
+                shareFab.invisible()
+            selAllCb.visibility = View.VISIBLE
+            if (retainFragment!!.selFiles.size == compImgs.size)
+                selAllCb.isChecked = true
+        } else if (selAllCb.visibility == View.VISIBLE) {
+            if (selAllCb.isChecked)
+                selAllCb.isChecked = false
+            selAllCb.visibility = View.INVISIBLE
+            delFab.visible()
         }
+        imgRecView.adapter = imgAdapter
 
-        if (isDoneWithDialog && compImgs.size == 0) {
+        if (compImgs.size == 0) {
             delFab.visible()
             shareFab.visible()
             noImages.visible()
@@ -122,17 +104,11 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
     override fun onBackPressed() {
         if (isSharingOrDeleting) {
             stopShareNDel()
-        } else if (!isDoneWithDialog) {
         } else {
             if (interstitialAd.isLoaded)
                 interstitialAd.show()
             finish()
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean("isDoneWithDialog", isDoneWithDialog)
     }
 
     override fun onDestroy() {
@@ -158,27 +134,18 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
         fm = supportFragmentManager
 
         //showing ads
-        val flurryExtras = Bundle(1)
         // Set an extra to enable Flurry SDK debug logs
         adRequest = AdRequest.Builder().build()
         interstitialAd = InterstitialAd(this)
         interstitialAd.adUnitId = getString(R.string.interstitial_adunit)
-        interstitialAd.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                if (isDoneWithDialog);
-                //interstitialAd.show();
-            }
-        }
         interstitialAd.loadAd(adRequest)
 
         //toolbar and up affordance and action bar
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
 
         //recyclerView, adapter and grid layout manager
-        val gridManager = GridLayoutManager(this, 3)
-        imgRecView.layoutManager = gridManager
         setImgRecyclerClickListener()
 
         //select all check box
@@ -280,7 +247,7 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
                 else
                     Snackbar.make(coord, R.string.unableToDelete, Snackbar.LENGTH_LONG).show()
                 stopShareNDel()
-                if (compImgs.size == 0) {
+                if (compImgs.isEmpty()) {
                     delFab.invisible()
                     shareFab.invisible()
                     noImages.visible()

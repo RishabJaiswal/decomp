@@ -18,37 +18,73 @@ import com.decomp.comp.decomp.utils.Utils
 import com.decomp.comp.decomp.utils.extensions.getColor
 import com.decomp.comp.decomp.utils.setBackgroundTint
 import com.decomp.comp.decomp.utils.visibleOrGone
+import com.google.android.gms.ads.AdRequest
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import kotlinx.android.synthetic.main.compress_dialog_native_ad.view.*
 import kotlinx.android.synthetic.main.item_compressing_image.view.*
 
 class CompressingImageAdapter(
         private val context: Context,
         private val list: Array<SelectedImage>
-) : RecyclerView.Adapter<CompressingImageAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     //private val adRequest: AdRequest
-    private val AD_THRESHOLD = 5
+    private val AD_THRESHOLD = 6
     private val TYPE_AD = 1
     private val TYPE_IMAGE = 0
     val imageCompressedColor = R.color.green_800.getColor(context)
     val imageEnhancedColor = R.color.red_800.getColor(context)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_compressing_image, parent, false)
-        return ViewHolder(view)
+    private val adRequest: AdRequest by lazy {
+        AdRequest.Builder().build()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(context)
+        if (viewType == TYPE_AD) {
+            return AdViewHolder(layoutInflater.inflate(R.layout.compress_dialog_native_ad, parent, false))
+        }
+        return ImageViewHolder(layoutInflater.inflate(R.layout.item_compressing_image, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ImageViewHolder) {
+            val positionInList = getDataSetPosition(position)
+            if (positionInList < list.size) {
+                holder.bind(list[positionInList])
+            }
+        } else if (holder is AdViewHolder) {
+        }
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return list.size + list.size / AD_THRESHOLD
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), Palette.PaletteAsyncListener {
+    override fun getItemViewType(position: Int): Int {
+        return if (position != 0 && (position + 1) % (AD_THRESHOLD + 1) == 0) TYPE_AD else TYPE_IMAGE
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is ImageViewHolder) {
+            holder.itemView.imv_bitmap.setImageDrawable(null)
+        }
+    }
+
+    fun updateItem(dataSetPosition: Int) {
+        notifyItemChanged(getAdapterPosition(dataSetPosition))
+    }
+
+    private fun getAdapterPosition(dataSetPosition: Int): Int {
+        return dataSetPosition + dataSetPosition / AD_THRESHOLD
+    }
+
+    private fun getDataSetPosition(adapterPosition: Int): Int {
+        return adapterPosition - (adapterPosition / (AD_THRESHOLD + 1))
+    }
+
+    inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), Palette.PaletteAsyncListener {
 
         lateinit var selectedImage: SelectedImage
 
@@ -64,7 +100,7 @@ class CompressingImageAdapter(
                 bitmap?.let {
                     itemView.imv_bitmap.setImageBitmap(it)
                     if (selectedImage.color == null) {
-                        Palette.from(it).generate(this@ViewHolder)
+                        Palette.from(it).generate(this@ImageViewHolder)
                     } else {
                         setImageSizeTint()
                     }
@@ -99,10 +135,11 @@ class CompressingImageAdapter(
 
                     //setting compressed by & its background
                     val compressedBy = Utils.findPercentDiff(image.compressImageBytes, image.length()).toInt()
-                    tv_compressed_by.text = "${compressedBy}%"
-                    if (compressedBy < 0) {
+                    if (compressedBy <= 0) {
+                        tv_compressed_by.text = context.getString(R.string.percentage_compressed, Math.abs(compressedBy))
                         tv_compressed_by.setBackgroundTint(imageCompressedColor)
                     } else {
+                        tv_compressed_by.text = context.getString(R.string.percentage_decompressed, compressedBy)
                         tv_compressed_by.setBackgroundTint(imageEnhancedColor)
                     }
 
@@ -130,6 +167,12 @@ class CompressingImageAdapter(
         private fun setImageSizeTint() {
             ViewCompat.setBackgroundTintList(itemView.scrim_image, ColorStateList.valueOf(selectedImage.color!!))
             itemView.tv_bitmap_size.setTextColor(selectedImage.textColor!!)
+        }
+    }
+
+    inner class AdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.nativeAdView.loadAd(adRequest)
         }
     }
 }
