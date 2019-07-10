@@ -9,7 +9,7 @@ import java.util.*
 class CompressTask(private val compFactor: Int,
                    private val baseDir: String,
                    private val updateItem: (Int, Int, Long) -> Unit,
-                   private val onComplete: (String?) -> Unit) : AsyncTask<SelectedImage, Int, String>() {
+                   private val onComplete: (Int) -> Unit) : AsyncTask<SelectedImage, Int, Int>() {
 
 
     private val compressedBytesOutputStream = ByteArrayOutputStream()
@@ -18,7 +18,7 @@ class CompressTask(private val compFactor: Int,
     private var filePath = ""
     private var imagesCompressed = 0
 
-    override fun doInBackground(vararg imgs: SelectedImage): String {
+    override fun doInBackground(vararg imgs: SelectedImage): Int {
         imgs.forEachIndexed { index, image ->
             try {
                 compressedBytesOutputStream.reset()
@@ -52,7 +52,7 @@ class CompressTask(private val compFactor: Int,
                 cancel(true)
             }
         }
-        return imgs.size.toString()
+        return imgs.size
     }
 
     override fun onProgressUpdate(vararg values: Int?) {
@@ -63,7 +63,7 @@ class CompressTask(private val compFactor: Int,
         }
     }
 
-    override fun onPostExecute(result: String?) {
+    override fun onPostExecute(result: Int) {
         onComplete(result)
     }
 }
