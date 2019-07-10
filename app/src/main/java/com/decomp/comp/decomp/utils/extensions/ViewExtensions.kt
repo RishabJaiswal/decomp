@@ -1,4 +1,4 @@
-package com.decomp.comp.decomp.utils
+package com.decomp.comp.decomp.utils.extensions
 
 import android.view.View
 import androidx.annotation.ColorInt

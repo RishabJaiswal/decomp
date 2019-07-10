@@ -20,8 +20,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import com.decomp.comp.decomp.utils.invisible
-import com.decomp.comp.decomp.utils.visible
+import com.decomp.comp.decomp.utils.extensions.invisible
+import com.decomp.comp.decomp.utils.extensions.visible
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.snackbar.Snackbar

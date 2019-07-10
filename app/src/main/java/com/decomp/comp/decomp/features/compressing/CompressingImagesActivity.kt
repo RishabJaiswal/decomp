@@ -15,8 +15,9 @@ import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
 import com.decomp.comp.decomp.utils.Utils
 import com.decomp.comp.decomp.utils.extensions.toggle
-import com.decomp.comp.decomp.utils.visible
+import com.decomp.comp.decomp.utils.extensions.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_compressing_images.*
 import kotlinx.android.synthetic.main.bottom_sheet_compressing_images.*
 
@@ -109,11 +110,16 @@ class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun onCompressionComplete(string: String?) {
+    private fun onCompressionComplete(result: Int) {
         tv_lbl_compressing.text = getString(R.string.compressed)
         compressProgressBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         btn_done_compressing.visible()
         isCompressionComplete = true
+
+        //analytics
+        val checkinEvent = Bundle()
+        checkinEvent.putLong(FirebaseAnalytics.Param.VALUE, result.toLong())
+        FirebaseAnalytics.getInstance(this).logEvent("images_Compressed", checkinEvent)
     }
 
     private fun setTotalUncompressedSize() {
