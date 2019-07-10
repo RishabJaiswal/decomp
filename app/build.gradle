@@ -23,6 +23,7 @@ android {
         versionCode 14
         versionName "v1.4.0-${getGitHash()}"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -49,12 +50,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'com.github.darsh2:MultipleImageSelect:v0.0.4'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha06'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-ads:18.0.0'
     implementation 'com.airbnb.android:lottie:2.8.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.android.support:palette-v7:28.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     //crashlytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation "androidx.core:core-ktx:1.0.2"
