@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.File;
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Rishab on 17-10-2015.
@@ -56,7 +56,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ThumbnailHolder> {
         loadBitmap(holder.thumbnail, compImgs[position]);
 
         //setting checkbox for selected files
-        if (compGallery.isSharingOrDeleting) {
+        if (compGallery.isSharingOrDeleting()) {
             holder.checkBox.setVisibility(View.VISIBLE);
             if (isChecked[position])
                 holder.checkBox.setChecked(true);
