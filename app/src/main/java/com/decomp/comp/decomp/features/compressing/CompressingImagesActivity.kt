@@ -15,7 +15,7 @@ import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
 import com.decomp.comp.decomp.utils.Utils
 import com.decomp.comp.decomp.utils.extensions.toggle
-import com.decomp.comp.decomp.utils.visible
+import com.decomp.comp.decomp.utils.extensions.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_compressing_images.*
 import kotlinx.android.synthetic.main.bottom_sheet_compressing_images.*

@@ -16,8 +16,8 @@ import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.ImageFileProvider
 import com.decomp.comp.decomp.utils.Utils
 import com.decomp.comp.decomp.utils.extensions.getColor
-import com.decomp.comp.decomp.utils.setBackgroundTint
-import com.decomp.comp.decomp.utils.visibleOrGone
+import com.decomp.comp.decomp.utils.extensions.setBackgroundTint
+import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import com.google.android.gms.ads.AdRequest
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
