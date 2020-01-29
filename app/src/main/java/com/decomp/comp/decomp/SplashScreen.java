@@ -13,9 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -33,6 +36,7 @@ import com.darsh.multipleimageselect.models.Image;
 import com.decomp.comp.decomp.features.compressing.CompressingImagesActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.snackbar.Snackbar;
@@ -114,7 +118,11 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         lottieAnimationView.playAnimation();
 
         //setting ad
-        final AdView adView = findViewById(R.id.adView);
+        final AdView adView = new AdView(this);
+        FrameLayout adViewParent = findViewById(R.id.ad_container);
+        adViewParent.addView(adView);
+        adView.setAdSize(getAdSize());
+        adView.setAdUnitId(getString(R.string.splash_screen_ad_unit));
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
         adView.setAdListener(new AdListener() {
@@ -151,6 +159,19 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         ((TextView) findViewById(R.id.title_comp)).setTypeface(bold);
         ((TextView) findViewById(R.id.decomped_count)).setTypeface(bold);
         ((TextView) findViewById(R.id.decomped_count_text)).setTypeface(bold);
+    }
+
+    private AdSize getAdSize() {
+        // Step 3 - Determine the screen width (less decorations) to use for the ad width.
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
+        //you can also pass your selected width here in dp
+        int adWidth = (int) (widthPixels / density);
+        //return the optimal size depends on your orientation (landscape or portrait)
+        return AdSize.getCurrentOrientationBannerAdSizeWithWidth(this, adWidth);
     }
 
     @Override
