@@ -40,7 +40,7 @@ class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private val baseDir: String by lazy {
-        getSharedPreferences("dir", Context.MODE_PRIVATE).getString("dir", null)
+        getSharedPreferences("dir", Context.MODE_PRIVATE).getString("dir", "") ?: ""
     }
 
     private val compressProgressBottomSheet by lazy {
