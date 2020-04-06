@@ -14,7 +14,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:requestLegacyExternalStorage="true">
 
         <activity
             android:name=".features.compressing.CompressingImagesActivity"

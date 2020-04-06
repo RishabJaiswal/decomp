@@ -171,7 +171,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         //you can also pass your selected width here in dp
         int adWidth = (int) (widthPixels / density);
         //return the optimal size depends on your orientation (landscape or portrait)
-        return AdSize.getCurrentOrientationBannerAdSizeWithWidth(this, adWidth);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
     }
 
     @Override
