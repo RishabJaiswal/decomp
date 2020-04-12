@@ -13,13 +13,13 @@ def getGitHash = { ->
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.decomp.comp.decomp"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 15
         versionName "v1.4.1-${getGitHash()}"
         vectorDrawables.useSupportLibrary = true
