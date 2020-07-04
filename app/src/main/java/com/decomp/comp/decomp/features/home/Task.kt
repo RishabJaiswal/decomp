@@ -8,5 +8,6 @@ data class Task(
         @StringRes var title: Int,
         @StringRes var details: Int,
         @DrawableRes var art: Int,
-        @ColorRes var color: Int
+        @ColorRes var color: Int,
+        var taskType: TaskType
 )

@@ -1,9 +1,11 @@
 package com.decomp.comp.decomp.features.home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.SplashScreen
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -15,6 +17,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        vp_tasks.adapter = TasksListAdapter(viewModel.getTasks())
+        vp_tasks.adapter = TasksListAdapter(viewModel.getTasks(), this::onTaskSelect)
+    }
+
+    private fun onTaskSelect(task: Task) {
+        when (task.taskType) {
+            TaskType.COMPRESS_IMAGE -> startActivity(Intent(this, SplashScreen::class.java))
+        }
     }
 }

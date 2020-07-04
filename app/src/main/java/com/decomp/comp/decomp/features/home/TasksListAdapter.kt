@@ -9,7 +9,8 @@ import com.decomp.comp.decomp.utils.extensions.getColorStateList
 import kotlinx.android.synthetic.main.item_task.view.*
 
 class TasksListAdapter(
-        private val list: List<Task>
+        private val list: List<Task>,
+        val onTaskSelect: (task: Task) -> Unit
 ) : RecyclerView.Adapter<TasksListAdapter.TaskViewHolder>() {
 
     val VIEW_TYPE_EVEN = 0
@@ -40,14 +41,20 @@ class TasksListAdapter(
         return list.size
     }
 
-    class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
         fun bind(task: Task) {
             itemView.apply {
                 tv_task_title.setText(task.title)
                 tv_task_details.setText(task.details)
                 imv_task_art.setImageResource(task.art)
                 btn_next.backgroundTintList = task.color.getColorStateList(context)
+                setOnClickListener(this@TaskViewHolder)
             }
+        }
+
+        override fun onClick(v: View?) {
+            onTaskSelect(list[bindingAdapterPosition])
         }
     }
 }
