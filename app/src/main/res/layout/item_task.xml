@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -95,6 +94,18 @@
         app:layout_constraintEnd_toEndOf="@+id/tv_task_details"
         app:layout_constraintStart_toStartOf="@+id/tv_task_details"
         app:layout_constraintTop_toBottomOf="@+id/tv_task_details" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/click_feedback"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="@id/cardView"
+        app:layout_constraintStart_toStartOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
