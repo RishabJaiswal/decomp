@@ -65,4 +65,17 @@
     <string name="mind_your_earth">Mind your Earth</string>
     <string name="mind_your_earth_descripion">कचरा डिजीटल करें और उन्हें अपने नक्शे पर खोजें। एक लंबी ज्ञात समस्या का समाधान करे।</string>-->
 
+    <!--tasks-->
+    <string name="task_title_compress_images">Compress Images</string>
+    <string name="task_title_compress_videos">Compress Videos</string>
+    <string name="task_title_record_screen">Record screen</string>
+    <string name="task_title_scan_document">Scan documents</string>
+
+    <!--task details-->
+    <string name="task_details_compress_images">Select a quality for your images to compress them &amp; save your precious memory</string>
+    <string name="task_details_compress_videos">Select a basic option or more advanced feature to compress your videos</string>
+    <string name="task_details_record_screen">Record the screen of your mobile while using it &amp; share it with others or just save it</string>
+    <string name="task_details_scan_document">Keep you precious documents safe by digitalising them via the DeComp scanner</string>
+    <string name="select_your_task">Select your task</string>
+
 </resources>
