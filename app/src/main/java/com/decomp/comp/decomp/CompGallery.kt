@@ -63,7 +63,7 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
         super.onResume()
         compImgs = File(compDir).listFiles()
         Arrays.sort(compImgs) { file1, file2 ->
-            if (file1.lastModified() < file2.lastModified()) 1 else -1
+            if (file1.lastModified() <= file2.lastModified()) 1 else -1
         }
         retainFragment = supportFragmentManager.findFragmentByTag("data") as RetainFragment?
 

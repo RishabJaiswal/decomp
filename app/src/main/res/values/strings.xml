@@ -77,12 +77,20 @@
     <string name="note_owl_app_name">Note Owl</string>
     <string name="note_owl_promo_descripion">If you haven\'t caught up with your writing habits, try note making with Note Owl. Write small scribbles, detailed descriptions or just a helpful visual reminder.</string>
 
-    <!--Mind Your Earth promo-->
-    <!--<string name="our_planet">Our Planet</string>
-    <string name="mind_your_earth">Mind your Earth</string>
-    <string name="mind_your_earth_descripion">Digitize trash and locate them on your map. Solving a long known problem.</string>-->
-
     <!--preferences-->
     <string name="pref_decompCount" translatable="false">decompedCount</string>
     <string name="pref_user_data" translatable="false">userData</string>
+
+    <!--tasks-->
+    <string name="task_title_compress_images">Compress Images</string>
+    <string name="task_title_compress_videos">Compress Videos</string>
+    <string name="task_title_record_screen">Record screen</string>
+    <string name="task_title_scan_document">Scan documents</string>
+
+    <!--task details-->
+    <string name="task_details_compress_images">Select a quality for your images to compress them &amp; save your precious memory</string>
+    <string name="task_details_compress_videos">Select a basic option or more advanced feature to compress your videos</string>
+    <string name="task_details_record_screen">Record the screen of your mobile while using it &amp; share it with others or just save it</string>
+    <string name="task_details_scan_document">Keep you precious documents safe by digitalising them via the DeComp scanner</string>
+    <string name="select_your_task">Select your task</string>
 </resources>
