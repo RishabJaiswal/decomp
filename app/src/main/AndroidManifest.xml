@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".application.DeCompApplicaton"
@@ -19,6 +20,7 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -57,6 +59,11 @@
             android:name=".ImagePager"
             android:screenOrientation="portrait" />
 
+        <!--screen recording activity-->
+        <activity
+            android:name=".features.compressing.record_screen.RecordScreenActivity"
+            android:screenOrientation="portrait" />
+
         <!-- file provider for sdk>=24 -->
         <provider
             android:name=".GenericFileProvider"
@@ -69,4 +76,5 @@
         </provider>
 
     </application>
+
 </manifest>
