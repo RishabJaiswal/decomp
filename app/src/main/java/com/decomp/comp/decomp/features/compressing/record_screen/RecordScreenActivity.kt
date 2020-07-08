@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.display.DisplayManager
+import android.hardware.display.VirtualDisplay
 import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
@@ -21,20 +23,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.application.PreferenceKeys
+import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_record_screen.*
 import java.io.IOException
 
-
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
 
-    private val DISPLAY_HEIGHT: Int = 1366
-    private val DISPLAY_WIDTH: Int = 768
+    var DISPLAY_HEIGHT: Int = 0
+    var DISPLAY_WIDTH: Int = 0
+    var screenDensity: Int = 0
     private val REQUEST_PERMISSIONS = 0
     private val REQUEST_SCREEN_SHARE = 10
     private var mediaRecorder: MediaRecorder? = null
     private var mediaProjection: MediaProjection? = null
+    private var virtualDisplay: VirtualDisplay? = null
     private var mediaProjectionCallback: MediaProjectionCallback? = null
     private val projectionManager by lazy {
         getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
@@ -44,22 +49,36 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record_screen)
         btn_start_recording.setOnClickListener(this)
+        changeRecordingState()
+    }
+
+    private fun changeRecordingState() {
+        if (isRecordingScreen()) {
+            btn_start_recording.text = "Stop recording"
+        } else {
+            btn_start_recording.text = "Start recording"
+        }
     }
 
     //STEP - 1 screen recording
     private fun prepareScreenRecording() {
         initMediaRecorder()
-        startScreenRecording()
+        checkScreenCastToRecord()
     }
 
     //STEP - 2
     private fun initMediaRecorder() {
         try {
             mediaRecorder = MediaRecorder()
+            resources.displayMetrics.apply {
+                DISPLAY_HEIGHT = heightPixels
+                DISPLAY_WIDTH = widthPixels
+                screenDensity = densityDpi
+            }
             mediaRecorder?.apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
-                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
                 setOutputFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/video.mp4")
                 setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
@@ -74,27 +93,64 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     //STEP - 3
-    fun startScreenRecording() {
+    private fun checkScreenCastToRecord() {
         if (mediaProjection == null) {
             startActivityForResult(projectionManager.createScreenCaptureIntent(), REQUEST_SCREEN_SHARE);
         } else {
-            mediaRecorder?.start()
+            startScreenRecording()
         }
+    }
+
+    //STEP - 4
+    private fun startScreenRecording() {
+        virtualDisplay = createVirtualDisplay()
+        mediaRecorder?.start()
+        PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, true)
+        changeRecordingState()
+    }
+
+    //STEP - 5
+    private fun stopScreenRecording() {
+        if (isRecordingScreen()) {
+            mediaRecorder?.apply {
+                try {
+                    stop()
+                    reset()
+                    release()
+                    virtualDisplay?.release()
+                } catch (error: RuntimeException) {
+
+                }
+            }
+            destroyMediaProjection()
+            PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, false)
+            changeRecordingState()
+        }
+    }
+
+    private fun createVirtualDisplay(): VirtualDisplay? {
+        return mediaProjection?.createVirtualDisplay("MainActivity",
+                DISPLAY_WIDTH, DISPLAY_HEIGHT, screenDensity,
+                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                mediaRecorder?.surface, null /*Callbacks*/, null /*Handler*/)
     }
 
     private fun setupMediaProjection(resultCode: Int, data: Intent) {
         mediaProjectionCallback = MediaProjectionCallback()
         mediaProjection = projectionManager.getMediaProjection(resultCode, data)
         mediaProjection?.registerCallback(mediaProjectionCallback, null)
-        mediaRecorder?.start()
+        startScreenRecording()
     }
 
     private fun destroyMediaProjection() {
         mediaProjection?.unregisterCallback(mediaProjectionCallback);
-        mediaProjection?.stop();
-        mediaProjection = null;
-        Log.i("screen recording", "MediaProjection Stopped");
+        mediaProjection?.stop()
+        mediaProjection = null
+        Log.i("screen recording", "MediaProjection Stopped")
     }
+
+    private fun isRecordingScreen() =
+            PreferenceHelper.getValue<Boolean>(PreferenceKeys.IS_SCREEN_RECORDING)
 
     /*requesting permissions*/
     private fun requestPermissions() {
@@ -173,17 +229,20 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
                 return
             }
         }
-
     }
 
     override fun onClick(v: View?) {
-        checkForPermissions()
+        if (isRecordingScreen()) {
+            stopScreenRecording()
+        } else {
+            checkForPermissions()
+        }
     }
 
     inner class MediaProjectionCallback : MediaProjection.Callback() {
         override fun onStop() {
             super.onStop()
-            destroyMediaProjection()
+            stopScreenRecording()
         }
     }
 }
