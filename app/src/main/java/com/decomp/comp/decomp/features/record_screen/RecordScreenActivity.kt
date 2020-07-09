@@ -1,4 +1,4 @@
-package com.decomp.comp.decomp.features.compressing.record_screen
+package com.decomp.comp.decomp.features.record_screen
 
 import android.Manifest
 import android.app.Activity

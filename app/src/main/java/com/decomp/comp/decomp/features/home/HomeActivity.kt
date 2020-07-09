@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.SplashScreen
-import com.decomp.comp.decomp.features.compressing.record_screen.RecordScreenActivity
+import com.decomp.comp.decomp.features.record_screen.RecordScreenActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
