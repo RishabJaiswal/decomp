@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
 import com.decomp.comp.decomp.application.PreferenceKeys
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.google.android.material.snackbar.Snackbar
@@ -139,7 +140,6 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
         mediaProjectionCallback = MediaProjectionCallback()
         mediaProjection = projectionManager.getMediaProjection(resultCode, data)
         mediaProjection?.registerCallback(mediaProjectionCallback, null)
-        startScreenRecording()
     }
 
     private fun destroyMediaProjection() {
@@ -214,7 +214,15 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "Screen Cast Permission Denied", Toast.LENGTH_SHORT).show()
             return
         }
-        setupMediaProjection(resultCode, data ?: Intent())
+
+        //starting service
+        data?.let {
+            startService(Intent(this, RecordScreen::class.java)
+                    .putExtras(data)
+                    .putExtra(KEY_RESULT_SCREEN_CAST, resultCode))
+        }
+        //setupMediaProjection(resultCode, data ?: Intent())
+        //startScreenRecording()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -233,7 +241,7 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         if (isRecordingScreen()) {
-            stopScreenRecording()
+            stopService(Intent(this, RecordScreen::class.java))
         } else {
             checkForPermissions()
         }
