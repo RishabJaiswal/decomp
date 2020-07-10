@@ -93,4 +93,12 @@
     <string name="task_details_record_screen">Record the screen of your mobile while using it &amp; share it with others or just save it</string>
     <string name="task_details_scan_document">Keep you precious documents safe by digitalising them via the DeComp scanner</string>
     <string name="select_your_task">Select your task</string>
+
+    <!--record screen-->
+    <string name="status_recording_details">DeComp is helping you record your screen. Please browse the DeComp gallery, once you are done with screen recording to view the latest recordings.</string>
+    <string name="status_not_recording_details">DeComp can help you record your screen and save your recorded screens safely in DeComp gallery, once you are done with screen recording.</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop Recording</string>
+    <string name="lbl_record_screen">Record\nScreen</string>
+    <string name="lbl_recording_screen">Recording…</string>
 </resources>

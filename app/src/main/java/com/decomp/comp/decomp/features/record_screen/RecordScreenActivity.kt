@@ -55,9 +55,13 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun changeRecordingState() {
         if (isRecordingScreen()) {
-            btn_start_recording.text = "Stop recording"
+            tv_lbl_record_screen.setText(R.string.lbl_recording_screen)
+            tv_record_screen_details.setText(R.string.status_recording_details)
+            btn_start_recording.setText(R.string.stop_recording)
         } else {
-            btn_start_recording.text = "Start recording"
+            tv_lbl_record_screen.setText(R.string.lbl_record_screen)
+            tv_record_screen_details.setText(R.string.status_not_recording_details)
+            btn_start_recording.setText(R.string.start_recording)
         }
     }
 
