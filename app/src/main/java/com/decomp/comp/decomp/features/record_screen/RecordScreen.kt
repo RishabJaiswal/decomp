@@ -30,8 +30,6 @@ class RecordScreen : Service() {
     var DISPLAY_HEIGHT: Int = 0
     var DISPLAY_WIDTH: Int = 0
     var screenDensity: Int = 0
-    private val REQUEST_PERMISSIONS = 0
-    private val REQUEST_SCREEN_SHARE = 10
     private var mediaRecorder: MediaRecorder? = null
     private var mediaProjection: MediaProjection? = null
     private var virtualDisplay: VirtualDisplay? = null
@@ -55,11 +53,11 @@ class RecordScreen : Service() {
                 0, notificationIntent, 0)
 
         val notification = NotificationCompat.Builder(this, notificationChannelID)
-                .setContentTitle("Foreground Service")
                 .setContentTitle("DeComp is Recording")
                 .setContentText("DeComp is helping you record the screen")
                 .setSmallIcon(R.drawable.ic_popup_sync)
                 .setContentIntent(pendingIntent)
+                .addAction(R.drawable.arrow_up_float, "Stop recording", pendingIntent)
                 .build()
         startForeground(1, notification)
     }
