@@ -18,6 +18,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
+import com.decomp.comp.decomp.application.KEY_STOP_RECORDING
 import com.decomp.comp.decomp.application.PreferenceKeys
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
@@ -50,7 +51,7 @@ class RecordScreen : Service() {
         createNotificationChannel(RecordScreen.notificationChannelID, RecordScreen.notificationChannelName)
         val notificationIntent = Intent(this, RecordScreenActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0)
+                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(this, notificationChannelID)
                 .setContentTitle("DeComp is Recording")
@@ -60,6 +61,14 @@ class RecordScreen : Service() {
                 .addAction(R.drawable.arrow_up_float, "Stop recording", pendingIntent)
                 .build()
         startForeground(1, notification)
+    }
+
+    // creates a intent for RecordScreenActivity and telling it to stop recording
+    private fun getStopRecordingIntent(): PendingIntent {
+        val notificationIntent = Intent(this, RecordScreenActivity::class.java).apply {
+            putExtra(KEY_STOP_RECORDING, true)
+        }
+        return PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     //STEP - 1 screen recording
@@ -166,5 +175,9 @@ class RecordScreen : Service() {
         val notificationChannelName = "Record screen"
         val notificationChannelID = "record_screen"
         val notificationID = "662"
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, RecordScreen::class.java)
+        }
     }
 }

@@ -67,7 +67,7 @@
         <!--screen recording activity-->
         <activity
             android:name="com.decomp.comp.decomp.features.record_screen.RecordScreenActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <!-- file provider for sdk>=24 -->
