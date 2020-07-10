@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
@@ -31,7 +32,7 @@ import kotlinx.android.synthetic.main.activity_record_screen.*
 import java.io.IOException
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
+class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     var DISPLAY_HEIGHT: Int = 0
     var DISPLAY_WIDTH: Int = 0
@@ -51,6 +52,12 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_record_screen)
         btn_start_recording.setOnClickListener(this)
         changeRecordingState()
+        listenSharedPreferenceListener()
+    }
+
+    override fun onDestroy() {
+        PreferenceHelper.preferences.unregisterOnSharedPreferenceChangeListener(this)
+        super.onDestroy()
     }
 
     private fun changeRecordingState() {
@@ -240,6 +247,16 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 return
             }
+        }
+    }
+
+    fun listenSharedPreferenceListener() {
+        PreferenceHelper.preferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == PreferenceKeys.IS_SCREEN_RECORDING) {
+            changeRecordingState()
         }
     }
 

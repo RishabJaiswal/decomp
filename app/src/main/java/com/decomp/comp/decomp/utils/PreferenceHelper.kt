@@ -9,7 +9,7 @@ import com.decomp.comp.decomp.application.DeCompApplicaton
 object PreferenceHelper {
 
     private val PREFERENCE_NAME = "${BuildConfig.APPLICATION_ID}_prefs"
-    private val preferences: SharedPreferences by lazy {
+    val preferences: SharedPreferences by lazy {
         DeCompApplicaton.getInstance()
                 .getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
