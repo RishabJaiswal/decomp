@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.SplashScreen
+import com.decomp.comp.decomp.features.record_screen.RecordScreenActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -23,6 +24,7 @@ class HomeActivity : AppCompatActivity() {
     private fun onTaskSelect(task: Task) {
         when (task.taskType) {
             TaskType.COMPRESS_IMAGE -> startActivity(Intent(this, SplashScreen::class.java))
+            TaskType.RECORD_SCREEN -> startActivity(Intent(this, RecordScreenActivity::class.java))
         }
     }
 }

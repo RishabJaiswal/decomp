@@ -85,6 +85,7 @@
         app:fabSize="mini"
         app:srcCompat="@drawable/ic_next"
         app:elevation="@dimen/task_non_card_elevation"
+        app:tint="@android:color/white"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="@+id/tv_task_title" />
