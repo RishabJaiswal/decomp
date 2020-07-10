@@ -27,6 +27,7 @@ import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
 import com.decomp.comp.decomp.application.PreferenceKeys
 import com.decomp.comp.decomp.utils.PreferenceHelper
+import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_record_screen.*
 import java.io.IOException
@@ -61,7 +62,10 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPr
     }
 
     private fun changeRecordingState() {
-        if (isRecordingScreen()) {
+        val isRecording = isRecordingScreen()
+        anim_recording.visibleOrGone(isRecordingScreen())
+        imv_art_record_screen.visibleOrGone(isRecordingScreen().not())
+        if (isRecording) {
             tv_lbl_record_screen.setText(R.string.lbl_recording_screen)
             tv_record_screen_details.setText(R.string.status_recording_details)
             btn_start_recording.setText(R.string.stop_recording)
