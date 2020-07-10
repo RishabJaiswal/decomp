@@ -30,6 +30,17 @@
         <item name="android:insetBottom">0dp</item>
     </style>
 
+    <style name="OutlinedBaseButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">@dimen/btn_corner_radius</item>
+        <item name="android:fontFamily">@font/raleway_bold</item>
+        <item name="android:textSize">@dimen/txt_body</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
     <style name="expandedToolbar" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">#fff</item>
         <item name="android:textSize">36sp</item>
