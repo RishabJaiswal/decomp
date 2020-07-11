@@ -73,7 +73,11 @@ class GalleryFilesAdapter(
                         thumbnailSize,
                         thumbnailSize
                 )
-                ThumbnailCache.save(file.absolutePath, thumbnail)
+
+                //thumbnail creation can fail
+                if (thumbnail != null) {
+                    ThumbnailCache.save(file.absolutePath, thumbnail)
+                }
             }
             itemView.imv_thumbnail.apply {
                 setImageBitmap(thumbnail)
