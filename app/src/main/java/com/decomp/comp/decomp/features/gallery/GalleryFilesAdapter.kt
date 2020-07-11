@@ -45,8 +45,8 @@ class GalleryFilesAdapter(
             if (thumbnail == null) {
                 thumbnail = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(file.absolutePath),
-                        200,
-                        200
+                        thumbnailSize,
+                        thumbnailSize
                 )
                 ThumbnailCache.save(file.absolutePath, thumbnail)
             }

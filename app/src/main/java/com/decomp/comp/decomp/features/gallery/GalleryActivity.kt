@@ -7,26 +7,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
+import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
+import com.decomp.comp.decomp.models.GalleryPage
+import com.decomp.comp.decomp.utils.extensions.configureViewModel
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
 
 class GalleryActivity : AppCompatActivity() {
 
-    private val GALLERY_TITLES = arrayOf(
-            R.string.gallery_title_images,
-            R.string.gallery_title_docs,
-            R.string.gallery_title_screens,
-            R.string.gallery_title_videos
-    )
+    private val viewModel by lazy {
+        configureViewModel<GalleryViewModel>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
+        createGalleryPagesModels()
         setGalleryPages()
     }
 
     private fun setGalleryPages() {
-        vp_gallery.adapter = GalleryPagerAdapter(this, supportFragmentManager)
+        vp_gallery.adapter = GalleryPagerAdapter(this, viewModel, supportFragmentManager)
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(vp_gallery)
 
@@ -39,10 +40,43 @@ class GalleryActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                tv_page_title.setText(GALLERY_TITLES[position])
+                tv_page_title.setText(viewModel.getPageTitle(position))
             }
         })
 
+    }
+
+    private fun createGalleryPagesModels() {
+        val compressedImagesDir = getSharedPreferences("dir", Context.MODE_PRIVATE)
+                ?.getString("dir", null) ?: ""
+
+        val galleryPages = listOf(
+                //images
+                GalleryPage(
+                        R.string.tab_text_images,
+                        R.string.gallery_title_images,
+                        compressedImagesDir
+                ),
+
+                GalleryPage(
+                        R.string.tab_text_docs,
+                        R.string.gallery_title_docs,
+                        ""
+                ),
+
+                GalleryPage(
+                        R.string.tab_text_screens,
+                        R.string.gallery_title_screens,
+                        ""
+                ),
+
+                GalleryPage(
+                        R.string.tab_text_videos,
+                        R.string.gallery_title_videos,
+                        ""
+                )
+        )
+        viewModel.galleryPageModels = galleryPages
     }
 
     companion object {

@@ -19,28 +19,30 @@ import java.io.File
 class GalleryPageFragment : Fragment() {
 
     private lateinit var galleryViewModel: GalleryViewModel
+    private var pagePosition: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        galleryViewModel = ViewModelProvider(this).get(GalleryViewModel::class.java)
+        pagePosition = arguments?.getInt(ARG_PAGE_POSITION) ?: 0
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_gallery, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setGalleryList()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity?.let { _activity ->
+            galleryViewModel = ViewModelProvider(_activity).get(GalleryViewModel::class.java)
+            setGalleryList()
+        }
     }
 
     private fun setGalleryList() {
         context?.let { _context ->
-            val compDir = context?.getSharedPreferences("dir", Context.MODE_PRIVATE)
-                    ?.getString("dir", null) ?: ""
-
             val thumbnailSpacing = 16.toFloat().dpToPixels(_context).toInt()
-            val files = File(compDir).listFiles()?.toMutableList() ?: emptyList<File>()
+            val files = File(galleryViewModel.getPageFolderPath(pagePosition))
+                    .listFiles()?.toMutableList() ?: emptyList<File>()
             rv_files.adapter = GalleryFilesAdapter(files, getThumbnailWidthInPx(_context), thumbnailSpacing)
         }
     }
@@ -52,13 +54,13 @@ class GalleryPageFragment : Fragment() {
     }
 
     companion object {
-        private const val ARG_SECTION_NUMBER = "section_number"
+        private const val ARG_PAGE_POSITION = "page_number"
 
         @JvmStatic
         fun newInstance(sectionNumber: Int): GalleryPageFragment {
             return GalleryPageFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_SECTION_NUMBER, sectionNumber)
+                    putInt(ARG_PAGE_POSITION, sectionNumber)
                 }
             }
         }
