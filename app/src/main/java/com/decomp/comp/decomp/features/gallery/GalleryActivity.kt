@@ -3,11 +3,13 @@ package com.decomp.comp.decomp.features.gallery
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
+import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.models.GalleryPage
 import com.decomp.comp.decomp.utils.extensions.configureViewModel
 import com.google.android.material.tabs.TabLayout
@@ -50,30 +52,36 @@ class GalleryActivity : AppCompatActivity() {
         val compressedImagesDir = getSharedPreferences("dir", Context.MODE_PRIVATE)
                 ?.getString("dir", null) ?: ""
 
+        val recordedScreensDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+
         val galleryPages = listOf(
                 //images
                 GalleryPage(
                         R.string.tab_text_images,
                         R.string.gallery_title_images,
-                        compressedImagesDir
+                        compressedImagesDir,
+                        TaskType.COMPRESS_IMAGE
                 ),
 
                 GalleryPage(
                         R.string.tab_text_docs,
                         R.string.gallery_title_docs,
-                        ""
+                        "",
+                        TaskType.SCAN_DOC
                 ),
 
                 GalleryPage(
                         R.string.tab_text_screens,
                         R.string.gallery_title_screens,
-                        ""
+                        recordedScreensDir,
+                        TaskType.RECORD_SCREEN
                 ),
 
                 GalleryPage(
                         R.string.tab_text_videos,
                         R.string.gallery_title_videos,
-                        ""
+                        "",
+                        TaskType.COMPRESS_VIDEO
                 )
         )
         viewModel.galleryPageModels = galleryPages

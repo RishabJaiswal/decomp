@@ -43,7 +43,13 @@ class GalleryPageFragment : Fragment() {
             val thumbnailSpacing = 16.toFloat().dpToPixels(_context).toInt()
             val files = File(galleryViewModel.getPageFolderPath(pagePosition))
                     .listFiles()?.toMutableList() ?: emptyList<File>()
-            rv_files.adapter = GalleryFilesAdapter(files, getThumbnailWidthInPx(_context), thumbnailSpacing)
+            //setting adapter
+            rv_files.adapter = GalleryFilesAdapter(
+                    files,
+                    getThumbnailWidthInPx(_context),
+                    thumbnailSpacing,
+                    galleryViewModel.getTaskType(pagePosition)
+            )
         }
     }
 

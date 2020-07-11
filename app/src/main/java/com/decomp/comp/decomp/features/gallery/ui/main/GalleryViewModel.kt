@@ -18,5 +18,7 @@ class GalleryViewModel : ViewModel() {
         return galleryPageModels[position].folderPath
     }
 
+    fun getTaskType(position: Int) = galleryPageModels[position].taskType
+
     fun getTotalPages() = galleryPageModels.size
 }
