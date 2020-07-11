@@ -8,17 +8,41 @@ import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_gallery.*
 
 class GalleryActivity : AppCompatActivity() {
+
+    private val GALLERY_TITLES = arrayOf(
+            R.string.gallery_title_images,
+            R.string.gallery_title_docs,
+            R.string.gallery_title_screens,
+            R.string.gallery_title_videos
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
-        val sectionsPagerAdapter = GalleryPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
+        setGalleryPages()
+    }
+
+    private fun setGalleryPages() {
+        vp_gallery.adapter = GalleryPagerAdapter(this, supportFragmentManager)
         val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
+        tabs.setupWithViewPager(vp_gallery)
+
+        //add page change listener
+        vp_gallery.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                tv_page_title.setText(GALLERY_TITLES[position])
+            }
+        })
+
     }
 
     companion object {

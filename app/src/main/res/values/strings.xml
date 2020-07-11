@@ -104,5 +104,12 @@
 
     <!--decomp gallery-->
     <string name="tab_text_images">Images</string>
+    <string name="tab_text_docs">Documents</string>
     <string name="tab_text_screens">Screens</string>
+    <string name="tab_text_videos">Videos</string>
+
+    <string name="gallery_title_images">Compressed\nImages</string>
+    <string name="gallery_title_docs">Scanned\nDocuments</string>
+    <string name="gallery_title_screens">Recorded\nScreens</string>
+    <string name="gallery_title_videos">Compressed\nVideos</string>
 </resources>

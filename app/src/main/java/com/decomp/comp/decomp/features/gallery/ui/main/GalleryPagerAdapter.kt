@@ -8,7 +8,9 @@ import com.decomp.comp.decomp.R
 
 private val TAB_TITLES = arrayOf(
         R.string.tab_text_images,
-        R.string.tab_text_screens
+        R.string.tab_text_docs,
+        R.string.tab_text_screens,
+        R.string.tab_text_videos
 )
 
 /**
@@ -30,6 +32,6 @@ class GalleryPagerAdapter(private val context: Context, fm: FragmentManager)
 
     override fun getCount(): Int {
         // Show 2 total pages.
-        return 2
+        return TAB_TITLES.size
     }
 }
