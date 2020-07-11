@@ -101,4 +101,8 @@
     <string name="stop_recording">Stop Recording</string>
     <string name="lbl_record_screen">Record\nScreen</string>
     <string name="lbl_recording_screen">Recording…</string>
+
+    <!--decomp gallery-->
+    <string name="tab_text_images">Images</string>
+    <string name="tab_text_screens">Screens</string>
 </resources>
