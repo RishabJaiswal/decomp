@@ -6,6 +6,7 @@
     <dimen name="txt_18">18sp</dimen>
     <dimen name="txt_20">20sp</dimen>
     <dimen name="txt_24">24sp</dimen>
+    <dimen name="txt_40">40sp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
