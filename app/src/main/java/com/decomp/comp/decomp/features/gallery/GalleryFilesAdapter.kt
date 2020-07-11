@@ -2,6 +2,7 @@ package com.decomp.comp.decomp.features.gallery
 
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.utils.ThumbnailCache
 import kotlinx.android.synthetic.main.item_gallery.view.*
+import kotlinx.android.synthetic.main.item_gallery_video.view.*
 import java.io.File
 
 class GalleryFilesAdapter(
@@ -89,7 +91,22 @@ class GalleryFilesAdapter(
     //video
     inner class VideoViewHolder(itemView: View) : ViewHolder(itemView) {
         override fun bind(file: File) {
+            var thumbnail = ThumbnailCache.get(file.absolutePath)
+            if (thumbnail == null) {
+                thumbnail = ThumbnailUtils.createVideoThumbnail(
+                        file.absolutePath,
+                        MediaStore.Images.Thumbnails.MINI_KIND
+                )
 
+                //thumbnail creation can fail
+                if (thumbnail != null) {
+                    ThumbnailCache.save(file.absolutePath, thumbnail)
+                }
+            }
+            itemView.imv_video_thumbnail.apply {
+                setImageBitmap(thumbnail)
+                clipToOutline = true
+            }
         }
     }
 }
