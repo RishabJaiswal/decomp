@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.gallery.ui.main.GalleryPageFragment">
+
+    <!--files list-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_files"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+        app:spanCount="3"
+        tools:itemCount="0"
+        tools:listitem="@layout/item_gallery" />
+
+    <!--art for no files blank slate-->
+
+    <!--blank slate message-->
+    <ImageView
+        android:id="@+id/imv_art_no_files"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/art_empty_street"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_blank_slate_no_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/no_files_present"
+        android:textColor="@color/secondaryTextBlack"
+        app:layout_constraintEnd_toEndOf="@id/imv_art_no_files"
+        app:layout_constraintStart_toStartOf="@+id/imv_art_no_files"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_files" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/blank_slate_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="imv_art_no_files,tv_blank_slate_no_files" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="339dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

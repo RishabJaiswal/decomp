@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <service
             android:name=".features.record_screen.RecordScreen"
             android:enabled="true"
@@ -68,6 +69,11 @@
         <activity
             android:name="com.decomp.comp.decomp.features.record_screen.RecordScreenActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <!--DeComp gallery screen-->
+        <activity
+            android:name=".features.gallery.GalleryActivity"
             android:screenOrientation="portrait" />
 
         <!-- file provider for sdk>=24 -->

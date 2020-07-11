@@ -101,4 +101,16 @@
     <string name="stop_recording">Stop Recording</string>
     <string name="lbl_record_screen">Record\nScreen</string>
     <string name="lbl_recording_screen">Recording…</string>
+
+    <!--decomp gallery-->
+    <string name="tab_text_images">Images</string>
+    <string name="tab_text_docs">Documents</string>
+    <string name="tab_text_screens">Screens</string>
+    <string name="tab_text_videos">Videos</string>
+
+    <string name="gallery_title_images">Compressed\nImages</string>
+    <string name="gallery_title_docs">Scanned\nDocuments</string>
+    <string name="gallery_title_screens">Recorded\nScreens</string>
+    <string name="gallery_title_videos">Compressed\nVideos</string>
+    <string name="no_files_present">Folder looks empty</string>
 </resources>

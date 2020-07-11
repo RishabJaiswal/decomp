@@ -61,7 +61,7 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        compImgs = File(compDir).listFiles()
+        compImgs = File(compDir).listFiles() ?: emptyArray()
         Arrays.sort(compImgs) { file1, file2 ->
             if (file1.lastModified() <= file2.lastModified()) 1 else -1
         }
