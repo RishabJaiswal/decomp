@@ -112,4 +112,5 @@
     <string name="gallery_title_docs">Scanned\nDocuments</string>
     <string name="gallery_title_screens">Recorded\nScreens</string>
     <string name="gallery_title_videos">Compressed\nVideos</string>
+    <string name="no_files_present">Folder looks empty</string>
 </resources>

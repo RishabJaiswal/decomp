@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.GalleryFilesAdapter
 import com.decomp.comp.decomp.utils.extensions.dpToPixels
+import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import kotlinx.android.synthetic.main.fragment_gallery.*
 import java.io.File
 
@@ -43,6 +44,8 @@ class GalleryPageFragment : Fragment() {
             val thumbnailSpacing = 16.toFloat().dpToPixels(_context).toInt()
             val files = File(galleryViewModel.getPageFolderPath(pagePosition))
                     .listFiles()?.toMutableList() ?: emptyList<File>()
+            blank_slate_files.visibleOrGone(files.isEmpty())
+
             //setting adapter
             rv_files.adapter = GalleryFilesAdapter(
                     files,
