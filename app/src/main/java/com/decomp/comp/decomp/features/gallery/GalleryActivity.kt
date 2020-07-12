@@ -3,6 +3,7 @@ package com.decomp.comp.decomp.features.gallery
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
@@ -13,8 +14,10 @@ import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.models.GalleryPage
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.extensions.configureViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
+import kotlinx.android.synthetic.main.share_files_bar.*
 
 class GalleryActivity : AppCompatActivity() {
 
@@ -22,12 +25,28 @@ class GalleryActivity : AppCompatActivity() {
         configureViewModel<GalleryViewModel>()
     }
 
+    private val shareBottomSheet by lazy {
+        BottomSheetBehavior.from(share_bottom_sheet)
+    }
+
+    private val shareBottomsheetCallback = ShareBottomSheetCallback()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         createGalleryPagesModels()
         observeUserSelection()
         setGalleryPages()
+        //share bar bottomsheet
+        shareBottomSheet.apply {
+            peekHeight = 0
+            addBottomSheetCallback(shareBottomsheetCallback)
+        }
+    }
+
+    override fun onDestroy() {
+        shareBottomSheet.removeBottomSheetCallback(shareBottomsheetCallback)
+        super.onDestroy()
     }
 
     override fun onBackPressed() {
@@ -42,9 +61,9 @@ class GalleryActivity : AppCompatActivity() {
     private fun observeUserSelection() {
         viewModel.isUserSelectingLD.observe(this, Observer { isUserSelecting ->
             if (isUserSelecting) {
-
+                shareBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
-
+                shareBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         })
     }
@@ -64,6 +83,7 @@ class GalleryActivity : AppCompatActivity() {
 
             override fun onPageSelected(position: Int) {
                 tv_page_title.setText(viewModel.getPageTitle(position))
+                viewModel.setUserSelectingFiles(false)
             }
         })
 
@@ -111,6 +131,18 @@ class GalleryActivity : AppCompatActivity() {
     companion object {
         fun getIntent(context: Context): Intent {
             return Intent(context, GalleryActivity::class.java)
+        }
+    }
+
+    inner class ShareBottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                viewModel.setUserSelectingFiles(false)
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
     }
 }
