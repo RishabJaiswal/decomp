@@ -15,10 +15,11 @@ import kotlinx.android.synthetic.main.item_gallery_video.view.*
 import java.io.File
 
 class GalleryFilesAdapter(
-        private val list: List<File>,
+        private val files: List<File>,
         private val thumbnailSize: Int,
         private val thumbnailSpacing: Int,
-        private val taskType: TaskType) :
+        private val taskType: TaskType,
+        val onFileClicked: (file: File) -> Unit) :
         RecyclerView.Adapter<GalleryFilesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -54,15 +55,22 @@ class GalleryFilesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(files[position])
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return files.size
     }
 
-    open class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        init {
+            itemView.setOnClickListener(this)
+        }
+
         open fun bind(file: File) {}
+        override fun onClick(v: View?) {
+            onFileClicked(files[absoluteAdapterPosition])
+        }
     }
 
     //Image
@@ -90,6 +98,7 @@ class GalleryFilesAdapter(
 
     //video
     inner class VideoViewHolder(itemView: View) : ViewHolder(itemView) {
+
         override fun bind(file: File) {
             var thumbnail = ThumbnailCache.get(file.absolutePath)
             if (thumbnail == null) {
