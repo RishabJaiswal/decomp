@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.decomp.comp.decomp.BuildConfig
 import com.decomp.comp.decomp.ImagePager
@@ -26,6 +27,7 @@ import java.io.File
 class GalleryPageFragment : Fragment() {
 
     private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var galleryFilesAdapter: GalleryFilesAdapter
     private var pagePosition: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +44,15 @@ class GalleryPageFragment : Fragment() {
         activity?.let { _activity ->
             galleryViewModel = ViewModelProvider(_activity).get(GalleryViewModel::class.java)
             setGalleryList()
+            observeUserSelection()
         }
+    }
+
+    //observes if user is selecting files
+    private fun observeUserSelection() {
+        galleryViewModel.isUserSelectingLD.observe(viewLifecycleOwner, Observer { isUserSelecting ->
+            galleryFilesAdapter.notifyDataSetChanged()
+        })
     }
 
     private fun setGalleryList() {
@@ -53,13 +63,15 @@ class GalleryPageFragment : Fragment() {
             blank_slate_files.visibleOrGone(files.isEmpty())
 
             //setting adapter
-            rv_files.adapter = GalleryFilesAdapter(
+            galleryFilesAdapter = GalleryFilesAdapter(
+                    galleryViewModel,
                     files,
                     getThumbnailWidthInPx(_context),
                     thumbnailSpacing,
                     galleryViewModel.getTaskType(pagePosition),
                     this::onFileClicked
             )
+            rv_files.adapter = galleryFilesAdapter
         }
     }
 
@@ -72,12 +84,14 @@ class GalleryPageFragment : Fragment() {
     private fun onFileClicked(file: File) {
         when (galleryViewModel.getTaskType(pagePosition)) {
 
+            //image files
             TaskType.COMPRESS_IMAGE -> {
                 val i = Intent(context, ImagePager::class.java)
                 i.putExtra("filepath", file.absolutePath)
                 startActivity(i)
             }
 
+            //video file
             TaskType.COMPRESS_VIDEO,
             TaskType.RECORD_SCREEN -> openVideoPlayer(file)
         }

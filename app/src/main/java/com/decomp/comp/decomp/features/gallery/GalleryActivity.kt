@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
@@ -25,7 +26,27 @@ class GalleryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         createGalleryPagesModels()
+        observeUserSelection()
         setGalleryPages()
+    }
+
+    override fun onBackPressed() {
+        if (viewModel.isUserSelectingFiles()) {
+            viewModel.setUserSelectingFiles(false)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    //observes if user is selecting files
+    private fun observeUserSelection() {
+        viewModel.isUserSelectingLD.observe(this, Observer { isUserSelecting ->
+            if (isUserSelecting) {
+
+            } else {
+
+            }
+        })
     }
 
     private fun setGalleryPages() {

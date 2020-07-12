@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.utils.ThumbnailCache
+import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import kotlinx.android.synthetic.main.item_gallery.view.*
 import kotlinx.android.synthetic.main.item_gallery_video.view.*
 import java.io.File
 
 class GalleryFilesAdapter(
+        private val viewModel: GalleryViewModel,
         private val files: List<File>,
         private val thumbnailSize: Int,
         private val thumbnailSpacing: Int,
@@ -62,14 +65,22 @@ class GalleryFilesAdapter(
         return files.size
     }
 
-    open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
         }
 
         open fun bind(file: File) {}
         override fun onClick(v: View?) {
             onFileClicked(files[absoluteAdapterPosition])
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            if (viewModel.isUserSelectingFiles().not()) {
+                viewModel.setUserSelectingFiles(true)
+            }
+            return true
         }
     }
 
@@ -89,9 +100,10 @@ class GalleryFilesAdapter(
                     ThumbnailCache.save(file.absolutePath, thumbnail)
                 }
             }
-            itemView.imv_thumbnail.apply {
-                setImageBitmap(thumbnail)
-                clipToOutline = true
+            itemView.apply {
+                imv_thumbnail.setImageBitmap(thumbnail)
+                imv_thumbnail.clipToOutline = true
+                cb_selected.visibleOrGone(viewModel.isUserSelectingFiles())
             }
         }
     }
