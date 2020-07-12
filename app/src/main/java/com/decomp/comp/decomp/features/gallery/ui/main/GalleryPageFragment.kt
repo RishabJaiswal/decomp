@@ -14,6 +14,7 @@ import com.decomp.comp.decomp.BuildConfig
 import com.decomp.comp.decomp.ImagePager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.GalleryFilesAdapter
+import com.decomp.comp.decomp.features.gallery.SelectionCountListener
 import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.utils.extensions.dpToPixels
 import com.decomp.comp.decomp.utils.extensions.visibleOrGone
@@ -29,6 +30,7 @@ class GalleryPageFragment : Fragment() {
     private lateinit var galleryViewModel: GalleryViewModel
     private lateinit var galleryFilesAdapter: GalleryFilesAdapter
     private var pagePosition: Int = 0
+    private lateinit var fileSelectionCountListener: SelectionCountListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +45,10 @@ class GalleryPageFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity?.let { _activity ->
             galleryViewModel = ViewModelProvider(_activity).get(GalleryViewModel::class.java)
+            fileSelectionCountListener = _activity as SelectionCountListener
             setGalleryList()
             observeUserSelection()
+            observeSelectedFilesCount()
             observeAllFilesSelection()
         }
     }
@@ -53,6 +57,16 @@ class GalleryPageFragment : Fragment() {
     private fun observeUserSelection() {
         galleryViewModel.isUserSelectingLD.observe(viewLifecycleOwner, Observer { isUserSelecting ->
             galleryFilesAdapter.notifyDataSetChanged()
+        })
+    }
+
+    //observing change in selected files count
+    private fun observeSelectedFilesCount() {
+        galleryViewModel.selectedFilesCountLD.observe(viewLifecycleOwner, Observer { filesCount ->
+            val areAllFilesSelected = filesCount == galleryFilesAdapter.files.size
+            fileSelectionCountListener.onSelectedFilesChanged(
+                    filesCount, areAllFilesSelected, galleryViewModel.getTaskType(pagePosition)
+            )
         })
     }
 

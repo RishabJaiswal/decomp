@@ -14,6 +14,7 @@ class GalleryViewModel : ViewModel() {
     //defines if user is  selecting images for
     val isUserSelectingLD = MutableLiveData<Boolean>()
     val selectAllFilesLD = MutableLiveData<TaskType?>()
+    val selectedFilesCountLD = MutableLiveData<Int>()
 
     fun getPageTitle(position: Int): Int {
         return galleryPageModels[position].pageTitle
@@ -33,10 +34,12 @@ class GalleryViewModel : ViewModel() {
 
     fun addSelectedFile(file: File) {
         userSelectedFiles.add(file)
+        updateSelectedFilesCount()
     }
 
     fun removeSelectedFile(file: File) {
         userSelectedFiles.remove(file)
+        updateSelectedFilesCount()
     }
 
     fun hasUserSelected(file: File): Boolean {
@@ -48,6 +51,11 @@ class GalleryViewModel : ViewModel() {
         if (files.isNotEmpty()) {
             userSelectedFiles.addAll(files)
         }
+        updateSelectedFilesCount()
+    }
+
+    private fun updateSelectedFilesCount() {
+        selectedFilesCountLD.value = userSelectedFiles.size
     }
 
     //set/get user selection for files
@@ -56,7 +64,7 @@ class GalleryViewModel : ViewModel() {
         isUserSelectingLD.value = isSelecting
         //clearing user selected files
         if (isSelecting.not()) {
-            userSelectedFiles.clear()
+            setUserSelectedFiles(emptyList())
         }
     }
 

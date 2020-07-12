@@ -18,7 +18,7 @@ import java.io.File
 
 class GalleryFilesAdapter(
         private val viewModel: GalleryViewModel,
-        private val files: List<File>,
+        val files: List<File>,
         private val thumbnailSize: Int,
         private val thumbnailSpacing: Int,
         private val taskType: TaskType,

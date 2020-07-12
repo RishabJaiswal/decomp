@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
 
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity(), SelectionCountListener {
 
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
@@ -45,9 +45,9 @@ class GalleryActivity : AppCompatActivity() {
         }
 
         //listening for all files selection changes
-        cb_select_all.setOnCheckedChangeListener { checkbox, isChecked ->
+        cb_select_all.setOnClickListener {
             viewModel.selectAllFilesFor(
-                    if (isChecked)
+                    if (cb_select_all.isChecked)
                         viewModel.getTaskType(vp_gallery.currentItem)
                     else
                         null
@@ -95,10 +95,24 @@ class GalleryActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 tv_page_title.setText(viewModel.getPageTitle(position))
                 viewModel.setUserSelectingFiles(false)
-                cb_select_all.isChecked = false
             }
         })
 
+    }
+
+    //listening the number of files selected
+    override fun onSelectedFilesChanged(
+            selectedFilesCount: Int,
+            areAllFilesSelected: Boolean,
+            taskType: TaskType
+    ) {
+        if (viewModel.getTaskType(vp_gallery.currentItem) == taskType) {
+
+            cb_select_all.apply {
+                isChecked = areAllFilesSelected
+                text = "$selectedFilesCount selected"
+            }
+        }
     }
 
     private fun createGalleryPagesModels() {
@@ -157,4 +171,8 @@ class GalleryActivity : AppCompatActivity() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
     }
+}
+
+interface SelectionCountListener {
+    fun onSelectedFilesChanged(selectedFilesCount: Int, areAllFilesSelected: Boolean, taskType: TaskType)
 }
