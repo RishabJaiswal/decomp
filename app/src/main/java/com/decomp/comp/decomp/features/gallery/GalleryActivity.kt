@@ -37,10 +37,21 @@ class GalleryActivity : AppCompatActivity() {
         createGalleryPagesModels()
         observeUserSelection()
         setGalleryPages()
+
         //share bar bottomsheet
         shareBottomSheet.apply {
             peekHeight = 0
             addBottomSheetCallback(shareBottomsheetCallback)
+        }
+
+        //listening for all files selection changes
+        cb_select_all.setOnCheckedChangeListener { checkbox, isChecked ->
+            viewModel.selectAllFilesFor(
+                    if (isChecked)
+                        viewModel.getTaskType(vp_gallery.currentItem)
+                    else
+                        null
+            )
         }
     }
 
@@ -84,6 +95,7 @@ class GalleryActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 tv_page_title.setText(viewModel.getPageTitle(position))
                 viewModel.setUserSelectingFiles(false)
+                cb_select_all.isChecked = false
             }
         })
 

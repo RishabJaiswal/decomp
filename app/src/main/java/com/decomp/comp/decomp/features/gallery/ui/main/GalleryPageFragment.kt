@@ -45,6 +45,7 @@ class GalleryPageFragment : Fragment() {
             galleryViewModel = ViewModelProvider(_activity).get(GalleryViewModel::class.java)
             setGalleryList()
             observeUserSelection()
+            observeAllFilesSelection()
         }
     }
 
@@ -52,6 +53,17 @@ class GalleryPageFragment : Fragment() {
     private fun observeUserSelection() {
         galleryViewModel.isUserSelectingLD.observe(viewLifecycleOwner, Observer { isUserSelecting ->
             galleryFilesAdapter.notifyDataSetChanged()
+        })
+    }
+
+    private fun observeAllFilesSelection() {
+        galleryViewModel.selectAllFilesLD.observe(viewLifecycleOwner, Observer { currentPageTaskType ->
+            val thisPageTaskType = galleryViewModel.getTaskType(pagePosition)
+            if (thisPageTaskType == currentPageTaskType) {
+                galleryFilesAdapter.selectAllFiles()
+            } else if (currentPageTaskType == null) {
+                galleryFilesAdapter.unSelectAllFiles()
+            }
         })
     }
 

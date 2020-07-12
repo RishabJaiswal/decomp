@@ -2,6 +2,7 @@ package com.decomp.comp.decomp.features.gallery.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.models.GalleryPage
 import java.io.File
 
@@ -12,6 +13,7 @@ class GalleryViewModel : ViewModel() {
 
     //defines if user is  selecting images for
     val isUserSelectingLD = MutableLiveData<Boolean>()
+    val selectAllFilesLD = MutableLiveData<TaskType?>()
 
     fun getPageTitle(position: Int): Int {
         return galleryPageModels[position].pageTitle
@@ -41,6 +43,13 @@ class GalleryViewModel : ViewModel() {
         return userSelectedFiles.contains(file)
     }
 
+    fun setUserSelectedFiles(files: List<File>) {
+        userSelectedFiles.clear()
+        if (files.isNotEmpty()) {
+            userSelectedFiles.addAll(files)
+        }
+    }
+
     //set/get user selection for files
     fun isUserSelectingFiles() = isUserSelectingLD.value ?: false
     fun setUserSelectingFiles(isSelecting: Boolean) {
@@ -49,5 +58,9 @@ class GalleryViewModel : ViewModel() {
         if (isSelecting.not()) {
             userSelectedFiles.clear()
         }
+    }
+
+    fun selectAllFilesFor(tasktype: TaskType?) {
+        selectAllFilesLD.value = tasktype
     }
 }

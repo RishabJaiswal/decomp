@@ -65,6 +65,16 @@ class GalleryFilesAdapter(
         return files.size
     }
 
+    fun selectAllFiles() {
+        viewModel.setUserSelectedFiles(files)
+        notifyDataSetChanged()
+    }
+
+    fun unSelectAllFiles() {
+        viewModel.setUserSelectedFiles(emptyList())
+        notifyDataSetChanged()
+    }
+
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
         init {
             itemView.setOnClickListener(this)
