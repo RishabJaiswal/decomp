@@ -1,6 +1,5 @@
 package com.decomp.comp.decomp.features.record_screen
 
-import android.R
 import android.app.Activity
 import android.app.PendingIntent
 import android.app.Service
@@ -12,17 +11,23 @@ import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.os.Environment
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.crashlytics.android.Crashlytics
+import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
 import com.decomp.comp.decomp.application.KEY_STOP_RECORDING
 import com.decomp.comp.decomp.application.PreferenceKeys
+import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
+import com.decomp.comp.decomp.utils.extensions.getFormattedString
+import java.io.File
 import java.io.IOException
+import java.util.*
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -56,9 +61,9 @@ class RecordScreen : Service() {
         val notification = NotificationCompat.Builder(this, notificationChannelID)
                 .setContentTitle("DeComp is Recording")
                 .setContentText("DeComp is helping you record the screen")
-                .setSmallIcon(R.drawable.ic_popup_sync)
+                .setSmallIcon(android.R.drawable.ic_popup_sync)
                 .setContentIntent(pendingIntent)
-                .addAction(R.drawable.arrow_up_float, "Stop recording", pendingIntent)
+                .addAction(android.R.drawable.arrow_up_float, "Stop recording", pendingIntent)
                 .build()
         startForeground(1, notification)
     }
@@ -73,14 +78,25 @@ class RecordScreen : Service() {
 
     //STEP - 1 screen recording
     private fun prepareScreenRecording(intent: Intent) {
-        val resultCode = intent.getIntExtra(KEY_RESULT_SCREEN_CAST, Activity.RESULT_OK)
-        initMediaRecorder()
-        setupMediaProjection(resultCode, intent)
-        startScreenRecording()
+        val videoFilePath = getFilePath()
+        if (videoFilePath.isNotEmpty()) {
+            val resultCode = intent.getIntExtra(KEY_RESULT_SCREEN_CAST, Activity.RESULT_OK)
+            initMediaRecorder(videoFilePath)
+            setupMediaProjection(resultCode, intent)
+            startScreenRecording()
+        } else {
+            Toast.makeText(
+                    applicationContext,
+                    R.string.error_directory_creation,
+                    Toast.LENGTH_SHORT
+            ).show()
+            Crashlytics.logException(Exception("unable to create recorded screens directory"))
+            stopSelf()
+        }
     }
 
     //STEP - 2
-    private fun initMediaRecorder() {
+    private fun initMediaRecorder(videoFilePath: String) {
         try {
             mediaRecorder = MediaRecorder()
             resources.displayMetrics.apply {
@@ -92,7 +108,7 @@ class RecordScreen : Service() {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setOutputFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/video.mp4")
+                setOutputFile(videoFilePath)
                 setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
                 setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
@@ -103,6 +119,23 @@ class RecordScreen : Service() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    //returns file for recorded screen
+    private fun getFilePath(): String {
+        val folder = File(Directory.getRecordedScreensDir())
+        if (folder.exists().not()) {
+            val isSuccess = folder.mkdirs()
+            if (!isSuccess) {
+                return ""
+            }
+        }
+        return "${folder.absolutePath}${File.separator}${getUniqueFileName()}"
+    }
+
+    private fun getUniqueFileName(): String {
+        val dateTime = Date().getFormattedString("dd-MMM-yyy_HH:mm:ss")
+        return "screen_$dateTime.mp4"
     }
 
     //STEP - 3
@@ -146,7 +179,7 @@ class RecordScreen : Service() {
     }
 
     private fun destroyMediaProjection() {
-        mediaProjection?.unregisterCallback(mediaProjectionCallback);
+        mediaProjection?.unregisterCallback(mediaProjectionCallback)
         mediaProjection?.stop()
         mediaProjection = null
         Log.i("screen recording", "MediaProjection Stopped")

@@ -2,30 +2,96 @@ package com.decomp.comp.decomp.features.gallery
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.models.GalleryPage
+import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.extensions.configureViewModel
+import com.decomp.comp.decomp.utils.extensions.getFileUri
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
+import kotlinx.android.synthetic.main.share_files_bar.*
+import java.util.*
 
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity(), SelectionCountListener {
 
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
     }
 
+    private val shareBottomSheet by lazy {
+        BottomSheetBehavior.from(share_bottom_sheet)
+    }
+
+    private val shareBottomsheetCallback = ShareBottomSheetCallback()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         createGalleryPagesModels()
+        observeUserSelection()
         setGalleryPages()
+
+        //share bar bottomsheet
+        shareBottomSheet.apply {
+            peekHeight = 0
+            addBottomSheetCallback(shareBottomsheetCallback)
+        }
+
+        //listening for all files selection changes
+        btn_share_files.setOnClickListener {
+            val filesToShare = ArrayList<Uri>()
+            for (file in viewModel.userSelectedFiles)
+                filesToShare.add(getFileUri(file))
+
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND_MULTIPLE
+                type = viewModel.getShareIntentType(viewModel.getTaskType(vp_gallery.currentItem))
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.share)))
+        }
+        cb_select_all.setOnClickListener {
+            viewModel.selectAllFilesFor(
+                    if (cb_select_all.isChecked)
+                        viewModel.getTaskType(vp_gallery.currentItem)
+                    else
+                        null
+            )
+        }
+    }
+
+    override fun onDestroy() {
+        shareBottomSheet.removeBottomSheetCallback(shareBottomsheetCallback)
+        super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        if (viewModel.isUserSelectingFiles()) {
+            viewModel.setUserSelectingFiles(false)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    //observes if user is selecting files
+    private fun observeUserSelection() {
+        viewModel.isUserSelectingLD.observe(this, Observer { isUserSelecting ->
+            if (isUserSelecting) {
+                shareBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                shareBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        })
     }
 
     private fun setGalleryPages() {
@@ -43,16 +109,32 @@ class GalleryActivity : AppCompatActivity() {
 
             override fun onPageSelected(position: Int) {
                 tv_page_title.setText(viewModel.getPageTitle(position))
+                viewModel.setUserSelectingFiles(false)
             }
         })
 
+    }
+
+    //listening the number of files selected
+    override fun onSelectedFilesChanged(
+            selectedFilesCount: Int,
+            areAllFilesSelected: Boolean,
+            taskType: TaskType
+    ) {
+        if (viewModel.getTaskType(vp_gallery.currentItem) == taskType) {
+
+            cb_select_all.apply {
+                isChecked = areAllFilesSelected
+                text = "$selectedFilesCount selected"
+            }
+        }
     }
 
     private fun createGalleryPagesModels() {
         val compressedImagesDir = getSharedPreferences("dir", Context.MODE_PRIVATE)
                 ?.getString("dir", null) ?: ""
 
-        val recordedScreensDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+        val recordedScreensDir = Directory.getRecordedScreensDir()
 
         val galleryPages = listOf(
                 //images
@@ -92,4 +174,20 @@ class GalleryActivity : AppCompatActivity() {
             return Intent(context, GalleryActivity::class.java)
         }
     }
+
+    inner class ShareBottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                viewModel.setUserSelectingFiles(false)
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
+    }
+}
+
+interface SelectionCountListener {
+    fun onSelectedFilesChanged(selectedFilesCount: Int, areAllFilesSelected: Boolean, taskType: TaskType)
 }

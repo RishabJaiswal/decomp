@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:behavior_peekHeight="0dp"
     tools:context=".features.gallery.GalleryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -57,5 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/share_files_bar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

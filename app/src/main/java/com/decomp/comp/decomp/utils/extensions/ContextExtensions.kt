@@ -3,7 +3,11 @@ package com.decomp.comp.decomp.utils.extensions
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.net.Uri
 import android.os.Build
+import androidx.core.content.FileProvider
+import com.decomp.comp.decomp.BuildConfig
+import java.io.File
 
 
 fun Context.createNotificationChannel(channelId: String, channelName: String) {
@@ -16,4 +20,8 @@ fun Context.createNotificationChannel(channelId: String, channelName: String) {
         val manager: NotificationManager = this.getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(serviceChannel)
     }
+}
+
+fun Context.getFileUri(file: File): Uri {
+    return FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".file.provider", file)
 }
