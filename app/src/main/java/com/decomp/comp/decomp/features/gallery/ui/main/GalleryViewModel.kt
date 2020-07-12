@@ -71,4 +71,17 @@ class GalleryViewModel : ViewModel() {
     fun selectAllFilesFor(tasktype: TaskType?) {
         selectAllFilesLD.value = tasktype
     }
+
+    fun getShareIntentType(tasktype: TaskType): String {
+        return when (tasktype) {
+            //images
+            TaskType.COMPRESS_IMAGE -> "image/*"
+
+            //videos
+            TaskType.RECORD_SCREEN,
+            TaskType.COMPRESS_VIDEO -> "video/*"
+
+            else -> "*/*"
+        }
+    }
 }

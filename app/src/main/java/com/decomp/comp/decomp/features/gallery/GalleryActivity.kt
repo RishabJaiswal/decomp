@@ -2,6 +2,7 @@ package com.decomp.comp.decomp.features.gallery
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +15,12 @@ import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.models.GalleryPage
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.extensions.configureViewModel
+import com.decomp.comp.decomp.utils.extensions.getFileUri
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
+import java.util.*
 
 class GalleryActivity : AppCompatActivity(), SelectionCountListener {
 
@@ -45,6 +48,18 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
         }
 
         //listening for all files selection changes
+        btn_share_files.setOnClickListener {
+            val filesToShare = ArrayList<Uri>()
+            for (file in viewModel.userSelectedFiles)
+                filesToShare.add(getFileUri(file))
+
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND_MULTIPLE
+                type = viewModel.getShareIntentType(viewModel.getTaskType(vp_gallery.currentItem))
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.share)))
+        }
         cb_select_all.setOnClickListener {
             viewModel.selectAllFilesFor(
                     if (cb_select_all.isChecked)
