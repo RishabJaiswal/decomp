@@ -72,12 +72,27 @@ class GalleryFilesAdapter(
         }
 
         open fun bind(file: File) {}
+
         override fun onClick(v: View?) {
-            onFileClicked(files[absoluteAdapterPosition])
+            if (viewModel.isUserSelectingFiles()) {
+                val file = files[absoluteAdapterPosition]
+                if (viewModel.hasUserSelected(file)) {
+                    //adding user selected file
+                    viewModel.removeSelectedFile(file)
+                } else {
+                    //removing user selected file
+                    viewModel.addSelectedFile(file)
+                }
+                //checking the checkbox
+                notifyItemChanged(absoluteAdapterPosition)
+            } else {
+                onFileClicked(files[absoluteAdapterPosition])
+            }
         }
 
         override fun onLongClick(v: View?): Boolean {
             if (viewModel.isUserSelectingFiles().not()) {
+                viewModel.addSelectedFile(files[absoluteAdapterPosition])
                 viewModel.setUserSelectingFiles(true)
             }
             return true
@@ -86,6 +101,11 @@ class GalleryFilesAdapter(
 
     //Image
     inner class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
+
+        init {
+            itemView.setOnClickListener(this@ImageViewHolder)
+        }
+
         override fun bind(file: File) {
             var thumbnail = ThumbnailCache.get(file.absolutePath)
             if (thumbnail == null) {
@@ -104,6 +124,7 @@ class GalleryFilesAdapter(
                 imv_thumbnail.setImageBitmap(thumbnail)
                 imv_thumbnail.clipToOutline = true
                 cb_selected.visibleOrGone(viewModel.isUserSelectingFiles())
+                cb_selected.isChecked = viewModel.hasUserSelected(file)
             }
         }
     }
