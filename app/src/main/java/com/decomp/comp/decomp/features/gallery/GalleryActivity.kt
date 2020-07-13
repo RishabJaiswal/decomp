@@ -5,10 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.application.BaseActivity
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
 import java.util.*
 
-class GalleryActivity : AppCompatActivity(), SelectionCountListener {
+class GalleryActivity : BaseActivity(), SelectionCountListener {
 
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
@@ -60,6 +60,20 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
             }
             startActivity(Intent.createChooser(intent, getString(R.string.share)))
         }
+
+        btn_delete_files.setOnClickListener {
+            showAlertDialog(
+                    R.string.deleteImages,
+                    R.string.deleteImages,
+                    android.R.string.ok,
+                    onPositiveAction = {
+                        viewModel.userSelectedFiles.forEach { file ->
+                            file.delete()
+                        }
+                    })
+        }
+
+        //clicking on select all
         cb_select_all.setOnClickListener {
             viewModel.selectAllFilesFor(
                     if (cb_select_all.isChecked)

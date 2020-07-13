@@ -3,6 +3,7 @@ package com.decomp.comp.decomp.features.gallery.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.FileObserver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class GalleryPageFragment : Fragment() {
     private lateinit var galleryFilesAdapter: GalleryFilesAdapter
     private var pagePosition: Int = 0
     private lateinit var fileSelectionCountListener: SelectionCountListener
+    private var galleryDirObserver: GalleryPageFilesObserver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,11 @@ class GalleryPageFragment : Fragment() {
             observeSelectedFilesCount()
             observeAllFilesSelection()
         }
+    }
+
+    override fun onDestroy() {
+        galleryDirObserver?.stopWatching()
+        super.onDestroy()
     }
 
     //observes if user is selecting files
@@ -83,9 +90,14 @@ class GalleryPageFragment : Fragment() {
 
     private fun setGalleryList() {
         context?.let { _context ->
+            //getting directory & listening to it
+            val galleryDirPath = galleryViewModel.getPageFolderPath(pagePosition)
+            galleryDirObserver = GalleryPageFilesObserver(galleryDirPath)
+            galleryDirObserver?.startWatching()
+
+            //setting adapter
             val thumbnailSpacing = 16.toFloat().dpToPixels(_context).toInt()
-            val files = File(galleryViewModel.getPageFolderPath(pagePosition))
-                    .listFiles()?.toMutableList() ?: emptyList<File>()
+            val files = File(galleryDirPath).listFiles()?.toMutableList() ?: emptyList<File>()
             blank_slate_files.visibleOrGone(files.isEmpty())
 
             //setting adapter
@@ -145,6 +157,13 @@ class GalleryPageFragment : Fragment() {
                     putInt(ARG_PAGE_POSITION, sectionNumber)
                 }
             }
+        }
+    }
+
+    inner class GalleryPageFilesObserver(dirPath: String) : FileObserver(dirPath) {
+
+        override fun onEvent(event: Int, path: String?) {
+            galleryFilesAdapter.notifyDataSetChanged()
         }
     }
 }
