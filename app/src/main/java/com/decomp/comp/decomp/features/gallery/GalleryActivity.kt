@@ -67,9 +67,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
                     R.string.deleteImages,
                     android.R.string.ok,
                     onPositiveAction = {
-                        viewModel.userSelectedFiles.forEach { file ->
-                            file.delete()
-                        }
+                        viewModel.deleteUserSelectedFiles()
                     })
         }
 

@@ -70,7 +70,7 @@ class GalleryPageFragment : Fragment() {
     //observing change in selected files count
     private fun observeSelectedFilesCount() {
         galleryViewModel.selectedFilesCountLD.observe(viewLifecycleOwner, Observer { filesCount ->
-            val areAllFilesSelected = filesCount == galleryFilesAdapter.files.size
+            val areAllFilesSelected = filesCount == galleryFilesAdapter.itemCount
             fileSelectionCountListener.onSelectedFilesChanged(
                     filesCount, areAllFilesSelected, galleryViewModel.getTaskType(pagePosition)
             )
@@ -90,27 +90,37 @@ class GalleryPageFragment : Fragment() {
 
     private fun setGalleryList() {
         context?.let { _context ->
-            //getting directory & listening to it
-            val galleryDirPath = galleryViewModel.getPageFolderPath(pagePosition)
-            galleryDirObserver = GalleryPageFilesObserver(galleryDirPath)
-            galleryDirObserver?.startWatching()
 
             //setting adapter
             val thumbnailSpacing = 16.toFloat().dpToPixels(_context).toInt()
-            val files = File(galleryDirPath).listFiles()?.toMutableList() ?: emptyList<File>()
-            blank_slate_files.visibleOrGone(files.isEmpty())
+            val files = galleryViewModel.getGalleryPageFolderFiles(pagePosition)
+            toggleBlankSlate(files)
 
             //setting adapter
             galleryFilesAdapter = GalleryFilesAdapter(
                     galleryViewModel,
-                    files,
                     getThumbnailWidthInPx(_context),
                     thumbnailSpacing,
                     galleryViewModel.getTaskType(pagePosition),
                     this::onFileClicked
             )
             rv_files.adapter = galleryFilesAdapter
+            galleryFilesAdapter.submitList(files)
+
+            //getting directory & listening to it
+            observeGalleryPageFolder()
         }
+    }
+
+    /**Observing the system directory for the folder related to the this page*/
+    private fun observeGalleryPageFolder() {
+        val galleryDirPath = galleryViewModel.getPageFolderPath(pagePosition)
+        galleryDirObserver = GalleryPageFilesObserver(galleryDirPath)
+        galleryDirObserver?.startWatching()
+    }
+
+    private fun toggleBlankSlate(galleryPageFiles: List<File>) {
+        blank_slate_files.visibleOrGone(galleryPageFiles.isEmpty())
     }
 
     private fun getThumbnailWidthInPx(context: Context): Int {
@@ -163,7 +173,11 @@ class GalleryPageFragment : Fragment() {
     inner class GalleryPageFilesObserver(dirPath: String) : FileObserver(dirPath) {
 
         override fun onEvent(event: Int, path: String?) {
-            galleryFilesAdapter.notifyDataSetChanged()
+            if (event == FileObserver.DELETE) {
+                val galleryPageFiles = galleryViewModel.getGalleryPageFolderFiles(pagePosition)
+                galleryFilesAdapter.submitList(galleryPageFiles)
+                toggleBlankSlate(galleryPageFiles)
+            }
         }
     }
 }

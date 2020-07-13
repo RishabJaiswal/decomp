@@ -6,6 +6,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
@@ -18,12 +20,10 @@ import java.io.File
 
 class GalleryFilesAdapter(
         private val viewModel: GalleryViewModel,
-        val files: List<File>,
         private val thumbnailSize: Int,
         private val thumbnailSpacing: Int,
         private val taskType: TaskType,
-        val onFileClicked: (file: File) -> Unit) :
-        RecyclerView.Adapter<GalleryFilesAdapter.ViewHolder>() {
+        val onFileClicked: (file: File) -> Unit) : ListAdapter<File, GalleryFilesAdapter.ViewHolder>(FilesDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(getViewLayout(), parent, false)
@@ -58,15 +58,11 @@ class GalleryFilesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(files[position])
-    }
-
-    override fun getItemCount(): Int {
-        return files.size
+        holder.bind(getItem(position))
     }
 
     fun selectAllFiles() {
-        viewModel.setUserSelectedFiles(files)
+        viewModel.setUserSelectedFiles(currentList)
         notifyDataSetChanged()
     }
 
@@ -84,8 +80,8 @@ class GalleryFilesAdapter(
         open fun bind(file: File) {}
 
         override fun onClick(v: View?) {
+            val file = getItem(absoluteAdapterPosition)
             if (viewModel.isUserSelectingFiles()) {
-                val file = files[absoluteAdapterPosition]
                 if (viewModel.hasUserSelected(file)) {
                     //adding user selected file
                     viewModel.removeSelectedFile(file)
@@ -96,13 +92,13 @@ class GalleryFilesAdapter(
                 //checking the checkbox
                 notifyItemChanged(absoluteAdapterPosition)
             } else {
-                onFileClicked(files[absoluteAdapterPosition])
+                onFileClicked(file)
             }
         }
 
         override fun onLongClick(v: View?): Boolean {
             if (viewModel.isUserSelectingFiles().not()) {
-                viewModel.addSelectedFile(files[absoluteAdapterPosition])
+                viewModel.addSelectedFile(getItem(absoluteAdapterPosition))
                 viewModel.setUserSelectingFiles(true)
             }
             return true
@@ -160,5 +156,17 @@ class GalleryFilesAdapter(
                 clipToOutline = true
             }
         }
+    }
+
+    private class FilesDiffCallback : DiffUtil.ItemCallback<File>() {
+
+        override fun areItemsTheSame(oldItem: File, newItem: File): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: File, newItem: File): Boolean {
+            return oldItem.absolutePath == newItem.absolutePath
+        }
+
     }
 }
