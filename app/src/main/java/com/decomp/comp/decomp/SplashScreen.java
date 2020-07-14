@@ -281,7 +281,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         seekBar.setProgress(progress);
 
         //building and showing dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(SplashScreen.this, R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SplashScreen.this);
         builder.setTitle(images.size() + " " + img);
         instruction.setText(R.string.set_quality);
         builder.setPositiveButton(R.string.statCompressingBtn, new DialogInterface.OnClickListener() {
@@ -325,7 +325,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         ((TextView) infoDialogView.findViewById(R.id.i3)).setTypeface(regular);
 
         //AlertDialog to show when users clicks infoFab
-        AlertDialog.Builder infoBuilder = new AlertDialog.Builder(SplashScreen.this, R.style.MyAlertDialogStyle);
+        AlertDialog.Builder infoBuilder = new AlertDialog.Builder(SplashScreen.this);
         infoBuilder.setTitle(R.string.app_name);
         infoBuilder.setIcon(R.mipmap.launcher);
         infoBuilder.setPositiveButton(R.string.ok, null);
