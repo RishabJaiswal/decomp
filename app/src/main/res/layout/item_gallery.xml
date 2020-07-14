@@ -24,8 +24,13 @@
         android:id="@+id/cb_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:layout_marginStart="2dp"
         android:visibility="gone"
+        android:button="@drawable/check_selector"
+        android:buttonTint="@color/check_selector_color_list"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
