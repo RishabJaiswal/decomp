@@ -53,6 +53,19 @@
         app:layout_constraintTop_toBottomOf="@+id/imv_task_art"
         tools:text="Compress Images" />
 
+    <!--feature ready label-->
+    <TextView
+        android:id="@+id/tv_feature_ready"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/task_non_card_elevation"
+        android:text="Feature coming soon"
+        android:textColor="@color/blue1000"
+        android:textSize="@dimen/txt_caption"
+        app:layout_constraintEnd_toEndOf="@+id/cardView"
+        app:layout_constraintStart_toStartOf="@+id/tv_task_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_task_title" />
+
     <!--task details-->
     <TextView
         android:id="@+id/tv_task_details"
@@ -68,7 +81,7 @@
         android:elevation="@dimen/task_non_card_elevation"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/tv_task_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_feature_ready"
         tools:text="@tools:sample/lorem" />
 
     <!--next buttion-->
