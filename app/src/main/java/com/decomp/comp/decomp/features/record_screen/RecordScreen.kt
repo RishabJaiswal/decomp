@@ -26,6 +26,7 @@ import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
 import com.decomp.comp.decomp.utils.extensions.getFormattedString
+import com.decomp.comp.decomp.utils.extensions.showLongToast
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -170,6 +171,7 @@ class RecordScreen : Service() {
                     reset()
                     release()
                     virtualDisplay?.release()
+                    applicationContext.showLongToast(R.string.screen_saved)
                 } catch (error: RuntimeException) {
 
                 }

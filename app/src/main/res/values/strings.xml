@@ -104,6 +104,7 @@
     <string name="error_directory_creation">Unable to create directory</string>
     <string name="record_screen">Record\nScreen</string>
     <string name="record_with_audio">Record with audio</string>
+    <string name="screen_saved">Recording saved in DeComp Gallery</string>
 
     <!--decomp gallery-->
     <string name="tab_text_images">Images</string>
