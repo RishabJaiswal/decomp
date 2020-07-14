@@ -13,14 +13,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:fontFamily="@font/raleway_bold"
-        android:text="Record\nScreen"
+        android:text="@string/record_screen"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_record_screen_details"
         app:layout_constraintEnd_toStartOf="@+id/imv_art_record_screen"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
@@ -54,30 +53,49 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
         android:fontFamily="@font/raleway"
         android:text="@string/status_not_recording_details"
         android:textColor="@color/primaryTextBlack"
-        app:layout_constraintBottom_toTopOf="@+id/btn_start_recording"
+        app:layout_constraintBottom_toTopOf="@+id/cb_enable_audio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_lbl_record_screen" />
+
+    <!--enabling/disabling audio while recording-->
+    <CheckBox
+        android:id="@+id/cb_enable_audio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:paddingStart="8dp"
+        android:background="?android:selectableItemBackground"
+        android:button="@drawable/check_selector"
+        android:buttonTint="@color/check_selector_color_list"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/record_with_audio"
+        android:textColor="@color/secondaryTextBlack"
+        android:textSize="@dimen/txt_body"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start_recording"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_record_screen_details" />
 
     <!--start/stop recording button-->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_start_recording"
         style="@style/BaseButton"
         android:layout_width="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_goneMarginTop="16dp"
         android:text="@string/start_recording"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tv_record_screen_details"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/tv_record_screen_details"
-        app:layout_constraintTop_toBottomOf="@+id/tv_record_screen_details" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_enable_audio" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

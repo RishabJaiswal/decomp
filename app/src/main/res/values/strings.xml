@@ -102,6 +102,8 @@
     <string name="lbl_record_screen">Record\nScreen</string>
     <string name="lbl_recording_screen">Recording…</string>
     <string name="error_directory_creation">Unable to create directory</string>
+    <string name="record_screen">Record\nScreen</string>
+    <string name="record_with_audio">Record with audio</string>
 
     <!--decomp gallery-->
     <string name="tab_text_images">Images</string>
