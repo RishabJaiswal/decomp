@@ -109,9 +109,8 @@ class GalleryFilesAdapter(
     inner class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
 
         init {
-            itemView.setOnClickListener(this@ImageViewHolder)
+            itemView.imv_thumbnail.clipToOutline = true
         }
-
         override fun bind(file: File) {
             var thumbnail = ThumbnailCache.get(file.absolutePath)
             if (thumbnail == null) {
@@ -128,7 +127,6 @@ class GalleryFilesAdapter(
             }
             itemView.apply {
                 imv_thumbnail.setImageBitmap(thumbnail)
-                imv_thumbnail.clipToOutline = true
                 cb_selected.visibleOrGone(viewModel.isUserSelectingFiles())
                 cb_selected.isChecked = viewModel.hasUserSelected(file)
             }
@@ -137,6 +135,10 @@ class GalleryFilesAdapter(
 
     //video
     inner class VideoViewHolder(itemView: View) : ViewHolder(itemView) {
+
+        init {
+            itemView.imv_video_thumbnail.clipToOutline = true
+        }
 
         override fun bind(file: File) {
             var thumbnail = ThumbnailCache.get(file.absolutePath)
@@ -151,9 +153,10 @@ class GalleryFilesAdapter(
                     ThumbnailCache.save(file.absolutePath, thumbnail)
                 }
             }
-            itemView.imv_video_thumbnail.apply {
-                setImageBitmap(thumbnail)
-                clipToOutline = true
+            itemView.apply {
+                imv_video_thumbnail.setImageBitmap(thumbnail)
+                cb_video_selected.visibleOrGone(viewModel.isUserSelectingFiles())
+                cb_video_selected.isChecked = viewModel.hasUserSelected(file)
             }
         }
     }
