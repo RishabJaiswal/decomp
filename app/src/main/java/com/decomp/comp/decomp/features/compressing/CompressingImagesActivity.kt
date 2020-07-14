@@ -13,6 +13,7 @@ import com.decomp.comp.decomp.CompGallery
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
 import com.decomp.comp.decomp.application.KEY_IMAGES
+import com.decomp.comp.decomp.features.gallery.GalleryActivity
 import com.decomp.comp.decomp.utils.Utils
 import com.decomp.comp.decomp.utils.extensions.toggle
 import com.decomp.comp.decomp.utils.extensions.visible
@@ -92,7 +93,7 @@ class CompressingImagesActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.btn_done_compressing -> {
-                startActivity(Intent(this, CompGallery::class.java))
+                startActivity(GalleryActivity.getIntent(this))
                 finish()
             }
             R.id.bs_compress_progress -> {

@@ -16,6 +16,8 @@ import com.decomp.comp.decomp.models.GalleryPage
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.extensions.configureViewModel
 import com.decomp.comp.decomp.utils.extensions.getFileUri
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
@@ -24,6 +26,8 @@ import java.util.*
 
 class GalleryActivity : BaseActivity(), SelectionCountListener {
 
+    private lateinit var interstitialAd: InterstitialAd
+    private lateinit var adRequest: AdRequest
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
     }
@@ -40,6 +44,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
         createGalleryPagesModels()
         observeUserSelection()
         setGalleryPages()
+        initializeAd()
 
         //share bar bottomsheet
         shareBottomSheet.apply {
@@ -82,6 +87,13 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
         }
     }
 
+    fun initializeAd() {
+        adRequest = AdRequest.Builder().build()
+        interstitialAd = InterstitialAd(this)
+        interstitialAd.adUnitId = getString(R.string.interstitial_adunit)
+        interstitialAd.loadAd(adRequest)
+    }
+
     override fun onDestroy() {
         shareBottomSheet.removeBottomSheetCallback(shareBottomsheetCallback)
         super.onDestroy()
@@ -91,6 +103,8 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
         if (viewModel.isUserSelectingFiles()) {
             viewModel.setUserSelectingFiles(false)
         } else {
+            if (interstitialAd.isLoaded)
+                interstitialAd.show()
             super.onBackPressed()
         }
     }
