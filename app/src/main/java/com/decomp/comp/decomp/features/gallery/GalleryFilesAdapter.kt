@@ -14,6 +14,7 @@ import com.decomp.comp.decomp.ImgLoadAsynTask
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
+import com.decomp.comp.decomp.utils.ThumbnailCache
 import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import kotlinx.android.synthetic.main.item_gallery.view.*
 import kotlinx.android.synthetic.main.item_gallery_video.view.*
@@ -74,8 +75,8 @@ class GalleryFilesAdapter(
 
     private fun loadBitmap(imageView: ImageView, file: File) {
         var bitmap: Bitmap?
-        synchronized(viewModel.lruCache) {
-            bitmap = viewModel.lruCache.get(file.absolutePath)
+        synchronized(ThumbnailCache.lruCache) {
+            bitmap = ThumbnailCache.lruCache.get(file.absolutePath)
         }
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap)
@@ -86,7 +87,7 @@ class GalleryFilesAdapter(
                 imageView.context,
                 imageView, thumbnailSize,
                 taskType,
-                viewModel.lruCache)
+                ThumbnailCache.lruCache)
         val asyncDrawable = AsyncDrawable(context.resources, null, task)
         imageView.setImageDrawable(asyncDrawable)
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, file)
