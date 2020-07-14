@@ -23,6 +23,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_home)
         vp_tasks.adapter = TasksListAdapter(viewModel.getTasks(), this::onTaskSelect)
         btn_browse_gallery.setOnClickListener(this)
+        btn_support_dev.setOnClickListener(this)
     }
 
     private fun onTaskSelect(task: Task) {
@@ -40,6 +41,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         when (view?.id) {
             R.id.btn_browse_gallery -> {
                 startActivity(GalleryActivity.getIntent(this))
+            }
+
+            R.id.btn_support_dev -> {
+                startActivity(AdRequestActivity.getIntent(this))
             }
         }
     }
