@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.utils.extensions.getColorStateList
+import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import kotlinx.android.synthetic.main.item_task.view.*
 
 class TasksListAdapter(
@@ -47,6 +48,7 @@ class TasksListAdapter(
             itemView.apply {
                 tv_task_title.setText(task.title)
                 tv_task_details.setText(task.details)
+                tv_feature_ready.visibleOrGone(task.isFeatureReady.not())
                 imv_task_art.setImageResource(task.art)
                 btn_next.backgroundTintList = task.color.getColorStateList(context)
                 setOnClickListener(this@TaskViewHolder)

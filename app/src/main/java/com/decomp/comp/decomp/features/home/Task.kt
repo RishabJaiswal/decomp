@@ -9,5 +9,6 @@ data class Task(
         @StringRes var details: Int,
         @DrawableRes var art: Int,
         @ColorRes var color: Int,
-        var taskType: TaskType
+        var taskType: TaskType,
+        var isFeatureReady: Boolean = false
 )
