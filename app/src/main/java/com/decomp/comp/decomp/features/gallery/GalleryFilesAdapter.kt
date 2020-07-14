@@ -1,18 +1,19 @@
 package com.decomp.comp.decomp.features.gallery
 
-import android.graphics.BitmapFactory
-import android.media.ThumbnailUtils
-import android.provider.MediaStore
+import android.graphics.Bitmap
+import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.decomp.comp.decomp.AsyncDrawable
+import com.decomp.comp.decomp.ImgLoadAsynTask
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
-import com.decomp.comp.decomp.utils.ThumbnailCache
 import com.decomp.comp.decomp.utils.extensions.visibleOrGone
 import kotlinx.android.synthetic.main.item_gallery.view.*
 import kotlinx.android.synthetic.main.item_gallery_video.view.*
@@ -71,6 +72,26 @@ class GalleryFilesAdapter(
         notifyDataSetChanged()
     }
 
+    private fun loadBitmap(imageView: ImageView, file: File) {
+        var bitmap: Bitmap?
+        synchronized(viewModel.lruCache) {
+            bitmap = viewModel.lruCache.get(file.absolutePath)
+        }
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap)
+            return
+        }
+        val context = imageView.context
+        val task = ImgLoadAsynTask(
+                imageView.context,
+                imageView, thumbnailSize,
+                taskType,
+                viewModel.lruCache)
+        val asyncDrawable = AsyncDrawable(context.resources, null, task)
+        imageView.setImageDrawable(asyncDrawable)
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, file)
+    }
+
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
         init {
             itemView.setOnClickListener(this)
@@ -111,22 +132,10 @@ class GalleryFilesAdapter(
         init {
             itemView.imv_thumbnail.clipToOutline = true
         }
-        override fun bind(file: File) {
-            var thumbnail = ThumbnailCache.get(file.absolutePath)
-            if (thumbnail == null) {
-                thumbnail = ThumbnailUtils.extractThumbnail(
-                        BitmapFactory.decodeFile(file.absolutePath),
-                        thumbnailSize,
-                        thumbnailSize
-                )
 
-                //thumbnail creation can fail
-                if (thumbnail != null) {
-                    ThumbnailCache.save(file.absolutePath, thumbnail)
-                }
-            }
+        override fun bind(file: File) {
             itemView.apply {
-                imv_thumbnail.setImageBitmap(thumbnail)
+                loadBitmap(imv_thumbnail, file)
                 cb_selected.visibleOrGone(viewModel.isUserSelectingFiles())
                 cb_selected.isChecked = viewModel.hasUserSelected(file)
             }
@@ -141,20 +150,8 @@ class GalleryFilesAdapter(
         }
 
         override fun bind(file: File) {
-            var thumbnail = ThumbnailCache.get(file.absolutePath)
-            if (thumbnail == null) {
-                thumbnail = ThumbnailUtils.createVideoThumbnail(
-                        file.absolutePath,
-                        MediaStore.Images.Thumbnails.MINI_KIND
-                )
-
-                //thumbnail creation can fail
-                if (thumbnail != null) {
-                    ThumbnailCache.save(file.absolutePath, thumbnail)
-                }
-            }
             itemView.apply {
-                imv_video_thumbnail.setImageBitmap(thumbnail)
+                loadBitmap(imv_video_thumbnail, file)
                 cb_video_selected.visibleOrGone(viewModel.isUserSelectingFiles())
                 cb_video_selected.isChecked = viewModel.hasUserSelected(file)
             }

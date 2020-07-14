@@ -2,6 +2,7 @@ package com.decomp.comp.decomp.features.gallery.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.decomp.comp.decomp.ImageLruCache
 import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.models.GalleryPage
 import java.io.File
@@ -15,6 +16,12 @@ class GalleryViewModel : ViewModel() {
     val isUserSelectingLD = MutableLiveData<Boolean>()
     val selectAllFilesLD = MutableLiveData<TaskType?>()
     val selectedFilesCountLD = MutableLiveData<Int>()
+
+    //image cache
+    val lruCache by lazy {
+        val maxSize = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+        ImageLruCache(maxSize / 16)
+    }
 
     fun getPageTitle(position: Int): Int {
         return galleryPageModels[position].pageTitle
