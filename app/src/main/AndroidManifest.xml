@@ -76,6 +76,11 @@
             android:name=".features.gallery.GalleryActivity"
             android:screenOrientation="portrait" />
 
+        <!--watch ad to support-->
+        <activity
+            android:name=".application.AdRequestActivity"
+            android:screenOrientation="portrait" />
+
         <!-- file provider for sdk>=24 -->
         <provider
             android:name=".GenericFileProvider"

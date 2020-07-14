@@ -5,10 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.application.BaseActivity
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
@@ -16,14 +16,18 @@ import com.decomp.comp.decomp.models.GalleryPage
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.extensions.configureViewModel
 import com.decomp.comp.decomp.utils.extensions.getFileUri
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
 import java.util.*
 
-class GalleryActivity : AppCompatActivity(), SelectionCountListener {
+class GalleryActivity : BaseActivity(), SelectionCountListener {
 
+    private lateinit var interstitialAd: InterstitialAd
+    private lateinit var adRequest: AdRequest
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
     }
@@ -40,6 +44,7 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
         createGalleryPagesModels()
         observeUserSelection()
         setGalleryPages()
+        initializeAd()
 
         //share bar bottomsheet
         shareBottomSheet.apply {
@@ -60,6 +65,18 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
             }
             startActivity(Intent.createChooser(intent, getString(R.string.share)))
         }
+
+        btn_delete_files.setOnClickListener {
+            showAlertDialog(
+                    R.string.deleteImages,
+                    R.string.deleteImages,
+                    android.R.string.ok,
+                    onPositiveAction = {
+                        viewModel.deleteUserSelectedFiles()
+                    })
+        }
+
+        //clicking on select all
         cb_select_all.setOnClickListener {
             viewModel.selectAllFilesFor(
                     if (cb_select_all.isChecked)
@@ -68,6 +85,13 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
                         null
             )
         }
+    }
+
+    fun initializeAd() {
+        adRequest = AdRequest.Builder().build()
+        interstitialAd = InterstitialAd(this)
+        interstitialAd.adUnitId = getString(R.string.interstitial_adunit)
+        interstitialAd.loadAd(adRequest)
     }
 
     override fun onDestroy() {
@@ -79,6 +103,8 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
         if (viewModel.isUserSelectingFiles()) {
             viewModel.setUserSelectingFiles(false)
         } else {
+            if (interstitialAd.isLoaded)
+                interstitialAd.show()
             super.onBackPressed()
         }
     }
@@ -131,17 +157,14 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
     }
 
     private fun createGalleryPagesModels() {
-        val compressedImagesDir = getSharedPreferences("dir", Context.MODE_PRIVATE)
-                ?.getString("dir", null) ?: ""
 
-        val recordedScreensDir = Directory.getRecordedScreensDir()
 
         val galleryPages = listOf(
                 //images
                 GalleryPage(
                         R.string.tab_text_images,
                         R.string.gallery_title_images,
-                        compressedImagesDir,
+                        Directory.getCompressedImagesDir(),
                         TaskType.COMPRESS_IMAGE
                 ),
 
@@ -155,7 +178,7 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
                 GalleryPage(
                         R.string.tab_text_screens,
                         R.string.gallery_title_screens,
-                        recordedScreensDir,
+                        Directory.getRecordedScreensDir(),
                         TaskType.RECORD_SCREEN
                 ),
 
@@ -170,6 +193,7 @@ class GalleryActivity : AppCompatActivity(), SelectionCountListener {
     }
 
     companion object {
+        @JvmStatic
         fun getIntent(context: Context): Intent {
             return Intent(context, GalleryActivity::class.java)
         }

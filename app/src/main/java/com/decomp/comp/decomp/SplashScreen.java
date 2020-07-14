@@ -34,6 +34,7 @@ import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.decomp.comp.decomp.features.compressing.CompressingImagesActivity;
+import com.decomp.comp.decomp.features.gallery.GalleryActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -280,7 +281,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         seekBar.setProgress(progress);
 
         //building and showing dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(SplashScreen.this, R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SplashScreen.this);
         builder.setTitle(images.size() + " " + img);
         instruction.setText(R.string.set_quality);
         builder.setPositiveButton(R.string.statCompressingBtn, new DialogInterface.OnClickListener() {
@@ -324,7 +325,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         ((TextView) infoDialogView.findViewById(R.id.i3)).setTypeface(regular);
 
         //AlertDialog to show when users clicks infoFab
-        AlertDialog.Builder infoBuilder = new AlertDialog.Builder(SplashScreen.this, R.style.MyAlertDialogStyle);
+        AlertDialog.Builder infoBuilder = new AlertDialog.Builder(SplashScreen.this);
         infoBuilder.setTitle(R.string.app_name);
         infoBuilder.setIcon(R.mipmap.launcher);
         infoBuilder.setPositiveButton(R.string.ok, null);
@@ -348,8 +349,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.compGalFab: {
-                Intent i = new Intent(getApplicationContext(), CompGallery.class);
-                startActivity(i);
+                startActivity(GalleryActivity.getIntent(this));
                 break;
             }
             case R.id.btn_changePermissions: {

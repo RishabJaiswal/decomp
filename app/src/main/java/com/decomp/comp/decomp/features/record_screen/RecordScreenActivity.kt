@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.application.KEY_RECORD_WITH_AUDIO
 import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
 import com.decomp.comp.decomp.application.KEY_STOP_RECORDING
 import com.decomp.comp.decomp.application.PreferenceKeys
@@ -58,8 +59,9 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPr
     //UI state management
     private fun changeRecordingState() {
         val isRecording = isRecordingScreen()
-        anim_recording.visibleOrGone(isRecordingScreen())
-        imv_art_record_screen.visibleOrGone(isRecordingScreen().not())
+        anim_recording.visibleOrGone(isRecording)
+        imv_art_record_screen.visibleOrGone(isRecording.not())
+        cb_enable_audio.visibleOrGone(isRecording.not())
         if (isRecording) {
             tv_lbl_record_screen.setText(R.string.lbl_recording_screen)
             tv_record_screen_details.setText(R.string.status_recording_details)
@@ -146,7 +148,8 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPr
         data?.let {
             startService(Intent(this, RecordScreen::class.java)
                     .putExtras(data)
-                    .putExtra(KEY_RESULT_SCREEN_CAST, resultCode))
+                    .putExtra(KEY_RESULT_SCREEN_CAST, resultCode)
+                    .putExtra(KEY_RECORD_WITH_AUDIO, cb_enable_audio.isChecked))
         }
     }
 

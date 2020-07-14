@@ -28,6 +28,14 @@ class GalleryViewModel : ViewModel() {
         return galleryPageModels[position].folderPath
     }
 
+    /***returns files in the file directory corresponding to the current gallery page*/
+    fun getGalleryPageFolderFiles(position: Int): List<File> {
+        val files = File(getPageFolderPath(position)).listFiles() ?: emptyArray()
+        return files.filter { file ->
+            file.isFile
+        }.toMutableList()
+    }
+
     fun getTaskType(position: Int) = galleryPageModels[position].taskType
 
     fun getTotalPages() = galleryPageModels.size
@@ -40,6 +48,14 @@ class GalleryViewModel : ViewModel() {
     fun removeSelectedFile(file: File) {
         userSelectedFiles.remove(file)
         updateSelectedFilesCount()
+    }
+
+    /**deletes the user*/
+    fun deleteUserSelectedFiles() {
+        userSelectedFiles.forEach { file ->
+            file.delete()
+        }
+        setUserSelectedFiles(emptyList())
     }
 
     fun hasUserSelected(file: File): Boolean {

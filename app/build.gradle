@@ -26,9 +26,13 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug{
+            resValue "string", "support_dev_ad_unit_id", "ca-app-pub-3940256099942544/5224354917"
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "support_dev_ad_unit_id", "ca-app-pub-4200151682628675/7937682345"
         }
     }
     compileOptions {

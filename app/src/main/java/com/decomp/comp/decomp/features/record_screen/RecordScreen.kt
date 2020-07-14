@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.crashlytics.android.Crashlytics
 import com.decomp.comp.decomp.R
+import com.decomp.comp.decomp.application.KEY_RECORD_WITH_AUDIO
 import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
 import com.decomp.comp.decomp.application.KEY_STOP_RECORDING
 import com.decomp.comp.decomp.application.PreferenceKeys
@@ -25,6 +26,7 @@ import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
 import com.decomp.comp.decomp.utils.extensions.getFormattedString
+import com.decomp.comp.decomp.utils.extensions.showLongToast
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -36,6 +38,7 @@ class RecordScreen : Service() {
     var DISPLAY_HEIGHT: Int = 0
     var DISPLAY_WIDTH: Int = 0
     var screenDensity: Int = 0
+    private var isAudioRecordingEnabled = false
     private var mediaRecorder: MediaRecorder? = null
     private var mediaProjection: MediaProjection? = null
     private var virtualDisplay: VirtualDisplay? = null
@@ -81,6 +84,7 @@ class RecordScreen : Service() {
         val videoFilePath = getFilePath()
         if (videoFilePath.isNotEmpty()) {
             val resultCode = intent.getIntExtra(KEY_RESULT_SCREEN_CAST, Activity.RESULT_OK)
+            isAudioRecordingEnabled = intent.getBooleanExtra(KEY_RECORD_WITH_AUDIO, false)
             initMediaRecorder(videoFilePath)
             setupMediaProjection(resultCode, intent)
             startScreenRecording()
@@ -105,14 +109,20 @@ class RecordScreen : Service() {
                 screenDensity = densityDpi
             }
             mediaRecorder?.apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
+                //audio source
+                if (isAudioRecordingEnabled) {
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                }
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
                 setOutputFile(videoFilePath)
                 setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-                setVideoEncodingBitRate(512 * 1000)
+                //audio encoder
+                if (isAudioRecordingEnabled) {
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                }
+                setVideoEncodingBitRate(1024 * 1000)
                 setVideoFrameRate(50)
                 prepare()
             }
@@ -161,6 +171,7 @@ class RecordScreen : Service() {
                     reset()
                     release()
                     virtualDisplay?.release()
+                    applicationContext.showLongToast(R.string.screen_saved)
                 } catch (error: RuntimeException) {
 
                 }

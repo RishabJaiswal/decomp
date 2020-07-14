@@ -220,7 +220,7 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
                 Snackbar.make(coord, R.string.noImageSelected, Snackbar.LENGTH_SHORT).show()
                 return
             }
-            val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+            val builder = AlertDialog.Builder(this)
             val size = imgAdapter.selFiles.size
             var imgs = "1 " + getString(R.string.image_selected)
             if (size > 1)
@@ -230,7 +230,7 @@ class CompGallery : AppCompatActivity(), View.OnClickListener {
             val finalImgs = imgs
             builder.setPositiveButton(R.string.ok) { dialogInterface, i ->
                 var total = size
-                val progressDialog = ProgressDialog(this@CompGallery, R.style.MyAlertDialogStyle)
+                val progressDialog = ProgressDialog(this@CompGallery)
                 progressDialog.setTitle(getString(R.string.deleting))
                 progressDialog.isIndeterminate = true
                 progressDialog.setCanceledOnTouchOutside(false)

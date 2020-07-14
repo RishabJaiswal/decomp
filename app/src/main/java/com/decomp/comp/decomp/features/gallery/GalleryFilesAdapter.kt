@@ -1,12 +1,16 @@
 package com.decomp.comp.decomp.features.gallery
 
-import android.graphics.BitmapFactory
-import android.media.ThumbnailUtils
-import android.provider.MediaStore
+import android.graphics.Bitmap
+import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.decomp.comp.decomp.AsyncDrawable
+import com.decomp.comp.decomp.ImgLoadAsynTask
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
@@ -18,12 +22,10 @@ import java.io.File
 
 class GalleryFilesAdapter(
         private val viewModel: GalleryViewModel,
-        val files: List<File>,
         private val thumbnailSize: Int,
         private val thumbnailSpacing: Int,
         private val taskType: TaskType,
-        val onFileClicked: (file: File) -> Unit) :
-        RecyclerView.Adapter<GalleryFilesAdapter.ViewHolder>() {
+        val onFileClicked: (file: File) -> Unit) : ListAdapter<File, GalleryFilesAdapter.ViewHolder>(FilesDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(getViewLayout(), parent, false)
@@ -58,21 +60,37 @@ class GalleryFilesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(files[position])
-    }
-
-    override fun getItemCount(): Int {
-        return files.size
+        holder.bind(getItem(position))
     }
 
     fun selectAllFiles() {
-        viewModel.setUserSelectedFiles(files)
+        viewModel.setUserSelectedFiles(currentList)
         notifyDataSetChanged()
     }
 
     fun unSelectAllFiles() {
         viewModel.setUserSelectedFiles(emptyList())
         notifyDataSetChanged()
+    }
+
+    private fun loadBitmap(imageView: ImageView, file: File) {
+        var bitmap: Bitmap?
+        synchronized(ThumbnailCache.lruCache) {
+            bitmap = ThumbnailCache.lruCache.get(file.absolutePath)
+        }
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap)
+            return
+        }
+        val context = imageView.context
+        val task = ImgLoadAsynTask(
+                imageView.context,
+                imageView, thumbnailSize,
+                taskType,
+                ThumbnailCache.lruCache)
+        val asyncDrawable = AsyncDrawable(context.resources, null, task)
+        imageView.setImageDrawable(asyncDrawable)
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, file)
     }
 
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
@@ -84,8 +102,8 @@ class GalleryFilesAdapter(
         open fun bind(file: File) {}
 
         override fun onClick(v: View?) {
+            val file = getItem(absoluteAdapterPosition)
             if (viewModel.isUserSelectingFiles()) {
-                val file = files[absoluteAdapterPosition]
                 if (viewModel.hasUserSelected(file)) {
                     //adding user selected file
                     viewModel.removeSelectedFile(file)
@@ -96,13 +114,13 @@ class GalleryFilesAdapter(
                 //checking the checkbox
                 notifyItemChanged(absoluteAdapterPosition)
             } else {
-                onFileClicked(files[absoluteAdapterPosition])
+                onFileClicked(file)
             }
         }
 
         override fun onLongClick(v: View?): Boolean {
             if (viewModel.isUserSelectingFiles().not()) {
-                viewModel.addSelectedFile(files[absoluteAdapterPosition])
+                viewModel.addSelectedFile(getItem(absoluteAdapterPosition))
                 viewModel.setUserSelectingFiles(true)
             }
             return true
@@ -113,26 +131,12 @@ class GalleryFilesAdapter(
     inner class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
 
         init {
-            itemView.setOnClickListener(this@ImageViewHolder)
+            itemView.imv_thumbnail.clipToOutline = true
         }
 
         override fun bind(file: File) {
-            var thumbnail = ThumbnailCache.get(file.absolutePath)
-            if (thumbnail == null) {
-                thumbnail = ThumbnailUtils.extractThumbnail(
-                        BitmapFactory.decodeFile(file.absolutePath),
-                        thumbnailSize,
-                        thumbnailSize
-                )
-
-                //thumbnail creation can fail
-                if (thumbnail != null) {
-                    ThumbnailCache.save(file.absolutePath, thumbnail)
-                }
-            }
             itemView.apply {
-                imv_thumbnail.setImageBitmap(thumbnail)
-                imv_thumbnail.clipToOutline = true
+                loadBitmap(imv_thumbnail, file)
                 cb_selected.visibleOrGone(viewModel.isUserSelectingFiles())
                 cb_selected.isChecked = viewModel.hasUserSelected(file)
             }
@@ -142,23 +146,28 @@ class GalleryFilesAdapter(
     //video
     inner class VideoViewHolder(itemView: View) : ViewHolder(itemView) {
 
-        override fun bind(file: File) {
-            var thumbnail = ThumbnailCache.get(file.absolutePath)
-            if (thumbnail == null) {
-                thumbnail = ThumbnailUtils.createVideoThumbnail(
-                        file.absolutePath,
-                        MediaStore.Images.Thumbnails.MINI_KIND
-                )
+        init {
+            itemView.imv_video_thumbnail.clipToOutline = true
+        }
 
-                //thumbnail creation can fail
-                if (thumbnail != null) {
-                    ThumbnailCache.save(file.absolutePath, thumbnail)
-                }
-            }
-            itemView.imv_video_thumbnail.apply {
-                setImageBitmap(thumbnail)
-                clipToOutline = true
+        override fun bind(file: File) {
+            itemView.apply {
+                loadBitmap(imv_video_thumbnail, file)
+                cb_video_selected.visibleOrGone(viewModel.isUserSelectingFiles())
+                cb_video_selected.isChecked = viewModel.hasUserSelected(file)
             }
         }
+    }
+
+    private class FilesDiffCallback : DiffUtil.ItemCallback<File>() {
+
+        override fun areItemsTheSame(oldItem: File, newItem: File): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: File, newItem: File): Boolean {
+            return oldItem.absolutePath == newItem.absolutePath
+        }
+
     }
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.SplashScreen
+import com.decomp.comp.decomp.application.AdRequestActivity
 import com.decomp.comp.decomp.features.gallery.GalleryActivity
 import com.decomp.comp.decomp.features.record_screen.RecordScreenActivity
 import kotlinx.android.synthetic.main.activity_home.*
@@ -22,9 +23,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_home)
         vp_tasks.adapter = TasksListAdapter(viewModel.getTasks(), this::onTaskSelect)
         btn_browse_gallery.setOnClickListener(this)
+        btn_support_dev.setOnClickListener(this)
     }
 
     private fun onTaskSelect(task: Task) {
+        if (task.isFeatureReady.not()) {
+            startActivity(AdRequestActivity.getIntent(this))
+            return
+        }
         when (task.taskType) {
             TaskType.COMPRESS_IMAGE -> startActivity(Intent(this, SplashScreen::class.java))
             TaskType.RECORD_SCREEN -> startActivity(Intent(this, RecordScreenActivity::class.java))
@@ -35,6 +41,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         when (view?.id) {
             R.id.btn_browse_gallery -> {
                 startActivity(GalleryActivity.getIntent(this))
+            }
+
+            R.id.btn_support_dev -> {
+                startActivity(AdRequestActivity.getIntent(this))
             }
         }
     }

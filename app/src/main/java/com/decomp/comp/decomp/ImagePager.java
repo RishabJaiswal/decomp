@@ -96,7 +96,7 @@ public class ImagePager extends AppCompatActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.delFab:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Delete");
                 builder.setMessage("Delete this image?");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
