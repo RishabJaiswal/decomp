@@ -14,5 +14,10 @@ object Directory {
                     publicDirName + File.separator +
                     recordedScreensDirName
 
+    fun getCompressedImagesDir() =
+            Environment
+                    .getExternalStorageDirectory()
+                    .toString() + File.separator +
+                    publicDirName
 
 }

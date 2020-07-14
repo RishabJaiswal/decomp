@@ -143,17 +143,14 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
     }
 
     private fun createGalleryPagesModels() {
-        val compressedImagesDir = getSharedPreferences("dir", Context.MODE_PRIVATE)
-                ?.getString("dir", null) ?: ""
 
-        val recordedScreensDir = Directory.getRecordedScreensDir()
 
         val galleryPages = listOf(
                 //images
                 GalleryPage(
                         R.string.tab_text_images,
                         R.string.gallery_title_images,
-                        compressedImagesDir,
+                        Directory.getCompressedImagesDir(),
                         TaskType.COMPRESS_IMAGE
                 ),
 
@@ -167,7 +164,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
                 GalleryPage(
                         R.string.tab_text_screens,
                         R.string.gallery_title_screens,
-                        recordedScreensDir,
+                        Directory.getRecordedScreensDir(),
                         TaskType.RECORD_SCREEN
                 ),
 
