@@ -36,8 +36,6 @@
         android:id="@+id/cb_video_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
         android:layout_marginStart="2dp"
         android:visibility="gone"
         android:button="@drawable/check_selector"
