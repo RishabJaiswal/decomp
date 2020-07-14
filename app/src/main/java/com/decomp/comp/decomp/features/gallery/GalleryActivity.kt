@@ -179,6 +179,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
     }
 
     companion object {
+        @JvmStatic
         fun getIntent(context: Context): Intent {
             return Intent(context, GalleryActivity::class.java)
         }
