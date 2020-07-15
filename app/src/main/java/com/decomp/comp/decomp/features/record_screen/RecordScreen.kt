@@ -1,6 +1,7 @@
 package com.decomp.comp.decomp.features.record_screen
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -18,10 +19,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.crashlytics.android.Crashlytics
 import com.decomp.comp.decomp.R
-import com.decomp.comp.decomp.application.KEY_RECORD_WITH_AUDIO
-import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
-import com.decomp.comp.decomp.application.KEY_STOP_RECORDING
-import com.decomp.comp.decomp.application.PreferenceKeys
+import com.decomp.comp.decomp.application.*
+import com.decomp.comp.decomp.features.gallery.GalleryActivity
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
@@ -46,6 +45,9 @@ class RecordScreen : Service() {
     private val projectionManager by lazy {
         getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
     }
+    private val notificationManager by lazy {
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
@@ -63,7 +65,7 @@ class RecordScreen : Service() {
 
         val notification = NotificationCompat.Builder(this, notificationChannelID)
                 .setContentTitle(applicationContext.getString(R.string.recording_notif_title))
-                .setContentText(applicationContext.getString(R.string.recording_notif_title))
+                .setContentText(applicationContext.getString(R.string.recording_notif_msg))
                 .setSmallIcon(android.R.drawable.ic_popup_sync)
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.arrow_up_float, "Stop recording", pendingIntent)
@@ -115,15 +117,15 @@ class RecordScreen : Service() {
                 }
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setOutputFile(videoFilePath)
-                setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
                 //audio encoder
                 if (isAudioRecordingEnabled) {
                     setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
                 }
-                setVideoEncodingBitRate(1024 * 1000)
-                setVideoFrameRate(50)
+                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+                setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+                setVideoFrameRate(30)
+                setOutputFile(videoFilePath)
+                setVideoEncodingBitRate(10 * 1024 * 1000)
                 prepare()
             }
         } catch (e: IOException) {
@@ -172,6 +174,7 @@ class RecordScreen : Service() {
                     release()
                     virtualDisplay?.release()
                     applicationContext.showLongToast(R.string.screen_saved)
+                    showRecordingSavedNotification()
                 } catch (error: RuntimeException) {
 
                 }
@@ -180,6 +183,24 @@ class RecordScreen : Service() {
             PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, false)
 
         }
+    }
+
+    private fun showRecordingSavedNotification() {
+        createNotificationChannel(RecordScreen.notificationChannelID, RecordScreen.notificationChannelName)
+        val notificationIntent = Intent(this, GalleryActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val notification = NotificationCompat.Builder(this, notificationChannelID)
+                .setContentTitle(applicationContext.getString(R.string.recording_saved_title))
+                .setContentText(applicationContext.getString(R.string.recording_saved_msg))
+                .setSmallIcon(android.R.drawable.ic_popup_sync)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
+                .build()
+
+        notificationManager.notify(Notifications.ID_RECORDING_SAVED, notification)
     }
 
     private fun createVirtualDisplay(): VirtualDisplay? {
