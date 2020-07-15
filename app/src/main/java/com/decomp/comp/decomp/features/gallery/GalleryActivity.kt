@@ -1,10 +1,15 @@
 package com.decomp.comp.decomp.features.gallery
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
@@ -19,6 +24,7 @@ import com.decomp.comp.decomp.utils.extensions.getFileUri
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
@@ -28,6 +34,8 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
 
     private lateinit var interstitialAd: InterstitialAd
     private lateinit var adRequest: AdRequest
+    private val REQUEST_PERMISSIONS = 11
+
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
     }
@@ -41,9 +49,9 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
+        checkForPermissions()
         createGalleryPagesModels()
         observeUserSelection()
-        setGalleryPages()
         initializeAd()
 
         //share bar bottomsheet
@@ -56,6 +64,10 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
         btn_share_files.setOnClickListener(this)
         cb_select_all.setOnClickListener(this)
         btn_delete_files.setOnClickListener(this)
+    }
+
+    private fun onPermissionsGranted() {
+        setGalleryPages()
     }
 
     private fun initializeAd() {
@@ -92,6 +104,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
     }
 
     private fun setGalleryPages() {
+        tv_page_title.setText(viewModel.getPageTitle(0))
         vp_gallery.adapter = GalleryPagerAdapter(this, viewModel, supportFragmentManager)
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(vp_gallery)
@@ -162,6 +175,68 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
         )
         viewModel.galleryPageModels = galleryPages
     }
+
+    /*requesting permissions*/
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                arrayOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                REQUEST_PERMISSIONS)
+    }
+
+    private fun checkForPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            //permission was denied initially
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                showEnablePermissionSnack()
+            } else {
+                requestPermissions()
+            }
+        } else {
+            onPermissionsGranted()
+        }
+    }
+
+    private fun showEnablePermissionSnack() {
+        Snackbar.make(findViewById(android.R.id.content), "Please allow file system access",
+                Snackbar.LENGTH_INDEFINITE).setAction("ENABLE") {
+            requestPermissions()
+        }.show()
+    }
+
+    private fun showOpenSettingSnack() {
+        Snackbar.make(findViewById(android.R.id.content), "Allow access to file system",
+                Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                View.OnClickListener {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = Uri.parse("package:$packageName")
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                    startActivity(intent)
+                }).show()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_PERMISSIONS -> {
+                if (grantResults.isNotEmpty() &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionsGranted()
+                } else {
+                    showOpenSettingSnack()
+                }
+                return
+            }
+        }
+    }
+
 
     companion object {
         @JvmStatic
