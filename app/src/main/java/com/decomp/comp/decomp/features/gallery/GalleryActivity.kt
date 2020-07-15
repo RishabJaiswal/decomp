@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.BaseActivity
+import com.decomp.comp.decomp.application.KEY_TASK_TYPE
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
@@ -126,6 +127,10 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
             }
         })
 
+        //scrolling to a specific task page
+        val taskType = TaskType.from(intent.getStringExtra(KEY_TASK_TYPE))
+        val taskTypePosition = viewModel.getTaskTypePosition(taskType)
+        vp_gallery.setCurrentItem(taskTypePosition, true)
     }
 
     //listening the number of files selected
@@ -240,26 +245,6 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
         }
     }
 
-
-    companion object {
-        @JvmStatic
-        fun getIntent(context: Context): Intent {
-            return Intent(context, GalleryActivity::class.java)
-        }
-    }
-
-    inner class ShareBottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
-
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                viewModel.setUserSelectingFiles(false)
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        }
-    }
-
     override fun onClick(view: View?) {
         when (view?.id) {
 
@@ -297,6 +282,29 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
                             null
                 )
             }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun getIntent(context: Context, taskType: TaskType? = TaskType.UNKNOWN): Intent {
+            return Intent(context, GalleryActivity::class.java).apply {
+                if (taskType != null) {
+                    putExtra(KEY_TASK_TYPE, taskType.value)
+                }
+            }
+        }
+    }
+
+    inner class ShareBottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                viewModel.setUserSelectingFiles(false)
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
     }
 }

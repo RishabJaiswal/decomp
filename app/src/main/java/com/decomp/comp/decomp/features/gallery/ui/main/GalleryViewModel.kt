@@ -41,6 +41,15 @@ class GalleryViewModel : ViewModel() {
 
     fun getTaskType(position: Int) = galleryPageModels[position].taskType
 
+    fun getTaskTypePosition(tasktype: TaskType): Int {
+        galleryPageModels.forEachIndexed { index, galleryPage ->
+            if (galleryPage.taskType == tasktype) {
+                return index
+            }
+        }
+        return 0
+    }
+
     fun getTotalPages() = galleryPageModels.size
 
     fun addSelectedFile(file: File) {

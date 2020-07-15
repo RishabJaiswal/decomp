@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.*
 import com.decomp.comp.decomp.features.gallery.GalleryActivity
+import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
@@ -187,7 +188,7 @@ class RecordScreen : Service() {
 
     private fun showRecordingSavedNotification() {
         createNotificationChannel(RecordScreen.notificationChannelID, RecordScreen.notificationChannelName)
-        val notificationIntent = Intent(this, GalleryActivity::class.java)
+        val notificationIntent = GalleryActivity.getIntent(this, TaskType.RECORD_SCREEN)
         val pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 

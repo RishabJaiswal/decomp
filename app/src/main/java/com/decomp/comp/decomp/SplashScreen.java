@@ -35,6 +35,7 @@ import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.decomp.comp.decomp.features.compressing.CompressingImagesActivity;
 import com.decomp.comp.decomp.features.gallery.GalleryActivity;
+import com.decomp.comp.decomp.features.home.TaskType;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -349,7 +350,7 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.compGalFab: {
-                startActivity(GalleryActivity.getIntent(this));
+                startActivity(GalleryActivity.getIntent(this, TaskType.UNKNOWN));
                 break;
             }
             case R.id.btn_changePermissions: {
