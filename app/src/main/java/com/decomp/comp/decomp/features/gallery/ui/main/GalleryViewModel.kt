@@ -34,6 +34,9 @@ class GalleryViewModel : ViewModel() {
         return files.filter { file ->
             file.isFile
         }.toMutableList()
+                .sortedByDescending { file ->
+                    file.lastModified()
+                }
     }
 
     fun getTaskType(position: Int) = galleryPageModels[position].taskType
