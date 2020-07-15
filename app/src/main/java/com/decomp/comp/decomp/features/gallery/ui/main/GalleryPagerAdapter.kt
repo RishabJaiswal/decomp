@@ -9,7 +9,7 @@ class GalleryPagerAdapter(
         private val context: Context,
         private val viewModel: GalleryViewModel,
         fm: FragmentManager)
-    : FragmentPagerAdapter(fm) {
+    : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         // getItem is called to instantiate the fragment for the given page.
