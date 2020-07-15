@@ -54,7 +54,7 @@
 
     <string name="no_images_show">No DeComped image</string>
     <!--deleting images and sharing on CompGallery Activity-->
-    <string name="deleteImages">Delete these images?</string>
+    <string name="deleteImages">Delete these files?</string>
     <string name="deleting">Deleting…</string>
     <string name="deleted">Deleted</string>
     <string name="unableToDelete">Unable to delete</string>

@@ -39,7 +39,7 @@
 
     <string name="no_images_show">कोई तसवीर नहीं है</string>
     <!--deleting images and sharing on CompGallery Activity-->
-    <string name="deleteImages">इन तस्वीरों को मिटाना चाहते हैं?</string>
+    <string name="deleteImages">इन फ़ाइलों को हटाएं?</string>
     <string name="deleting">तस्वीरों को मिटाया जा रहा है…</string>
     <string name="deleted">मिटा दिया</string>
     <string name="unableToDelete">मिटाने में असमर्थ</string>
@@ -96,6 +96,7 @@
     <string name="tab_text_screens">स्क्रीन</string>
     <string name="tab_text_videos">वीडियो</string>
 
+    <string name="gallery_initial_title">DeComp\nगैलरी</string>
     <string name="gallery_title_images">संकुचित\nचित्र</string>
     <string name="gallery_title_docs">स्कैन किए गए\nदस्तावेज़</string>
     <string name="gallery_title_screens">स्क्रीन\nरिकॉर्डिंग</string>

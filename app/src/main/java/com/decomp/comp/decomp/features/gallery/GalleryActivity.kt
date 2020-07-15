@@ -50,7 +50,6 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         checkForPermissions()
-        createGalleryPagesModels()
         observeUserSelection()
         initializeAd()
 
@@ -104,7 +103,11 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
     }
 
     private fun setGalleryPages() {
+
+        //setting up models & titles
+        createGalleryPagesModels()
         tv_page_title.setText(viewModel.getPageTitle(0))
+
         vp_gallery.adapter = GalleryPagerAdapter(this, viewModel, supportFragmentManager)
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(vp_gallery)
