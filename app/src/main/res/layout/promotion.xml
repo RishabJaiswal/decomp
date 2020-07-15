@@ -63,6 +63,7 @@
 
     <Button
         android:id="@+id/know_more"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -76,6 +77,7 @@
         android:id="@+id/install_mye_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        style="@style/BaseButton"
         android:background="@color/promo_color"
         android:text="@string/install"
         android:textColor="@android:color/white"
