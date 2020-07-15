@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
 import java.util.*
 
-class GalleryActivity : BaseActivity(), SelectionCountListener {
+class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickListener {
 
     private lateinit var interstitialAd: InterstitialAd
     private lateinit var adRequest: AdRequest
@@ -52,42 +52,13 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
             addBottomSheetCallback(shareBottomsheetCallback)
         }
 
-        //listening for all files selection changes
-        btn_share_files.setOnClickListener {
-            val filesToShare = ArrayList<Uri>()
-            for (file in viewModel.userSelectedFiles)
-                filesToShare.add(getFileUri(file))
-
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND_MULTIPLE
-                type = viewModel.getShareIntentType(viewModel.getTaskType(vp_gallery.currentItem))
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.share)))
-        }
-
-        btn_delete_files.setOnClickListener {
-            showAlertDialog(
-                    R.string.deleteImages,
-                    R.string.deleteImages,
-                    android.R.string.ok,
-                    onPositiveAction = {
-                        viewModel.deleteUserSelectedFiles()
-                    })
-        }
-
-        //clicking on select all
-        cb_select_all.setOnClickListener {
-            viewModel.selectAllFilesFor(
-                    if (cb_select_all.isChecked)
-                        viewModel.getTaskType(vp_gallery.currentItem)
-                    else
-                        null
-            )
-        }
+        //setting click listeners
+        btn_share_files.setOnClickListener(this)
+        cb_select_all.setOnClickListener(this)
+        btn_delete_files.setOnClickListener(this)
     }
 
-    fun initializeAd() {
+    private fun initializeAd() {
         adRequest = AdRequest.Builder().build()
         interstitialAd = InterstitialAd(this)
         interstitialAd.adUnitId = getString(R.string.interstitial_adunit)
@@ -208,6 +179,46 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+
+            //listening for all files selection changes
+            R.id.btn_share_files -> {
+                val filesToShare = ArrayList<Uri>()
+                for (file in viewModel.userSelectedFiles)
+                    filesToShare.add(getFileUri(file))
+
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND_MULTIPLE
+                    type = viewModel.getShareIntentType(viewModel.getTaskType(vp_gallery.currentItem))
+                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
+                }
+                startActivity(Intent.createChooser(intent, getString(R.string.share)))
+            }
+
+            //deleting files
+            R.id.btn_delete_files -> {
+                showAlertDialog(
+                        R.string.are_you_sure,
+                        R.string.deleteImages,
+                        android.R.string.ok,
+                        onPositiveAction = {
+                            viewModel.deleteUserSelectedFiles()
+                        })
+            }
+
+            //clicking on select all
+            R.id.cb_select_all -> {
+                viewModel.selectAllFilesFor(
+                        if (cb_select_all.isChecked)
+                            viewModel.getTaskType(vp_gallery.currentItem)
+                        else
+                            null
+                )
+            }
         }
     }
 }

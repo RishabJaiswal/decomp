@@ -105,6 +105,9 @@
     <string name="record_screen">Record\nScreen</string>
     <string name="record_with_audio">Record with audio</string>
     <string name="screen_saved">Recording saved in DeComp Gallery</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="recording_notif_title">DeComp is Recording</string>
+    <string name="recording_notif_msg">DeComp is helping you record the screen</string>
 
     <!--decomp gallery-->
     <string name="tab_text_images">Images</string>

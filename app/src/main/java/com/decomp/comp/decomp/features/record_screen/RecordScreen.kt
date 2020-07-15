@@ -62,8 +62,8 @@ class RecordScreen : Service() {
                 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(this, notificationChannelID)
-                .setContentTitle("DeComp is Recording")
-                .setContentText("DeComp is helping you record the screen")
+                .setContentTitle(applicationContext.getString(R.string.recording_notif_title))
+                .setContentText(applicationContext.getString(R.string.recording_notif_title))
                 .setSmallIcon(android.R.drawable.ic_popup_sync)
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.arrow_up_float, "Stop recording", pendingIntent)
