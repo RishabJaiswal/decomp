@@ -17,23 +17,23 @@ class HomeViewModel : ViewModel() {
                 //record screen
                 Task(R.string.task_title_record_screen,
                         R.string.task_details_record_screen,
-                        R.drawable.art_task_record_screen,
-                        R.color.blue800,
+                        R.drawable.art_task_compress_video,
+                        R.color.blue900,
                         TaskType.RECORD_SCREEN,
                         isFeatureReady = true),
 
                 //scan documents
                 Task(R.string.task_title_scan_document,
                         R.string.task_details_scan_document,
-                        R.drawable.art_task_record_screen,
+                        R.drawable.art_scan_documents,
                         R.color.blue800,
                         TaskType.SCAN_DOC),
 
                 //compress video
                 Task(R.string.task_title_compress_videos,
                         R.string.task_details_compress_videos,
-                        R.drawable.art_task_compress_video,
-                        R.color.blue900,
+                        R.drawable.art_video_settings,
+                        R.color.blue800,
                         TaskType.COMPRESS_VIDEO)
         )
     }
