@@ -77,6 +77,8 @@
     <string name="note_owl_app_name">Note Owl</string>
     <string name="note_owl_promo_descripion">If you haven\'t caught up with your writing habits, try note making with Note Owl. Write small scribbles, detailed descriptions or just a helpful visual reminder.</string>
 
+    <string name="feature_coming_soon">Feature coming soon</string>
+
     <!--preferences-->
     <string name="pref_decompCount" translatable="false">decompedCount</string>
     <string name="pref_user_data" translatable="false">userData</string>
@@ -89,7 +91,7 @@
 
     <!--task details-->
     <string name="task_details_compress_images">Select a quality for your images to compress them &amp; save your precious memory</string>
-    <string name="task_details_compress_videos">Select a basic option or more advanced feature to compress your videos</string>
+    <string name="task_details_compress_videos">Select a basic option or a more advanced feature to compress your videos</string>
     <string name="task_details_record_screen">Record the screen of your mobile while using it &amp; share it with others or just save it</string>
     <string name="task_details_scan_document">Keep you precious documents safe by digitalising them via the DeComp scanner</string>
     <string name="select_your_task">Select your task</string>
@@ -120,10 +122,12 @@
     <string name="gallery_title_screens">Recorded\nScreens</string>
     <string name="gallery_title_videos">Compressed\nVideos</string>
     <string name="no_files_present">Folder looks empty</string>
+    <string name="files_selected">%d selected</string>
 
     <!--ad request screen screen-->
     <string name="error_ad_load">Failed to load</string>
     <string name="ad_request_title">Building for you! Support us?</string>
     <string name="ad_request_msg">Developer is building more features for you. Meanwhile, you can support by watching an Ad for him. It helps him in bringing amazing features for you.</string>
     <string name="ad_request_btn">Watch &amp; Support</string>
+    <string name="browse_decomp_gallery">Browse decomp gallery</string>
 </resources>

@@ -122,7 +122,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickList
 
             cb_select_all.apply {
                 isChecked = areAllFilesSelected
-                text = "$selectedFilesCount selected"
+                text = getString(R.string.files_selected, selectedFilesCount)
             }
         }
     }

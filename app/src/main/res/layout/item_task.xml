@@ -59,7 +59,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:elevation="@dimen/task_non_card_elevation"
-        android:text="Feature coming soon"
+        android:text="@string/feature_coming_soon"
         android:textColor="@color/blue1000"
         android:textSize="@dimen/txt_caption"
         app:layout_constraintEnd_toEndOf="@+id/cardView"

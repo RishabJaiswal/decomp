@@ -22,7 +22,7 @@
                 android:id="@+id/tv_page_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Compressed\nImages"
+                android:text="@string/gallery_title_images"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/txt_40"
                 android:paddingStart="24dp"
