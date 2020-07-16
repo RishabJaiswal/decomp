@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:behavior_peekHeight="0dp"
+    tools:context=".features.gallery.GalleryActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_gallery"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <TextView
+                android:id="@+id/tv_page_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gallery_initial_title"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/txt_40"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/raleway" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <!--file tabs-->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:background="@null"
+            app:tabMode="scrollable"
+            app:tabTextColor="@color/opaqueWhite"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextAppearance="@style/galleryTabText"
+            app:tabIndicator="@drawable/recatangle_rounded_blue"
+            app:tabIndicatorGravity="center"
+            app:tabIndicatorColor="#5466CE"
+            app:tabIndicatorHeight="32dp"
+            app:tabPaddingStart="32dp"
+            app:tabPaddingEnd="32dp" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!--gallery pages-->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/share_files_bar" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

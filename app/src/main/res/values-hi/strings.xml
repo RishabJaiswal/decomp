@@ -39,7 +39,7 @@
 
     <string name="no_images_show">कोई तसवीर नहीं है</string>
     <!--deleting images and sharing on CompGallery Activity-->
-    <string name="deleteImages">इन तस्वीरों को मिटाना चाहते हैं?</string>
+    <string name="deleteImages">इन फ़ाइलों को हटाएं?</string>
     <string name="deleting">तस्वीरों को मिटाया जा रहा है…</string>
     <string name="deleted">मिटा दिया</string>
     <string name="unableToDelete">मिटाने में असमर्थ</string>
@@ -60,9 +60,59 @@
     <string name="note_owl_app_name">Note Owl</string>
     <string name="note_owl_promo_descripion">If you haven\'t caught up with your writing habits, try note making with Note Owl. Those small scribbles, details descriptions or just a visual reminder are helpful</string>
 
-    <!--Mind your Earth promo-->
-    <!--<string name="our_planet">हमारी पृथ्वी</string>
-    <string name="mind_your_earth">Mind your Earth</string>
-    <string name="mind_your_earth_descripion">कचरा डिजीटल करें और उन्हें अपने नक्शे पर खोजें। एक लंबी ज्ञात समस्या का समाधान करे।</string>-->
+    <string name="feature_coming_soon">जल्द ही आने वाला फीचर</string>
+
+    <!--tasks-->
+    <string name="task_title_compress_images">छवियों संपीड़ित करें</string>
+    <string name="task_title_compress_videos">वीडियो संपीड़ित करें</string>
+    <string name="task_title_record_screen">स्क्रीन रिकॉर्ड करें</string>
+    <string name="task_title_scan_document">दस्तावेजों को स्कैन करें</string>
+
+    <!--task details-->
+    <string name="task_details_compress_images">अपनी छवियों के लिए उन्हें संपीड़ित करने और अपनी कीमती मेमोरी को बचाने के लिए एक गुणवत्ता का चयन करें।</string>
+    <string name="task_details_compress_videos">अपने वीडियो को संपीड़ित करने के लिए एक मूल विकल्प या अधिक उन्नत सुविधा का चयन करें।</string>
+    <string name="task_details_record_screen">मोबाइल का उपयोग करते समय अपने मोबाइल की स्क्रीन रिकॉर्ड करें और दूसरों के साथ साझा करें या बस इसे सहेजें।</string>
+    <string name="task_details_scan_document">आप कीमती दस्तावेजों को डीकॉम स्कैनर के माध्यम से डिजिटल करके सुरक्षित रखें।</string>
+    <string name="select_your_task">अपने कार्य का चयन करें</string>
+
+    <!--record screen-->
+    <string name="status_recording_details">डीकॉम आपको अपनी स्क्रीन रिकॉर्ड करने में मदद कर रहा है। नवीनतम रिकॉर्डिंग देखने के लिए स्क्रीन रिकॉर्डिंग के साथ काम करने के बाद कृपया डीकॉम गैलरी ब्राउज़ करें।</string>
+    <string name="status_not_recording_details">डीकॉम आपको अपनी स्क्रीन रिकॉर्ड करने और डीकॉम गैलरी में सुरक्षित रूप से अपने रिकॉर्ड किए गए स्क्रीन को बचाने में मदद कर सकता है।</string>
+    <string name="start_recording">रिकॉर्डिंग शुरू करें</string>
+    <string name="stop_recording">रिकॉर्डिंग बंद करें</string>
+    <string name="lbl_record_screen">रिकॉर्ड\nस्क्रीन</string>
+    <string name="lbl_recording_screen">रिकॉर्डिंग…</string>
+    <string name="error_directory_creation">डायरेक्टरी बनाने में अक्षम</string>
+    <string name="record_screen">रिकॉर्ड\nस्क्रीन</string>
+    <string name="record_with_audio">ऑडियो के साथ रिकॉर्ड करें</string>
+    <string name="screen_saved">रिकॉर्डिंग डीकॉम गैलरी में सहेजी गई</string>
+    <string name="are_you_sure">क्या आपको यकीन है?</string>
+    <string name="recording_notif_title">DeComp स्क्रीन रिकॉर्डिंग कर रहा है।</string>
+    <string name="recording_notif_msg">DeComp आपको स्क्रीन रिकॉर्ड करने में मदद कर रहा है।</string>
+    <string name="recording_saved_title">रिकॉर्डिंग सहेजा गया</string>
+    <string name="recording_saved_msg">आपकी स्क्रीन रिकॉर्डिंग DeComp गैलरी में सुरक्षित रूप से सहेजी गई है</string>
+    <string name="failed_to_record">स्क्रीन रिकॉर्ड करने में विफल</string>
+    <string name="max_images_reached_msg">आप %d छवियों तक का चयन कर सकते हैं</string>
+
+    <!--decomp gallery-->
+    <string name="tab_text_images">इमेजिस</string>
+    <string name="tab_text_docs">दस्तावेज़</string>
+    <string name="tab_text_screens">स्क्रीन</string>
+    <string name="tab_text_videos">वीडियो</string>
+
+    <string name="gallery_initial_title">DeComp\nगैलरी</string>
+    <string name="gallery_title_images">संकुचित\nचित्र</string>
+    <string name="gallery_title_docs">स्कैन किए गए\nदस्तावेज़</string>
+    <string name="gallery_title_screens">स्क्रीन\nरिकॉर्डिंग</string>
+    <string name="gallery_title_videos">संपीड़ित\nवीडियो</string>
+    <string name="no_files_present">फोल्डर खाली दिखता है</string>
+    <string name="files_selected">%d चुन लिया</string>
+
+    <!--ad request screen screen-->
+    <string name="error_ad_load">लोड करने में विफल</string>
+    <string name="ad_request_title">आपके लिए भवन! हमें सहयोग दीजिये?</string>
+    <string name="ad_request_msg">डेवलपर आपके लिए और अधिक सुविधाओं का निर्माण कर रहा है। इस बीच, आप उसके लिए एक विज्ञापन देखकर समर्थन कर सकते हैं। यह आपके लिए अद्भुत विशेषताएं लाने में उनकी मदद करता है।</string>
+    <string name="ad_request_btn">देखें और समर्थन दें</string>
+    <string name="browse_decomp_gallery">गैलरी ब्राउज़ करें</string>
 
 </resources>

@@ -54,7 +54,7 @@
 
     <string name="no_images_show">No DeComped image</string>
     <!--deleting images and sharing on CompGallery Activity-->
-    <string name="deleteImages">Delete these images?</string>
+    <string name="deleteImages">Delete these files?</string>
     <string name="deleting">Deleting…</string>
     <string name="deleted">Deleted</string>
     <string name="unableToDelete">Unable to delete</string>
@@ -77,12 +77,62 @@
     <string name="note_owl_app_name">Note Owl</string>
     <string name="note_owl_promo_descripion">If you haven\'t caught up with your writing habits, try note making with Note Owl. Write small scribbles, detailed descriptions or just a helpful visual reminder.</string>
 
-    <!--Mind Your Earth promo-->
-    <!--<string name="our_planet">Our Planet</string>
-    <string name="mind_your_earth">Mind your Earth</string>
-    <string name="mind_your_earth_descripion">Digitize trash and locate them on your map. Solving a long known problem.</string>-->
+    <string name="feature_coming_soon">Feature coming soon</string>
 
     <!--preferences-->
     <string name="pref_decompCount" translatable="false">decompedCount</string>
     <string name="pref_user_data" translatable="false">userData</string>
+
+    <!--tasks-->
+    <string name="task_title_compress_images">Compress Images</string>
+    <string name="task_title_compress_videos">Compress Videos</string>
+    <string name="task_title_record_screen">Record screen</string>
+    <string name="task_title_scan_document">Scan documents</string>
+
+    <!--task details-->
+    <string name="task_details_compress_images">Select a quality for your images to compress them &amp; save your precious memory</string>
+    <string name="task_details_compress_videos">Select a basic option or a more advanced feature to compress your videos</string>
+    <string name="task_details_record_screen">Record the screen of your mobile while using it &amp; share it with others or just save it</string>
+    <string name="task_details_scan_document">Keep you precious documents safe by digitalising them via the DeComp scanner</string>
+    <string name="select_your_task">Select your task</string>
+
+    <!--record screen-->
+    <string name="status_recording_details">DeComp is helping you record your screen. Please browse the DeComp gallery, once you are done with screen recording to view the latest recordings.</string>
+    <string name="status_not_recording_details">DeComp can help you record your screen and save your recorded screens safely in DeComp gallery, once you are done with screen recording.</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop Recording</string>
+    <string name="lbl_record_screen">Record\nScreen</string>
+    <string name="lbl_recording_screen">Recording…</string>
+    <string name="error_directory_creation">Unable to create directory</string>
+    <string name="record_screen">Record\nScreen</string>
+    <string name="record_with_audio">Record with audio</string>
+    <string name="screen_saved">Recording saved in DeComp Gallery</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="recording_notif_title">DeComp is Recording</string>
+    <string name="recording_notif_msg">DeComp is helping you record the screen</string>
+    <string name="recording_saved_title">Recording Saved</string>
+    <string name="recording_saved_msg">Your screen recording is saved safely in DeComp Gallery</string>
+    <string name="failed_to_record">Failed to record screen</string>
+    <string name="max_images_reached_msg">You can select up to %d images</string>
+
+    <!--decomp gallery-->
+    <string name="tab_text_images">Images</string>
+    <string name="tab_text_docs">Documents</string>
+    <string name="tab_text_screens">Screens</string>
+    <string name="tab_text_videos">Videos</string>
+
+    <string name="gallery_initial_title">DeComp\nGallery</string>
+    <string name="gallery_title_images">Compressed\nImages</string>
+    <string name="gallery_title_docs">Scanned\nDocuments</string>
+    <string name="gallery_title_screens">Recorded\nScreens</string>
+    <string name="gallery_title_videos">Compressed\nVideos</string>
+    <string name="no_files_present">Folder looks empty</string>
+    <string name="files_selected">%d selected</string>
+
+    <!--ad request screen screen-->
+    <string name="error_ad_load">Failed to load</string>
+    <string name="ad_request_title">Building for you! Support us?</string>
+    <string name="ad_request_msg">Developer is building more features for you. Meanwhile, you can support by watching an Ad for him. It helps him in bringing amazing features for you.</string>
+    <string name="ad_request_btn">Watch &amp; Support</string>
+    <string name="browse_decomp_gallery">Browse decomp gallery</string>
 </resources>

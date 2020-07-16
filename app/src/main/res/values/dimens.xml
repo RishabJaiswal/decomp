@@ -1,10 +1,24 @@
 <resources>
+    <!--text sizes-->
+    <dimen name="txt_caption">12sp</dimen>
+    <dimen name="txt_body">14sp</dimen>
+    <dimen name="txt_title">16sp</dimen>
+    <dimen name="txt_18">18sp</dimen>
+    <dimen name="txt_20">20sp</dimen>
+    <dimen name="txt_24">24sp</dimen>
+    <dimen name="txt_40">40sp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="compressing_items_pad">0.5dp</dimen>
-    <dimen name="checkbox_dimen">40dp</dimen>
+    <dimen name="checkbox_dimen">32dp</dimen>
     <dimen name="compressing_image">108dp</dimen>
     <dimen name="compress_pb_height">1dp</dimen>
     <dimen name="compress_image_card_radius">8dp</dimen>
+
+    <dimen name="task_card_elevation">4dp</dimen>
+    <dimen name="task_non_card_elevation">6dp</dimen>
+    <dimen name="task_card_corner_radius">16dp</dimen>
+    <dimen name="task_art">132dp</dimen>
 </resources>

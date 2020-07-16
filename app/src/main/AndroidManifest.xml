@@ -4,64 +4,91 @@
     package="com.decomp.comp.decomp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
+        android:name=".application.DeCompApplicaton"
         android:icon="@mipmap/launcher"
         android:label="@string/app_name"
-        android:name=".application.DeCompApplicaton"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <service
+            android:name=".features.record_screen.RecordScreen"
+            android:foregroundServiceType="mediaProjection"
+            android:enabled="true"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".features.home.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".features.compressing.CompressingImagesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
-
-        <!--main and initial screen-->
+        <!-- main and initial screen -->
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
 
-        <!--activity to select multiple images to compress-->
+        <!-- activity to show all compressed images -->
         <activity
-            android:name="com.darsh.multipleimageselect.activities.AlbumSelectActivity"
-            android:theme="@style/MultipleImageSelectTheme"
-            android:screenOrientation="portrait"/>
+            android:name=".CompGallery"
+            android:screenOrientation="portrait" />
 
-        <!--activity to show all compressed images-->
-        <activity android:name=".CompGallery"
-            android:screenOrientation="portrait"/>
+        <!-- activity to show a selected image -->
+        <activity
+            android:name=".ImagePager"
+            android:screenOrientation="portrait" />
 
-        <!--activity to show a selected image-->
-        <activity android:name=".ImagePager"
-            android:screenOrientation="portrait"/>
+        <!--screen recording activity-->
+        <activity
+            android:name="com.decomp.comp.decomp.features.record_screen.RecordScreenActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
 
-        <!--file provider for sdk>=24-->
+        <!--DeComp gallery screen-->
+        <activity
+            android:name=".features.gallery.GalleryActivity"
+            android:screenOrientation="portrait" />
+
+        <!--watch ad to support-->
+        <activity
+            android:name=".application.AdRequestActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- file provider for sdk>=24 -->
         <provider
-            android:authorities="${applicationId}.file.provider"
             android:name=".GenericFileProvider"
+            android:authorities="${applicationId}.file.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
-
+                android:resource="@xml/provider_paths" />
         </provider>
 
     </application>
+
 </manifest>

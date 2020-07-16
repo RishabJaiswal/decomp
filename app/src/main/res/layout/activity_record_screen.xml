@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context=".features.record_screen.RecordScreenActivity">
+
+    <!--record screen label-->
+    <TextView
+        android:id="@+id/tv_lbl_record_screen"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/record_screen"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_record_screen_details"
+        app:layout_constraintEnd_toStartOf="@+id/imv_art_record_screen"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <!--animation for recording-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/anim_recording"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toTopOf="@+id/tv_lbl_record_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="record.json"
+        app:lottie_loop="true" />
+
+    <!--art work-->
+    <ImageView
+        android:id="@+id/imv_art_record_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_lbl_record_screen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/art_task_record_screen" />
+
+    <!--record screen details-->
+    <TextView
+        android:id="@+id/tv_record_screen_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/raleway"
+        android:text="@string/status_not_recording_details"
+        android:textColor="@color/primaryTextBlack"
+        app:layout_constraintBottom_toTopOf="@+id/cb_enable_audio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lbl_record_screen" />
+
+    <!--enabling/disabling audio while recording-->
+    <CheckBox
+        android:id="@+id/cb_enable_audio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:paddingStart="8dp"
+        android:background="?android:selectableItemBackground"
+        android:button="@drawable/check_selector"
+        android:buttonTint="@color/check_selector_color_list"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/record_with_audio"
+        android:textColor="@color/secondaryTextBlack"
+        android:textSize="@dimen/txt_body"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start_recording"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_record_screen_details" />
+
+    <!--start/stop recording button-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_start_recording"
+        style="@style/BaseButton"
+        android:layout_width="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_goneMarginTop="16dp"
+        android:text="@string/start_recording"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_record_screen_details"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/tv_record_screen_details"
+        app:layout_constraintTop_toBottomOf="@+id/cb_enable_audio" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

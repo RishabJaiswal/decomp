@@ -1,6 +1,6 @@
 package com.decomp.comp.decomp.features.compressing
 
-import com.darsh.multipleimageselect.models.Image
+import com.nguyenhoanglam.imagepicker.model.Image
 import java.io.File
 
 class SelectedImage(val image: Image) : File(image.path) {

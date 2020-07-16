@@ -2,21 +2,38 @@
 
     <!-- Base application theme. -->
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme" parent="AppTheme.Base">
-    </style>
+    <style name="AppTheme" parent="AppTheme.Base"></style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColorPrimary"> #d000 </item>
+    <!--button styles-->
+    <style name="BaseButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">@dimen/btn_corner_radius</item>
+        <item name="android:fontFamily">@font/raleway_bold</item>
+        <item name="android:textSize">@dimen/txt_body</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="OutlinedBaseButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">@dimen/btn_corner_radius</item>
+        <item name="android:fontFamily">@font/raleway_bold</item>
+        <item name="android:textSize">@dimen/txt_body</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <style name="expandedToolbar" parent="TextAppearance.AppCompat.Medium">
@@ -30,4 +47,14 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="galleryTabText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">@dimen/txt_body</item>
+        <item name="textAllCaps">false</item>
+        <item name="fontFamily">@font/raleway_bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="paddingStart">32dp</item>
+        <item name="paddingEnd">32dp</item>
+    </style>
+
+    <dimen name="btn_corner_radius">8dp</dimen>
 </resources>
