@@ -8,7 +8,6 @@ import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.darsh.multipleimageselect.models.Image
 import com.decomp.comp.decomp.CompGallery
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.KEY_COMP_FACTOR
@@ -19,6 +18,7 @@ import com.decomp.comp.decomp.utils.extensions.toggle
 import com.decomp.comp.decomp.utils.extensions.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.nguyenhoanglam.imagepicker.model.Image
 import kotlinx.android.synthetic.main.activity_compressing_images.*
 import kotlinx.android.synthetic.main.bottom_sheet_compressing_images.*
 

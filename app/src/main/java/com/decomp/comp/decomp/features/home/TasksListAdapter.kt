@@ -44,6 +44,11 @@ class TasksListAdapter(
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
+        init {
+            itemView.setOnClickListener(this)
+            itemView.btn_next.setOnClickListener(this)
+        }
+
         fun bind(task: Task) {
             itemView.apply {
                 tv_task_title.setText(task.title)
@@ -51,7 +56,6 @@ class TasksListAdapter(
                 tv_feature_ready.visibleOrGone(task.isFeatureReady.not())
                 imv_task_art.setImageResource(task.art)
                 btn_next.backgroundTintList = task.color.getColorStateList(context)
-                setOnClickListener(this@TaskViewHolder)
             }
         }
 

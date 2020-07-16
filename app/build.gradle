@@ -13,15 +13,15 @@ def getGitHash = { ->
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId "com.decomp.comp.decomp"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 16
-        versionName "v1.6.0-${getGitHash()}"
+        targetSdkVersion 29
+        versionCode 17
+        versionName "v2.0.0-${getGitHash()}"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
@@ -59,7 +59,6 @@ dependencies {
     implementation 'androidx.core:core:1.3.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta7'
-    implementation 'com.github.darsh2:MultipleImageSelect:v0.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.google.firebase:firebase-core:17.4.3'
@@ -72,6 +71,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     //crashlytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    //image picker
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.3'
     implementation 'androidx.core:core-ktx:1.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Required for all integration of Flurry, includes Analytics

@@ -30,17 +30,17 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
-import com.darsh.multipleimageselect.helpers.Constants;
-import com.darsh.multipleimageselect.models.Image;
 import com.decomp.comp.decomp.features.compressing.CompressingImagesActivity;
 import com.decomp.comp.decomp.features.gallery.GalleryActivity;
+import com.decomp.comp.decomp.features.home.TaskType;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.snackbar.Snackbar;
+import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -203,10 +203,11 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // The last parameter value of shouldHandleResult() is the value we pass to setRequestCode().
+        // If we do not call setRequestCode(), we can ignore the last parameter.
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            //The array list has the image paths of the selected images
-            images = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
+        if (ImagePicker.shouldHandleResult(requestCode, resultCode, data, 100)) {
+            images = ImagePicker.getImages(data);
             goingToComp = true;
         }
     }
@@ -343,13 +344,22 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.selImgFab: {
                 compClicked = true;
-                Intent intent = new Intent(SplashScreen.this, AlbumSelectActivity.class);
-                intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 100);
-                startActivityForResult(intent, Constants.REQUEST_CODE);
+                int maxImages = 100;
+                ImagePicker.with(this)
+                        .setFolderMode(true)
+                        .setFolderTitle("Album")
+                        .setDirectoryName("Image Picker")
+                        .setMultipleMode(true)
+                        .setShowNumberIndicator(true)
+                        .setMaxSize(maxImages)
+                        .setLimitMessage(getString(R.string.max_images_reached_msg, maxImages))
+                        .setSelectedImages(images)
+                        .setRequestCode(100)
+                        .start();
                 break;
             }
             case R.id.compGalFab: {
-                startActivity(GalleryActivity.getIntent(this));
+                startActivity(GalleryActivity.getIntent(this, TaskType.UNKNOWN));
                 break;
             }
             case R.id.btn_changePermissions: {

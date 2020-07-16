@@ -75,7 +75,7 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPr
 
     //checking permissions for screen cast
     private fun checkScreenCastToRecord() {
-        startActivityForResult(projectionManager.createScreenCaptureIntent(), REQUEST_SCREEN_SHARE);
+        startActivityForResult(projectionManager.createScreenCaptureIntent(), REQUEST_SCREEN_SHARE)
     }
 
     private fun isRecordingScreen() =
@@ -85,6 +85,7 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPr
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(this,
                 arrayOf(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.RECORD_AUDIO
                 ),
@@ -92,15 +93,22 @@ class RecordScreenActivity : AppCompatActivity(), View.OnClickListener, SharedPr
     }
 
     private fun checkForPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) +
+        if (
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) +
                 ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale
-                    //permision was denied initially
+            if (
+            //permision was denied initially
+                    ActivityCompat.shouldShowRequestPermissionRationale
                     (this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
                     ActivityCompat.shouldShowRequestPermissionRationale
-                    (this, Manifest.permission.RECORD_AUDIO)) {
+                    (this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, Manifest.permission.RECORD_AUDIO)
+            ) {
                 showEnablePermissionSnack()
             } else {
                 requestPermissions()

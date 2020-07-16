@@ -1,14 +1,20 @@
 package com.decomp.comp.decomp.features.gallery
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.decomp.comp.decomp.R
 import com.decomp.comp.decomp.application.BaseActivity
+import com.decomp.comp.decomp.application.KEY_TASK_TYPE
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryPagerAdapter
 import com.decomp.comp.decomp.features.gallery.ui.main.GalleryViewModel
 import com.decomp.comp.decomp.features.home.TaskType
@@ -19,15 +25,18 @@ import com.decomp.comp.decomp.utils.extensions.getFileUri
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.android.synthetic.main.share_files_bar.*
 import java.util.*
 
-class GalleryActivity : BaseActivity(), SelectionCountListener {
+class GalleryActivity : BaseActivity(), SelectionCountListener, View.OnClickListener {
 
     private lateinit var interstitialAd: InterstitialAd
     private lateinit var adRequest: AdRequest
+    private val REQUEST_PERMISSIONS = 11
+
     private val viewModel by lazy {
         configureViewModel<GalleryViewModel>()
     }
@@ -41,9 +50,8 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
-        createGalleryPagesModels()
+        checkForPermissions()
         observeUserSelection()
-        setGalleryPages()
         initializeAd()
 
         //share bar bottomsheet
@@ -52,42 +60,17 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
             addBottomSheetCallback(shareBottomsheetCallback)
         }
 
-        //listening for all files selection changes
-        btn_share_files.setOnClickListener {
-            val filesToShare = ArrayList<Uri>()
-            for (file in viewModel.userSelectedFiles)
-                filesToShare.add(getFileUri(file))
-
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND_MULTIPLE
-                type = viewModel.getShareIntentType(viewModel.getTaskType(vp_gallery.currentItem))
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.share)))
-        }
-
-        btn_delete_files.setOnClickListener {
-            showAlertDialog(
-                    R.string.deleteImages,
-                    R.string.deleteImages,
-                    android.R.string.ok,
-                    onPositiveAction = {
-                        viewModel.deleteUserSelectedFiles()
-                    })
-        }
-
-        //clicking on select all
-        cb_select_all.setOnClickListener {
-            viewModel.selectAllFilesFor(
-                    if (cb_select_all.isChecked)
-                        viewModel.getTaskType(vp_gallery.currentItem)
-                    else
-                        null
-            )
-        }
+        //setting click listeners
+        btn_share_files.setOnClickListener(this)
+        cb_select_all.setOnClickListener(this)
+        btn_delete_files.setOnClickListener(this)
     }
 
-    fun initializeAd() {
+    private fun onPermissionsGranted() {
+        setGalleryPages()
+    }
+
+    private fun initializeAd() {
         adRequest = AdRequest.Builder().build()
         interstitialAd = InterstitialAd(this)
         interstitialAd.adUnitId = getString(R.string.interstitial_adunit)
@@ -121,6 +104,11 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
     }
 
     private fun setGalleryPages() {
+
+        //setting up models & titles
+        createGalleryPagesModels()
+        tv_page_title.setText(viewModel.getPageTitle(0))
+
         vp_gallery.adapter = GalleryPagerAdapter(this, viewModel, supportFragmentManager)
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(vp_gallery)
@@ -139,6 +127,10 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
             }
         })
 
+        //scrolling to a specific task page
+        val taskType = TaskType.from(intent.getStringExtra(KEY_TASK_TYPE))
+        val taskTypePosition = viewModel.getTaskTypePosition(taskType)
+        vp_gallery.setCurrentItem(taskTypePosition, true)
     }
 
     //listening the number of files selected
@@ -151,7 +143,7 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
 
             cb_select_all.apply {
                 isChecked = areAllFilesSelected
-                text = "$selectedFilesCount selected"
+                text = getString(R.string.files_selected, selectedFilesCount)
             }
         }
     }
@@ -192,10 +184,115 @@ class GalleryActivity : BaseActivity(), SelectionCountListener {
         viewModel.galleryPageModels = galleryPages
     }
 
+    /*requesting permissions*/
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                arrayOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                REQUEST_PERMISSIONS)
+    }
+
+    private fun checkForPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            //permission was denied initially
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                showEnablePermissionSnack()
+            } else {
+                requestPermissions()
+            }
+        } else {
+            onPermissionsGranted()
+        }
+    }
+
+    private fun showEnablePermissionSnack() {
+        Snackbar.make(findViewById(android.R.id.content), "Please allow file system access",
+                Snackbar.LENGTH_INDEFINITE).setAction("ENABLE") {
+            requestPermissions()
+        }.show()
+    }
+
+    private fun showOpenSettingSnack() {
+        Snackbar.make(findViewById(android.R.id.content), "Allow access to file system",
+                Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
+                View.OnClickListener {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = Uri.parse("package:$packageName")
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                    startActivity(intent)
+                }).show()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_PERMISSIONS -> {
+                if (grantResults.isNotEmpty() &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionsGranted()
+                } else {
+                    showOpenSettingSnack()
+                }
+                return
+            }
+        }
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+
+            //listening for all files selection changes
+            R.id.btn_share_files -> {
+                val filesToShare = ArrayList<Uri>()
+                for (file in viewModel.userSelectedFiles)
+                    filesToShare.add(getFileUri(file))
+
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND_MULTIPLE
+                    type = viewModel.getShareIntentType(viewModel.getTaskType(vp_gallery.currentItem))
+                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, filesToShare)
+                }
+                startActivity(Intent.createChooser(intent, getString(R.string.share)))
+            }
+
+            //deleting files
+            R.id.btn_delete_files -> {
+                showAlertDialog(
+                        R.string.are_you_sure,
+                        R.string.deleteImages,
+                        android.R.string.ok,
+                        onPositiveAction = {
+                            viewModel.deleteUserSelectedFiles()
+                        })
+            }
+
+            //clicking on select all
+            R.id.cb_select_all -> {
+                viewModel.selectAllFilesFor(
+                        if (cb_select_all.isChecked)
+                            viewModel.getTaskType(vp_gallery.currentItem)
+                        else
+                            null
+                )
+            }
+        }
+    }
+
     companion object {
         @JvmStatic
-        fun getIntent(context: Context): Intent {
-            return Intent(context, GalleryActivity::class.java)
+        fun getIntent(context: Context, taskType: TaskType? = TaskType.UNKNOWN): Intent {
+            return Intent(context, GalleryActivity::class.java).apply {
+                if (taskType != null) {
+                    putExtra(KEY_TASK_TYPE, taskType.value)
+                }
+            }
         }
     }
 

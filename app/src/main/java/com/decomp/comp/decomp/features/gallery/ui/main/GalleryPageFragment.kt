@@ -121,6 +121,9 @@ class GalleryPageFragment : Fragment() {
 
     private fun toggleBlankSlate(galleryPageFiles: List<File>) {
         blank_slate_files.visibleOrGone(galleryPageFiles.isEmpty())
+        if (galleryPageFiles.isEmpty()) {
+            galleryViewModel.setUserSelectingFiles(false)
+        }
     }
 
     private fun getThumbnailWidthInPx(context: Context): Int {
@@ -176,7 +179,9 @@ class GalleryPageFragment : Fragment() {
             if (event == FileObserver.DELETE) {
                 val galleryPageFiles = galleryViewModel.getGalleryPageFolderFiles(pagePosition)
                 galleryFilesAdapter.submitList(galleryPageFiles)
-                toggleBlankSlate(galleryPageFiles)
+                activity?.runOnUiThread {
+                    toggleBlankSlate(galleryPageFiles)
+                }
             }
         }
     }

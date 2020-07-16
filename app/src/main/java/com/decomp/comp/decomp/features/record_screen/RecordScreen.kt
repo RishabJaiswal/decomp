@@ -1,10 +1,12 @@
 package com.decomp.comp.decomp.features.record_screen
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.MediaRecorder
@@ -13,20 +15,19 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.crashlytics.android.Crashlytics
 import com.decomp.comp.decomp.R
-import com.decomp.comp.decomp.application.KEY_RECORD_WITH_AUDIO
-import com.decomp.comp.decomp.application.KEY_RESULT_SCREEN_CAST
-import com.decomp.comp.decomp.application.KEY_STOP_RECORDING
-import com.decomp.comp.decomp.application.PreferenceKeys
+import com.decomp.comp.decomp.application.*
+import com.decomp.comp.decomp.features.gallery.GalleryActivity
+import com.decomp.comp.decomp.features.home.TaskType
 import com.decomp.comp.decomp.utils.Directory
 import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
 import com.decomp.comp.decomp.utils.extensions.getFormattedString
 import com.decomp.comp.decomp.utils.extensions.showLongToast
+import com.decomp.comp.decomp.utils.extensions.showShortToast
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -46,12 +47,15 @@ class RecordScreen : Service() {
     private val projectionManager by lazy {
         getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
     }
+    private val notificationManager by lazy {
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
+            createNotification()
             prepareScreenRecording(intent)
         }
-        createNotification()
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -62,13 +66,17 @@ class RecordScreen : Service() {
                 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(this, notificationChannelID)
-                .setContentTitle("DeComp is Recording")
-                .setContentText("DeComp is helping you record the screen")
+                .setContentTitle(applicationContext.getString(R.string.recording_notif_title))
+                .setContentText(applicationContext.getString(R.string.recording_notif_msg))
                 .setSmallIcon(android.R.drawable.ic_popup_sync)
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.arrow_up_float, "Stop recording", pendingIntent)
                 .build()
-        startForeground(1, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION)
+        } else {
+            startForeground(1, notification)
+        }
     }
 
     // creates a intent for RecordScreenActivity and telling it to stop recording
@@ -89,11 +97,7 @@ class RecordScreen : Service() {
             setupMediaProjection(resultCode, intent)
             startScreenRecording()
         } else {
-            Toast.makeText(
-                    applicationContext,
-                    R.string.error_directory_creation,
-                    Toast.LENGTH_SHORT
-            ).show()
+            applicationContext.showShortToast(R.string.error_directory_creation)
             Crashlytics.logException(Exception("unable to create recorded screens directory"))
             stopSelf()
         }
@@ -115,19 +119,20 @@ class RecordScreen : Service() {
                 }
                 setVideoSource(MediaRecorder.VideoSource.SURFACE)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setOutputFile(videoFilePath)
-                setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
                 //audio encoder
                 if (isAudioRecordingEnabled) {
                     setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
                 }
-                setVideoEncodingBitRate(1024 * 1000)
-                setVideoFrameRate(50)
+                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+                setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+                setVideoFrameRate(30)
+                setOutputFile(videoFilePath)
+                setVideoEncodingBitRate(10 * 1024 * 1000)
                 prepare()
             }
         } catch (e: IOException) {
             e.printStackTrace()
+            Crashlytics.logException(e)
         }
     }
 
@@ -150,16 +155,21 @@ class RecordScreen : Service() {
 
     //STEP - 3
     private fun setupMediaProjection(resultCode: Int, data: Intent) {
-        mediaProjectionCallback = ScreenProjectionCallback()
         mediaProjection = projectionManager.getMediaProjection(resultCode, data)
+        mediaProjectionCallback = ScreenProjectionCallback()
         mediaProjection?.registerCallback(mediaProjectionCallback, null)
     }
 
     //STEP - 4
     private fun startScreenRecording() {
-        virtualDisplay = createVirtualDisplay()
-        mediaRecorder?.start()
-        PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, true)
+        try {
+            virtualDisplay = createVirtualDisplay()
+            mediaRecorder?.start()
+            PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, true)
+        } catch (exception: java.lang.Exception) {
+            Crashlytics.logException(exception)
+            applicationContext.showShortToast(R.string.failed_to_record)
+        }
     }
 
     //STEP - 5
@@ -172,6 +182,7 @@ class RecordScreen : Service() {
                     release()
                     virtualDisplay?.release()
                     applicationContext.showLongToast(R.string.screen_saved)
+                    showRecordingSavedNotification()
                 } catch (error: RuntimeException) {
 
                 }
@@ -182,8 +193,26 @@ class RecordScreen : Service() {
         }
     }
 
+    private fun showRecordingSavedNotification() {
+        createNotificationChannel(RecordScreen.notificationChannelID, RecordScreen.notificationChannelName)
+        val notificationIntent = GalleryActivity.getIntent(this, TaskType.RECORD_SCREEN)
+        val pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val notification = NotificationCompat.Builder(this, notificationChannelID)
+                .setContentTitle(applicationContext.getString(R.string.recording_saved_title))
+                .setContentText(applicationContext.getString(R.string.recording_saved_msg))
+                .setSmallIcon(android.R.drawable.ic_popup_sync)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
+                .build()
+
+        notificationManager.notify(Notifications.ID_RECORDING_SAVED, notification)
+    }
+
     private fun createVirtualDisplay(): VirtualDisplay? {
-        return mediaProjection?.createVirtualDisplay("MainActivity",
+        return mediaProjection?.createVirtualDisplay("RecordScreen",
                 DISPLAY_WIDTH, DISPLAY_HEIGHT, screenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 mediaRecorder?.surface, null /*Callbacks*/, null /*Handler*/)
