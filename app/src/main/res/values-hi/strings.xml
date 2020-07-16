@@ -89,6 +89,10 @@
     <string name="are_you_sure">क्या आपको यकीन है?</string>
     <string name="recording_notif_title">DeComp स्क्रीन रिकॉर्डिंग कर रहा है।</string>
     <string name="recording_notif_msg">DeComp आपको स्क्रीन रिकॉर्ड करने में मदद कर रहा है।</string>
+    <string name="recording_saved_title">रिकॉर्डिंग सहेजा गया</string>
+    <string name="recording_saved_msg">आपकी स्क्रीन रिकॉर्डिंग DeComp गैलरी में सुरक्षित रूप से सहेजी गई है</string>
+    <string name="failed_to_record">स्क्रीन रिकॉर्ड करने में विफल</string>
+    <string name="max_images_reached_msg">आप %d छवियों तक का चयन कर सकते हैं</string>
 
     <!--decomp gallery-->
     <string name="tab_text_images">इमेजिस</string>
