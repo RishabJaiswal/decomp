@@ -112,6 +112,8 @@
     <string name="recording_notif_msg">DeComp is helping you record the screen</string>
     <string name="recording_saved_title">Recording Saved</string>
     <string name="recording_saved_msg">Your screen recording is saved safely in DeComp Gallery</string>
+    <string name="failed_to_record">Failed to record screen</string>
+    <string name="max_images_reached_msg">You can select up to %d images</string>
 
     <!--decomp gallery-->
     <string name="tab_text_images">Images</string>
