@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.MediaRecorder
@@ -14,7 +15,6 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.crashlytics.android.Crashlytics
@@ -27,6 +27,7 @@ import com.decomp.comp.decomp.utils.PreferenceHelper
 import com.decomp.comp.decomp.utils.extensions.createNotificationChannel
 import com.decomp.comp.decomp.utils.extensions.getFormattedString
 import com.decomp.comp.decomp.utils.extensions.showLongToast
+import com.decomp.comp.decomp.utils.extensions.showShortToast
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -52,9 +53,9 @@ class RecordScreen : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
+            createNotification()
             prepareScreenRecording(intent)
         }
-        createNotification()
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -71,7 +72,11 @@ class RecordScreen : Service() {
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.arrow_up_float, "Stop recording", pendingIntent)
                 .build()
-        startForeground(1, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION)
+        } else {
+            startForeground(1, notification)
+        }
     }
 
     // creates a intent for RecordScreenActivity and telling it to stop recording
@@ -92,11 +97,7 @@ class RecordScreen : Service() {
             setupMediaProjection(resultCode, intent)
             startScreenRecording()
         } else {
-            Toast.makeText(
-                    applicationContext,
-                    R.string.error_directory_creation,
-                    Toast.LENGTH_SHORT
-            ).show()
+            applicationContext.showShortToast(R.string.error_directory_creation)
             Crashlytics.logException(Exception("unable to create recorded screens directory"))
             stopSelf()
         }
@@ -131,6 +132,7 @@ class RecordScreen : Service() {
             }
         } catch (e: IOException) {
             e.printStackTrace()
+            Crashlytics.logException(e)
         }
     }
 
@@ -153,16 +155,21 @@ class RecordScreen : Service() {
 
     //STEP - 3
     private fun setupMediaProjection(resultCode: Int, data: Intent) {
-        mediaProjectionCallback = ScreenProjectionCallback()
         mediaProjection = projectionManager.getMediaProjection(resultCode, data)
+        mediaProjectionCallback = ScreenProjectionCallback()
         mediaProjection?.registerCallback(mediaProjectionCallback, null)
     }
 
     //STEP - 4
     private fun startScreenRecording() {
-        virtualDisplay = createVirtualDisplay()
-        mediaRecorder?.start()
-        PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, true)
+        try {
+            virtualDisplay = createVirtualDisplay()
+            mediaRecorder?.start()
+            PreferenceHelper.putValue(PreferenceKeys.IS_SCREEN_RECORDING, true)
+        } catch (exception: java.lang.Exception) {
+            Crashlytics.logException(exception)
+            applicationContext.showShortToast(R.string.failed_to_record)
+        }
     }
 
     //STEP - 5
@@ -205,7 +212,7 @@ class RecordScreen : Service() {
     }
 
     private fun createVirtualDisplay(): VirtualDisplay? {
-        return mediaProjection?.createVirtualDisplay("MainActivity",
+        return mediaProjection?.createVirtualDisplay("RecordScreen",
                 DISPLAY_WIDTH, DISPLAY_HEIGHT, screenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 mediaRecorder?.surface, null /*Callbacks*/, null /*Handler*/)
